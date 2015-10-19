@@ -1,4 +1,4 @@
-package de.unima.core;
+package de.unima.core.api;
 
 import java.util.List;
 
