@@ -1,0 +1,10 @@
+dependencies {
+    compile project(':api')
+
+    compile 'org.camunda.bpm.model:camunda-bpmn-model:7.3.0'
+    compile 'org.apache.jena:jena-arq:3.0.0'
+    compile 'org.apache.jena:jena-core:3.0.0'
+    compile 'org.apache.jena:jena-shaded-guava:3.0.0'
+    compile 'org.apache.jena:jena-iri:3.0.0'
+    compile 'org.apache.jena:jena-tdb:3.0.0'
+}
