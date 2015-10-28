@@ -7,6 +7,7 @@ import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
@@ -40,8 +41,8 @@ public class Testing2 {
                 System.out.println(flowNode.getElementType().getTypeName());
                 System.out.println(flowNode.getId());
             }
-            
         }
+        
         
         
         //Jenastuff
@@ -52,22 +53,20 @@ public class Testing2 {
         
         OntModel m = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
         
-        m.read("/home/chschrec/workspace/SPP/smartprocess/schema/BPMN_2.0_ontology.owl");
-        
-        System.out.println(m.listStatements().toList().size());
+        m.read("schema/BPMN_2.0_ontology.owl");
         
         OntClass startEvent = m.getOntClass(NS + "startEvent");
         
-        if(startEvent == null) System.out.println("fail");
-        
         Individual p1 = m.createIndividual(NSinstance + modelProcess.iterator().next().getChildElementsByType(FlowNode.class).iterator().next().getId(), startEvent);
         
-        System.out.println(m.listStatements().toList().size());
-        
-        System.out.println(m.getBaseModel().listStatements().toList().size());
         
         
-        System.out.println(p1.getURI());
+        
+//        p1.
+        
+        for(Individual i : m.listIndividuals().toList()){
+          System.out.println(i);
+        }
         
         //back to bpmn
         
