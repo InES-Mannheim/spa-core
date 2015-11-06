@@ -6,6 +6,6 @@ import de.unima.core.io.IOObject;
 public interface DataPool {
 	
 	public boolean addDataModel(String id, IOObject<DataSource> ioo);
-	public boolean validate();
+	public boolean isValid();
 	public void loadDataPool();
 }

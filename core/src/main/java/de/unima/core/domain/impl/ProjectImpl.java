@@ -39,7 +39,7 @@ public class ProjectImpl implements Project {
 		} else {
 		
 		  DataPool ds = this.dataPools.get(id);
-		  ds.loadDataPool();;
+		  ds.loadDataPool();
 		  return ds;
 		}
 	}

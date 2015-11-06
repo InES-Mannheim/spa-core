@@ -39,28 +39,28 @@ public class DataPoolImpl implements DataPool {
   }
   
   @Override
-  public boolean addDataModel(String id, IOObject<DataSource> ioo) {
+  public boolean addDataModel(String i, IOObject<DataSource> ioo) {
 
 	  this.loadDataPool();
 	  OntModel data_bak = this.data;
-	  DataModel dm = new DataModelImpl(id, ioo.getData());
+	  DataModel dm = new DataModelImpl(i, ioo.getData());
 	  this.data.add(dm.getData());
 	  
-	  if (this.validate()) {
+	  if (this.isValid()) {
 		  
+		  this.datamodels.put(i, dm);
 		  return true;
 	  
 	  } else {
 		  
 		  this.data = data_bak;
-		  this.datamodels.remove(id);
-		  System.err.println("New data model " + id + " is invalid for current data pool");
+		  System.err.println("New data model " + i + " is invalid for current data pool.");
 		  return false;
 	  }	  
   }
   
   @Override
-  public boolean validate() {
+  public boolean isValid() {
   	// TODO Auto-generated method stub
   	return true;
   }

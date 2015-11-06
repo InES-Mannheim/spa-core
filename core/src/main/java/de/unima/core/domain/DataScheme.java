@@ -1,5 +1,9 @@
 package de.unima.core.domain;
 
-public interface DataScheme {
+import de.unima.core.persistence.Storable;
+
+public interface DataScheme extends Storable {
+	
+	
 
 }

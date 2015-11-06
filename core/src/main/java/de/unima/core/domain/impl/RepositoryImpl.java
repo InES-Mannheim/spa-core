@@ -41,18 +41,26 @@ public class RepositoryImpl implements Repository {
 	}
 
 
-	public boolean registerDataScheme(String id, IOObject<RDFFile> ioo, Importer<DataSource> i) {
+	public boolean registerDataScheme(String i, IOObject<RDFFile> ioo, Importer<DataSource> imp) {
 
-		if (this.schemes.containsKey(id)) {
+		if (this.schemes.containsKey(i)) {
 
 			return false;
 			
 		} else {
 			
-			DataScheme newDataScheme = new DataSchemeImpl(ioo.getData(), this, i);
-			this.schemes.put(id, newDataScheme);
-			// TODO store the new data scheme into triple store
-			return true;
+			DataScheme newDataScheme = new DataSchemeImpl(i, ioo.getData(), this, imp);
+	
+			if (!newDataScheme.store()) {
+				
+				System.err.println("Storing of scheme " + i + " fails while registration.");
+				return false;
+				
+			} else {
+				
+				this.schemes.put(i, newDataScheme);
+				return true;
+			}
 		}
 		
 	}
