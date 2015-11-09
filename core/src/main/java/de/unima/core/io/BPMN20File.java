@@ -1,5 +1,5 @@
 package de.unima.core.io;
 
-public interface BPMN20File extends DataSource {
+public interface BPMN20File extends File {
 
 }

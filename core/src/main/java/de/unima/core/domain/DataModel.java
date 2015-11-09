@@ -2,7 +2,9 @@ package de.unima.core.domain;
 
 import org.apache.jena.ontology.OntModel;
 
-public interface DataModel {
+import de.unima.core.persistence.Storable;
+
+public interface DataModel extends Storable {
 	
 	public OntModel getData();
 

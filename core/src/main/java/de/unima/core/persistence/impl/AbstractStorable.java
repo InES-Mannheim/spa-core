@@ -9,6 +9,7 @@ public abstract class AbstractStorable implements Storable {
 	
 	private Store store;
 
+	@Override
 	public boolean store() {
 		
 		if (this.store==null) {
@@ -21,6 +22,7 @@ public abstract class AbstractStorable implements Storable {
 		}
 	}
 	
+	@Override
 	public boolean load() {
 		
 		if (this.store==null) {
@@ -41,15 +43,16 @@ public abstract class AbstractStorable implements Storable {
 		}
 	}
 	
-	protected void setStore(Store s) {
+	@Override
+	public void setStore(Store s) {
 		
 		this.store = s;
 	}
 	
-	abstract protected OntModel getData();
+	abstract public OntModel getData();
 	
 	abstract protected void setData(OntModel d);
 	
-	abstract protected String getID();
+	abstract public String getID();
 
 }

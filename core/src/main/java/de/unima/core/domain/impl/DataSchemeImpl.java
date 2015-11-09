@@ -7,8 +7,8 @@ import de.unima.core.io.Importer;
 import de.unima.core.persistence.Store;
 import de.unima.core.persistence.impl.AbstractStorable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.jena.ontology.OntModel;
 
@@ -17,20 +17,20 @@ public class DataSchemeImpl extends AbstractStorable implements DataScheme {
 	private String id;
 	private OntModel data;
 	private Repository repository;
-	private Set<Importer<DataSource>> instanceImporters;
+	private Map<String, Importer<? extends DataSource>> instanceImporters;
 
 	
-	public DataSchemeImpl(String i, OntModel d, Repository r, Importer<DataSource> imp) {
+	public DataSchemeImpl(String i, OntModel d, Repository r, Importer<? extends DataSource> imp) {
 
 		this.id = i;
 		this.data = d;
 		this.repository = r;
-		this.instanceImporters = new HashSet<Importer<DataSource>>();
-		this.instanceImporters.add(imp);
+		this.instanceImporters = new HashMap<String, Importer<? extends DataSource>>();
+		this.instanceImporters.put(imp.getID(), imp);
 		this.setStore(null);
 	}
 	
-	public DataSchemeImpl(String i, OntModel d, Repository r, Importer<DataSource> imp, Class<Store> s) {
+	public DataSchemeImpl(String i, OntModel d, Repository r, Importer<? extends DataSource> imp, Class<Store> s) {
 
 		this(i, d, r, imp);
 
@@ -51,13 +51,13 @@ public class DataSchemeImpl extends AbstractStorable implements DataScheme {
 	}
 
 	@Override
-	final protected OntModel getData() {
+	final public OntModel getData() {
 
 		return this.data;
 	}
 
 	@Override
-	final protected String getID() {
+	final public String getID() {
 
 		return this.id;
 	}
@@ -66,6 +66,18 @@ public class DataSchemeImpl extends AbstractStorable implements DataScheme {
 	final protected void setData(OntModel d) {
 		
 		this.data = d;
+	}
+
+	@Override
+	public void setImporter(Importer<? extends DataSource> imp) {
+		
+		this.instanceImporters.put(imp.getID(), imp);
+	}
+
+	@Override
+	public Importer<? extends DataSource> getImporter(String impID) {
+
+		return this.instanceImporters.get(impID);
 	}
 	
 	

@@ -29,32 +29,47 @@ public class DataPoolImpl implements DataPool {
 	  this.loadSchemes();	  
   }
 
-  public void loadDataPool() {
+  public boolean updateDataPool() {
 
-	  for (String dm : this.datamodels.keySet()) {
+	  boolean state = true;
+	  
+	  state = this.loadSchemes();
+
+	  for (DataModel dm : this.datamodels.values()) {
 		  
-		  this.loadDataIntoDataPool(dm);
+		  if (!dm.load()) {
+			  	  
+			  System.err.println("Data model " + dm.getID() + " is unable to load from storage system.");
+			  state = false;
+		  
+		  } else {
+			
+			  this.data.add(dm.getData());
+		  }
 	  }
-	  this.loadSchemes();
+	  
+	  return state;
   }
   
   @Override
-  public boolean addDataModel(String i, IOObject<DataSource> ioo) {
+  public boolean addDataModel(String i, IOObject<? extends DataSource> ioo) {
 
-	  this.loadDataPool();
-	  OntModel data_bak = this.data;
+	  this.updateDataPool();
+	  OntModel data_bak = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+	  data_bak.add(this.data);
 	  DataModel dm = new DataModelImpl(i, ioo.getData());
 	  this.data.add(dm.getData());
 	  
 	  if (this.isValid()) {
 		  
 		  this.datamodels.put(i, dm);
+		  dm.store();
 		  return true;
 	  
 	  } else {
 		  
 		  this.data = data_bak;
-		  System.err.println("New data model " + i + " is invalid for current data pool.");
+		  System.err.println("New data model " + i + " is invalid related to current data pool.");
 		  return false;
 	  }	  
   }
@@ -65,22 +80,22 @@ public class DataPoolImpl implements DataPool {
   	return true;
   }
   
-  private void loadDataIntoDataPool(String id) {
+  private boolean loadSchemes() {
 	  
-	  // TODO load rdf data from triple store and fill this.data
-  }
-  
-  private void loadSchemes() {
+	  boolean state = true;
 	  
-	  for (String ds : this.project.getSchemeIDs()) {
+	  for (String sID : this.project.getSchemeIDs()) {
 		  
-		  this.loadDataIntoDataPool(ds);
+		  if (!this.project.getRepository().getDataScheme(sID).load()) {
+			  
+			  System.err.println("Data scheme " + sID + " is unable to load from storage system.");
+			  state = false;
+		  }
+		  
+		  this.data.add(this.project.getRepository().getDataScheme(sID).getData());
 	  }
 
+	  return state;
   }
-
-
-
-
 
 }

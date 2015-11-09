@@ -1,5 +1,6 @@
 package de.unima.core.domain.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,35 +16,41 @@ import de.unima.core.io.RDFFile;
 public class RepositoryImpl implements Repository {
 
 	private Map<String, Project> projects;
-	private Map<String, DataScheme> schemes;
-
-
-	public boolean createProject(String id, Set<String> schemeIDs) {
+	private Map<String, DataScheme> dataschemes;
+	
+	public RepositoryImpl() {
 		
-		if (this.projects.containsKey(id) & !this.schemes.keySet().containsAll(schemeIDs)) {
+		this.dataschemes = new HashMap<String, DataScheme>();
+		this.projects = new HashMap<String, Project>();
+	}
+
+	@Override
+	public boolean createProject(String id, String schemeID) {
+		
+		if (this.projects.containsKey(id) & !this.dataschemes.keySet().contains(schemeID)) {
 			return false;
 		} else {
-			this.projects.put(id, new ProjectImpl(schemeIDs));
+			this.projects.put(id, new ProjectImpl(schemeID, this));
 			return true;
 		}
 	}
 
-
+	@Override
 	public Project getProject(String id) {
 
 		return this.projects.get(id);
 	}
 
-
+	@Override
 	public Set<String> getProjectIDs() {
 		
 		return this.projects.keySet();
 	}
 
+	@Override
+	public boolean registerDataScheme(String i, IOObject<RDFFile> ioo, Importer<? extends DataSource> imp) {
 
-	public boolean registerDataScheme(String i, IOObject<RDFFile> ioo, Importer<DataSource> imp) {
-
-		if (this.schemes.containsKey(i)) {
+		if (this.dataschemes.containsKey(i)) {
 
 			return false;
 			
@@ -53,16 +60,23 @@ public class RepositoryImpl implements Repository {
 	
 			if (!newDataScheme.store()) {
 				
-				System.err.println("Storing of scheme " + i + " fails while registration.");
+				System.err.println("Unable to store scheme " + i + " while registration.");
 				return false;
 				
 			} else {
 				
-				this.schemes.put(i, newDataScheme);
+				this.dataschemes.put(i, newDataScheme);
 				return true;
 			}
 		}
 		
+	}
+
+
+	@Override
+	public DataScheme getDataScheme(String id) {
+
+		return this.dataschemes.get(id);
 	}
 
 }

@@ -9,8 +9,9 @@ import de.unima.core.io.RDFFile;
 
 public interface Repository {
 	
-	public boolean createProject(String id, Set<String> schemeIDs);
+	public boolean createProject(String id, String schemeID);
 	public Project getProject(String id);
+	public DataScheme getDataScheme(String id);
 	public Set<String> getProjectIDs();
-	public boolean registerDataScheme(String id, IOObject<RDFFile> ioo, Importer<DataSource> i);
+	public boolean registerDataScheme(String id, IOObject<RDFFile> ioo, Importer<? extends DataSource> i);
 }
