@@ -10,10 +10,11 @@ import de.unima.core.io.RDFImporter;
 public class RDFImporterImpl implements RDFImporter {
 
 	@Override
-	public OntModel importData(RDFFile ds) {
+	public OntModel importData(RDFFile rdf_source) {
 	
-		// TODO Auto-generated method stub
-		return ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+		OntModel m = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+	    m.read(rdf_source.getPath());
+	    return m;
 	}
 
 	@Override

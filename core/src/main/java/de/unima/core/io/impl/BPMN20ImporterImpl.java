@@ -12,11 +12,11 @@ public class BPMN20ImporterImpl implements Importer<BPMN20File> {
 	private String id;
 
 	@Override
-	public OntModel importData(BPMN20File ds) {
+	public OntModel importData(BPMN20File bpmn_source) {
 		
-		
-		// TODO Auto-generated method stub
-		return ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+		OntModel m = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+		// TODO Implement the import from BPMN-Data into OntModel
+		return m;
 	}
 
 	@Override

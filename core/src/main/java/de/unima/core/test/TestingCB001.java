@@ -1,7 +1,10 @@
 package de.unima.core.test;
 
 
+import org.apache.jena.ontology.OntModel;
+
 import de.unima.core.domain.DataPool;
+import de.unima.core.domain.DataScheme;
 import de.unima.core.domain.Project;
 import de.unima.core.domain.Repository;
 import de.unima.core.domain.impl.RepositoryImpl;
@@ -20,7 +23,7 @@ public class TestingCB001 {
 		
 		Repository r = new RepositoryImpl();
 		
-		IOObject<RDFFile> scheme = new IOObjectImpl<RDFFile>(new RDFFileImpl(), new RDFImporterImpl());
+		IOObject<RDFFile> scheme = new IOObjectImpl<RDFFile>(new RDFFileImpl("schema/BPMN_2.0_ontology.owl"), new RDFImporterImpl());
 	
 		r.registerDataScheme("BPMN2.0", scheme, new BPMN20ImporterImpl());
 		
@@ -32,9 +35,14 @@ public class TestingCB001 {
 		
 		DataPool dp = p.getDataPool("SampleDataPool");
 		
-		IOObject<BPMN20File> processModel = new IOObjectImpl<BPMN20File>(new BPMN20FileImpl(), new BPMN20ImporterImpl());
+		IOObject<BPMN20File> processModel = new IOObjectImpl<BPMN20File>(new BPMN20FileImpl("tmp/example-spa.bpmn"), new BPMN20ImporterImpl());
 		
 		dp.addDataModel("SampleBPMN2.0Model", processModel);
+		
+		DataScheme s = r.getDataScheme(p.getSchemeIDs().iterator().next());
+		OntModel m = s.getData();
+		System.out.println(m.listStatements().toList().toString());
+		
 		
 	  
 	}
