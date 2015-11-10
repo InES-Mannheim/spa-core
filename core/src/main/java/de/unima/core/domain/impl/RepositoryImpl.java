@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import de.unima.core.domain.impl.DataSchemeImpl;
 import de.unima.core.domain.DataScheme;
 import de.unima.core.domain.Project;
 import de.unima.core.domain.Repository;
@@ -12,6 +11,7 @@ import de.unima.core.io.DataSource;
 import de.unima.core.io.IOObject;
 import de.unima.core.io.Importer;
 import de.unima.core.io.RDFFile;
+import de.unima.core.persistence.Store;
 
 public class RepositoryImpl implements Repository {
 
@@ -56,9 +56,9 @@ public class RepositoryImpl implements Repository {
 			
 		} else {
 			
-			DataScheme newDataScheme = new DataSchemeImpl(i, ioo.getData(), this, imp);
+			DataScheme newDataScheme = new DataSchemeImpl(i, ioo.getData(), this, imp, Store.fake());
 	
-			if (!newDataScheme.store()) {
+			if (!newDataScheme.save()) {
 				
 				System.err.println("Unable to store scheme " + i + " while registration.");
 				return false;

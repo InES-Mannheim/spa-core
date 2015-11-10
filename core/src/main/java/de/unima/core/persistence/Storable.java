@@ -2,13 +2,32 @@ package de.unima.core.persistence;
 
 import org.apache.jena.ontology.OntModel;
 
-import de.unima.core.io.Importer;
-
-public interface Storable {
+/**
+ * Active Graph pattern for RDF.
+ *
+ * @param <T> id type (e.g. {@code String}, ...)
+ */
+public interface Storable<T> {
 	
+	/**
+	 * Load this {@code Storable} from the {@code Store}.
+	 * 
+	 * @return true if loading was successful; false otherwise
+	 * @see #getData()
+	 */
 	public boolean load();
-	public boolean store();
-	public String getID();
+	
+	/**
+	 * Save this {@code Storeable} in the {@code Store}.
+	 * 
+	 * @return true if saving was successful; false otherwise
+	 */
+	public boolean save();
+	
+	/**
+	 * Get the data as {@link OntModel}.
+	 * 
+	 * @return {@code OntModel} containing entity information.
+	 */
 	public OntModel getData();
-	public void setStore(Store s);
 }

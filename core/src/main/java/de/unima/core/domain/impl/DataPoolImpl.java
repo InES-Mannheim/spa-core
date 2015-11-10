@@ -7,11 +7,12 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 
-import de.unima.core.domain.DataPool;
 import de.unima.core.domain.DataModel;
+import de.unima.core.domain.DataPool;
 import de.unima.core.domain.Project;
 import de.unima.core.io.DataSource;
 import de.unima.core.io.IOObject;
+import de.unima.core.persistence.Store;
 
 public class DataPoolImpl implements DataPool {
 
@@ -21,7 +22,6 @@ public class DataPoolImpl implements DataPool {
   private Map<String, DataModel> datamodels;
   
   public DataPoolImpl(String i, Project p) {
-	  
 	  this.id = i;
 	  this.datamodels = new HashMap<String, DataModel>();
 	  this.data = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
@@ -39,7 +39,7 @@ public class DataPoolImpl implements DataPool {
 		  
 		  if (!dm.load()) {
 			  	  
-			  System.err.println("Data model " + dm.getID() + " is unable to load from storage system.");
+			  System.err.println("Data model " + dm.getId() + " is unable to load from storage system.");
 			  state = false;
 		  
 		  } else {
@@ -57,13 +57,13 @@ public class DataPoolImpl implements DataPool {
 	  this.updateDataPool();
 	  OntModel data_bak = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
 	  data_bak.add(this.data);
-	  DataModel dm = new DataModelImpl(i, ioo.getData());
+	  DataModel dm = new DataModelImpl(i, ioo.getData(), Store.fake());
 	  this.data.add(dm.getData());
 	  
 	  if (this.isValid()) {
 		  
 		  this.datamodels.put(i, dm);
-		  dm.store();
+		  dm.save();
 		  return true;
 	  
 	  } else {

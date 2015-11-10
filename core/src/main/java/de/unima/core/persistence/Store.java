@@ -1,10 +1,40 @@
 package de.unima.core.persistence;
 
+import java.util.Optional;
+
 import org.apache.jena.ontology.OntModel;
 
-public interface Store {
+/**
+ * Abstraction over the underlying triple store.
+ * 
+ * @param <T> id type
+ */
+public interface Store<T> {
+
+	public boolean save(Entity<T> entity);
+
+	public Optional<OntModel> load(Entity<T> entity);
+
+	/**
+	 * Store implementation which pretends to store given entity but
+	 * does nothing.
+	 * 
+	 * @return fake store implementation
+	 */
+	public static <T> Store<T> fake() {
+		return new EMPTY<T>();
+	}
 	
-	public boolean commit(String id, OntModel data);
-	public OntModel update(String id);
+	final static class EMPTY<T extends Object> implements Store<T> {
+		@Override
+		public boolean save(Entity<T> entity) {
+			return true;
+		}
+		@Override
+		public Optional<OntModel> load(Entity<T> entity) {
+			return Optional.empty();
+		}
+		
+	}
 
 }

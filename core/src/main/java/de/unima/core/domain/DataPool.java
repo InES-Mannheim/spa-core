@@ -5,7 +5,7 @@ import de.unima.core.io.IOObject;
 
 public interface DataPool {
 	
-	public boolean addDataModel(String id, IOObject<? extends DataSource> ioo);
-	public boolean isValid();
-	public boolean updateDataPool();
+	boolean addDataModel(String id, IOObject<? extends DataSource> ioo);
+	boolean isValid();
+	boolean updateDataPool();
 }
