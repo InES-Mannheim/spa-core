@@ -18,7 +18,7 @@ public abstract class AbstractEntity<T> implements Entity<T> {
 	
 	@Override
 	public boolean load() {
-		return store.load(this).map(this::setData).orElse(true);
+		return store.load(this).map(this::setData).orElse(false);
 	}
 	
 	protected abstract boolean setData(OntModel data);
