@@ -1,70 +1,31 @@
 package de.unima.core.persistence;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-import org.apache.jena.ontology.OntModel;
-import org.junit.Before;
 import org.junit.Test;
 
 public class AbstractEntityTest {
-
-	private TestEntity entityWithFakeStore;
-	private TestEntity entityWithEmptyStore;
-
-	@Before
-	public void setUp(){
-		entityWithFakeStore = new TestEntity(Store.fake());
-		entityWithEmptyStore = new TestEntity(Store.empty());
+	
+	@Test
+	public void enititiesWithSameIdsShouldBeEqual(){
+		final Entity<String> first = new StringEntity("test");
+		final Entity<String> second = new StringEntity("test");
+		assertThat(first, is(equalTo(second)));
 	}
 	
 	@Test
-	public void whenEntityShouldBeLoadedAndStoreIsFakeThenReturnTrue(){
-		final boolean isSaved = entityWithFakeStore.save();
-		assertThat(isSaved, is(true));
+	public void enititiesWithDifferentIdsShouldBeNonEqual(){
+		final Entity<String> first = new StringEntity("test2");
+		final Entity<String> second = new StringEntity("test");
+		assertThat(first, is(not(equalTo(second))));
 	}
 	
-	@Test
-	public void itShouldBeSavedAndStoreIsFakeThenReturnTrue(){
-		final boolean isLoaded = entityWithFakeStore.load();
-		assertThat(isLoaded, is(true));
-	}
-	
-	@Test
-	public void itShouldBeLoadedButStoreWasEmptyThenReturnFalse(){
-		final boolean isLoaded = entityWithEmptyStore.load();
-		assertThat(isLoaded, is(false));
-	}
-	
-	@Test
-	public void itShouldBeSavedButStoreWasEmptyThenReturnFalse(){
-		final boolean isSaved = entityWithEmptyStore.save();
-		assertThat(isSaved, is(false));
-	}
-	
-	private final class TestEntity extends AbstractEntity<String>{
-		
-		private OntModel data;
-		
-		public TestEntity(Store<String> store) {
-			super(store);
+	private class StringEntity extends AbstractEntity<String>{
+		public StringEntity(String id) {
+			super(id);
 		}
-
-		@Override
-		public String getId() {
-			return "http://test.de";
-		}
-
-		@Override
-		public OntModel getData() {
-			return data;
-		}
-
-		@Override
-		protected boolean setData(OntModel data) {
-			this.data = data;
-			return true;
-		}
-		
 	}
 }

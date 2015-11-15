@@ -1,9 +1,9 @@
 package de.unima.core.domain;
 
-import org.apache.jena.ontology.OntModel;
-
 import de.unima.core.persistence.Entity;
 
+/**
+ * Assertional data stored in an own context identified by {@link #getId()}.
+ */
 public interface DataModel extends Entity<String> {
-	public OntModel getData();
 }

@@ -2,81 +2,61 @@ package de.unima.core.domain.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-import de.unima.core.domain.DataScheme;
+import org.apache.jena.ext.com.google.common.collect.Sets;
+
 import de.unima.core.domain.Project;
 import de.unima.core.domain.Repository;
-import de.unima.core.io.DataSource;
-import de.unima.core.io.IOObject;
-import de.unima.core.io.Importer;
-import de.unima.core.io.RDFFile;
-import de.unima.core.persistence.Store;
+import de.unima.core.persistence.AbstractEntity;
 
-public class RepositoryImpl implements Repository {
+public class RepositoryImpl extends AbstractEntity<String> implements Repository {
 
 	private Map<String, Project> projects;
-	private Map<String, DataScheme> dataschemes;
 	
-	public RepositoryImpl() {
-		
-		this.dataschemes = new HashMap<String, DataScheme>();
+	public RepositoryImpl(String id) {
+		super(id);
 		this.projects = new HashMap<String, Project>();
 	}
 
 	@Override
-	public boolean createProject(String id, String schemeID) {
-		
-		if (this.projects.containsKey(id) & !this.dataschemes.keySet().contains(schemeID)) {
-			return false;
-		} else {
-			this.projects.put(id, new ProjectImpl(schemeID, this));
-			return true;
-		}
+	public boolean createProject(String id) {
+		return projects.computeIfAbsent(id, key -> new ProjectImpl(id, this)) != null;
 	}
 
 	@Override
-	public Project getProject(String id) {
-
-		return this.projects.get(id);
+	public Optional<Project> findProjectById(String id) {
+		return Optional.of(projects.get(id));
 	}
 
 	@Override
-	public Set<String> getProjectIDs() {
-		
-		return this.projects.keySet();
+	public Set<Project> getProjects() {
+		return Sets.newHashSet(projects.values());
 	}
-
-	@Override
-	public boolean registerDataScheme(String i, IOObject<RDFFile> ioo, Importer<? extends DataSource> imp) {
-
-		if (this.dataschemes.containsKey(i)) {
-
-			return false;
-			
-		} else {
-			
-			DataScheme newDataScheme = new DataSchemeImpl(i, ioo.getData(), this, imp, Store.fake());
-	
-			if (!newDataScheme.save()) {
-				
-				System.err.println("Unable to store scheme " + i + " while registration.");
-				return false;
-				
-			} else {
-				
-				this.dataschemes.put(i, newDataScheme);
-				return true;
-			}
-		}
-		
-	}
-
-
-	@Override
-	public DataScheme getDataScheme(String id) {
-
-		return this.dataschemes.get(id);
-	}
+//
+//	@Override
+//	public boolean registerDataScheme(String i, IOObject<RDFFile> ioo, Importer<? extends DataSource> imp) {
+//		if (this.dataschemes.containsKey(i)) {
+//			return false;
+//		} else {
+//			Schema newDataScheme = new Schema(i, ioo.getData(), this, imp, Repository.fake());
+//			if (!newDataScheme.save()) {
+//				System.err.println("Unable to store scheme " + i + " while registration.");
+//				return false;
+//			} else {
+//				this.dataschemes.put(i, newDataScheme);
+//				return true;
+//			}
+//		}
+//		
+//	}
+//
+//
+//	@Override
+//	public Schema getDataScheme(String id) {
+//
+//		return this.dataschemes.get(id);
+//	}
 
 }

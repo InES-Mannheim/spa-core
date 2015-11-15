@@ -1,17 +1,34 @@
 package de.unima.core.domain;
 
+import java.util.Optional;
 import java.util.Set;
 
-import de.unima.core.io.DataSource;
-import de.unima.core.io.IOObject;
-import de.unima.core.io.Importer;
-import de.unima.core.io.RDFFile;
+import de.unima.core.persistence.Entity;
 
-public interface Repository {
+/**
+ * A repository contains multiple independent projects.  
+ */
+public interface Repository extends Entity<String>{
+	/**
+	 * Creates a new project.
+	 * 
+	 * @param id of the project
+	 * @return true if successful; false otherwise
+	 */
+	public boolean createProject(String id);
 	
-	public boolean createProject(String id, String schemeID);
-	public Project getProject(String id);
-	public DataScheme getDataScheme(String id);
-	public Set<String> getProjectIDs();
-	public boolean registerDataScheme(String id, IOObject<RDFFile> ioo, Importer<? extends DataSource> i);
+	/**
+	 * Finds the {@link Project} with given id.
+	 * 
+	 * @param id of the project
+	 * @return the project if found; false otherwise
+	 */
+	public Optional<Project> findProjectById(String id);
+	
+	/**
+	 * Returns all projects within this repository.
+	 * 
+	 * @return all projects in this repository
+	 */
+	public Set<Project> getProjects();
 }
