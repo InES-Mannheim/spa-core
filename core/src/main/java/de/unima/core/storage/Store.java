@@ -1,8 +1,8 @@
 package de.unima.core.storage;
 
 import java.util.Optional;
+import java.util.function.Function;
 
-import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 
 /**

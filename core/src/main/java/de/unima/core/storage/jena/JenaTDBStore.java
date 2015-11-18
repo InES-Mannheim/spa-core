@@ -29,7 +29,7 @@ public class JenaTDBStore implements Store {
 		public boolean areTransactionsSupported() {
 			return true;
 		}
-		
+	 	
 		@Override
 		public long beginTransaction(Lock lock) {
 			final ReadWrite readWrite = (lock == Lock.READ ? ReadWrite.READ: ReadWrite.WRITE);

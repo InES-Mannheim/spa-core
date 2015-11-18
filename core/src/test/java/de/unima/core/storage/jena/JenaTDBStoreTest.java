@@ -24,6 +24,7 @@ public class JenaTDBStoreTest {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
+	
 	private JenaTDBStore store;
 
 	@Before
@@ -66,6 +67,7 @@ public class JenaTDBStoreTest {
 				.map(dataset -> dataset.getDefaultModel()
 						.createResource("http://test.de/subject")
 						.addProperty(VCARD.FN, "test")));
+		
 		final List<Statement> statements = store.readWithConnection(connection -> connection.as(Dataset.class)
 				.map(dataset -> dataset.getDefaultModel().listStatements().toList())
 				.orElse(Collections.<Statement>emptyList()))
