@@ -1,16 +1,15 @@
 package de.unima.core.persistence.transformation;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
@@ -74,7 +73,7 @@ public class TransformationTest {
 	}
 	
 	@Test
-	public void transformerShouldContaiNameValueAfterMapping(){
+	public void transformerShouldContainNameValueAfterMapping(){
 		final Function<House, Model> houseToModel = housetransformationWithId.withString("name").asLiteral(Vocabulary.name).get();
 		final House house = new House();
 		final Model model = houseToModel.apply(house);
@@ -112,36 +111,53 @@ public class TransformationTest {
 		final Function<House, Model> houseToModel = housetransformationWithoutId.to(Vocabulary.House).withId("id").asLiteral(Vocabulary.id).get();
 		assertThat(houseToModel.apply(new House()), is(notNullValue()));
 	}
+	
+	@Test
+	public void whenIdFieldIsNotNullThenUseValue(){
+		final Function<House, Model> houseToModel = housetransformationWithId.get();
+		final House house = new House();
+		final String id = house.getId();
+		final Model model = houseToModel.apply(house);
+		final List<String> subjectsInModel = model.listSubjects().toList().stream().map(String::valueOf).collect(Collectors.toList());
+		
+		assertThat(subjectsInModel, hasItem(id));
+	}
+
+	@Test
+	public void whenIdFieldIsNullThenThrowIllegalStateException(){
+		expected.expect(IllegalStateException.class);
+		housetransformationWithoutId.to(Vocabulary.House).withId("nullId").asLiteral(Vocabulary.id).get().apply(new House());
+		
+	}
+
+	@Test
+	public void whenFieldIsNullThenStatementShouldNotBeCreated(){
+		final Function<House, Model> houseToModel = housetransformationWithId.withString("nullId").asLiteral(Vocabulary.nullId).get();
+		final Model model = houseToModel.apply(new House());
+		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.nullId)), is(false));
+	}
+	
+	@Test
+	public void whenAFieldShouldBeReadButCannotBeFoundThenThrowAnIllegalStateException(){
+		expected.expect(IllegalStateException.class);
+		housetransformationWithId.withString("nope").asLiteral(Vocabulary.nullId).get().apply(new House());
+	}
 
 	private final static class House extends AbstractEntity<String> {
 		
 		private String name;
 		private int number;
-		private List<Window> windows;
+		
+		private String nullId;
 
 		public House() {
-			this("test",34,Lists.newArrayList(Window.withRandomThickness(), Window.withRandomThickness()));
+			this("test",34);
 		}
 		
-		public House(String name, int number, List<Window> windows) {
-			super(Vocabulary.House+"/instance/"+Objects.hash(name, number, windows));
+		public House(String name, int number) {
+			super(Vocabulary.House+"/instance/"+Objects.hash(name, number));
 			this.name = name;
 			this.number = number;
-			this.windows = windows;
-		}
-	}
-
-	private final static class Window extends AbstractEntity<String>{
-		
-		private double thickness;
-		
-		public Window(double thickness){
-			super(Vocabulary.Window+"/instance/"+thickness);
-			this.thickness = thickness;
-		}
-		
-		public static Window withRandomThickness(){
-			return new Window(new Random().nextDouble());
 		}
 	}
 	
@@ -151,8 +167,6 @@ public class TransformationTest {
 		final static String name = NS + "name";
 		final static String number = NS + "number";
 		final static String id = NS + "id";
-		final static String containsWindow = NS + "containsWindow";
-		final static String Window = NS + "window";
-		final static String thickness = NS + "thickness";
+		final static String nullId = NS + "nullId";
 	}
 }
