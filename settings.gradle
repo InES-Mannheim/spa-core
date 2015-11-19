@@ -1,3 +1,2 @@
 include 'core'
-include 'api'
 rootProject.name = 'spa-core'
