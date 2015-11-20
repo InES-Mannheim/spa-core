@@ -28,7 +28,7 @@ public interface Repository<T extends Entity<R>, R> {
 	 * 
 	 * @return list of entities
 	 */
-	public List<Entity<R>> findAll();
+	public List<T> findAll();
 
 	/**
 	 * Finds entity with given id.
@@ -37,7 +37,7 @@ public interface Repository<T extends Entity<R>, R> {
 	 *            of the entity
 	 * @return the entity; empty otherwise
 	 */
-	public Optional<Entity<R>> findById(R id);
+	public Optional<T> findById(R id);
 
 	/**
 	 * Deletes all entities.
