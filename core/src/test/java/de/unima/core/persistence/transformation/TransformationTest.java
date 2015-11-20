@@ -18,6 +18,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.google.common.collect.Lists;
+
 import de.unima.core.persistence.AbstractEntity;
 
 public class TransformationTest {
@@ -31,7 +33,7 @@ public class TransformationTest {
 	@Before
 	public void setup(){
 		housetransformationWithoutId = Transformation.map(House.class);
-		housetransformationWithId = Transformation.map(House.class).to(Vocabulary.House).withId("id").asLiteral(Vocabulary.id);
+		housetransformationWithId = Transformation.map(House.class).to(Vocabulary.House).withId("id");
 	}
 	
 	@Test
@@ -108,7 +110,7 @@ public class TransformationTest {
 	
 	@Test
 	public void whenIdFieldIsSpecifiedThenCreateTheTransformation(){
-		final Function<House, Model> houseToModel = housetransformationWithoutId.to(Vocabulary.House).withId("id").asLiteral(Vocabulary.id).get();
+		final Function<House, Model> houseToModel = housetransformationWithoutId.to(Vocabulary.House).withId("id").get();
 		assertThat(houseToModel.apply(new House()), is(notNullValue()));
 	}
 	
@@ -126,7 +128,7 @@ public class TransformationTest {
 	@Test
 	public void whenIdFieldIsNullThenThrowIllegalStateException(){
 		expected.expect(IllegalStateException.class);
-		housetransformationWithoutId.to(Vocabulary.House).withId("nullId").asLiteral(Vocabulary.id).get().apply(new House());
+		housetransformationWithoutId.to(Vocabulary.House).withId("nullId").get().apply(new House());
 		
 	}
 
@@ -142,13 +144,36 @@ public class TransformationTest {
 		expected.expect(IllegalStateException.class);
 		housetransformationWithId.withString("nope").asLiteral(Vocabulary.nullId).get().apply(new House());
 	}
+	
+	@Test
+	public void anotherObjectShouldBeReferencedAsUri(){
+		Function <House, Model> houseToModel = housetransformationWithId.with("window", Window.class).asResource(Vocabulary.hasWindow, window -> window.getId()).get();
+		final Model model = houseToModel.apply(new House());
+		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.hasWindow), ResourceFactory.createResource(Vocabulary.Window+"/1")), is(true));
+	}
+	
+	@Test
+	public void gettersShouldBeUsedBeforeFieldAcess(){
+		Function <House, Model> houseToModel = housetransformationWithId.withString("noProperty").asLiteral(Vocabulary.name).get();
+		final Model model = houseToModel.apply(new House());
+		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.name), ResourceFactory.createTypedLiteral("test")), is(true));
+	}
+	
+	@Test
+	public void aListOfOtherObjectsShouldBeReferencedAsUris(){
+		Function <House, Model> houseToModel = housetransformationWithId.with("windows", Window.class).asResources(Vocabulary.hasWindow, window -> window.getId()).get();
+		final Model model = houseToModel.apply(new House());
+		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.hasWindow), ResourceFactory.createResource(Vocabulary.Window+"/1")), is(true));
+		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.hasWindow), ResourceFactory.createResource(Vocabulary.Window+"/2")), is(true));
+	}
 
-	private final static class House extends AbstractEntity<String> {
+	public final static class House extends AbstractEntity<String> {
 		
+		private String nullId;
 		private String name;
 		private int number;
 		
-		private String nullId;
+		private Window window;
 
 		public House() {
 			this("test",34);
@@ -158,7 +183,24 @@ public class TransformationTest {
 			super(Vocabulary.House+"/instance/"+Objects.hash(name, number));
 			this.name = name;
 			this.number = number;
+			this.window = new Window(Vocabulary.Window+"/1", "Large window on the left");
 		}
+		
+		public String getNoProperty(){
+			return name;
+		}
+		
+		public List<Window> getWindows(){
+			return Lists.newArrayList(new Window(Vocabulary.Window+"/1", "first"), new Window(Vocabulary.Window+"/2", "second"));
+		}
+	}
+	
+	private final static class Window extends AbstractEntity<String> {
+
+		public Window(String id, String label) {
+			super(id, label);
+		}
+		
 	}
 	
 	private final static class Vocabulary{
@@ -166,7 +208,8 @@ public class TransformationTest {
 		final static String House = NS + "House";
 		final static String name = NS + "name";
 		final static String number = NS + "number";
-		final static String id = NS + "id";
 		final static String nullId = NS + "nullId";
+		final static String Window = NS + "Window";
+		final static String hasWindow = NS + "hasWindow";
 	}
 }
