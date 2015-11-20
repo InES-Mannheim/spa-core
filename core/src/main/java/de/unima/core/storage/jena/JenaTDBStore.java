@@ -18,6 +18,10 @@ public class JenaTDBStore implements Store {
 		this.dataset = TDBFactory.createDataset(storageFolder.toString());
 	}
 	
+	public JenaTDBStore() {
+		this.dataset = TDBFactory.createDataset();
+	}
+	
 	@Override
 	public StoreConnection getConnection() {
 		return new JenaTdbStoreConnection();
