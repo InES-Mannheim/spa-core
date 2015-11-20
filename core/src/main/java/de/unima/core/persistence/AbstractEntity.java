@@ -5,14 +5,28 @@ import org.apache.jena.ext.com.google.common.base.Objects;
 public abstract class AbstractEntity<T> implements Entity<T> {
 	
 	protected T id;
+	private String label;
 	
 	public AbstractEntity(T id) {
+		this(id, null);
+	}
+	
+	public AbstractEntity(T id, String label) {
 		this.id = id;
+		this.setLabel(label);
 	}
 	
 	@Override
 	public T getId() {
 		return id;
+	}
+	
+	public String getLabel() {
+		return label;
+	}
+	
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	@Override

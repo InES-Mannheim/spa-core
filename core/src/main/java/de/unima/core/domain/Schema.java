@@ -1,10 +1,13 @@
 package de.unima.core.domain;
 
-import de.unima.core.persistence.Entity;
+import de.unima.core.persistence.AbstractEntity;
 
 /**
- * Terminological data stored in an own context identified by {@link #getId()}.
- *
+ * A schema describes the structure of the data.
  */
-public interface Schema extends Entity<String> {
+public class Schema extends AbstractEntity<String> {
+
+	public Schema(String id) {
+		super(id);
+	}
 }

@@ -1,56 +1,108 @@
 package de.unima.core.domain;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-import de.unima.core.persistence.Entity;
+import org.apache.jena.ext.com.google.common.collect.Maps;
+
+import com.google.common.collect.ImmutableList;
+
+import de.unima.core.persistence.AbstractEntity;
 
 /**
- * A project combines {@link Schema}s and {@link DataPool}s. 
+ * A project combines {@link Schema}s and {@link DataPool}s.
  */
-public interface Project extends Entity<String>{
+public class Project extends AbstractEntity<String>{
 	
+	private final Repository repository;
+	private final Map<String, DataPool> datapools;
+	private final Map<String, Schema> schemas;
+	
+	public Project(String id, Repository repository, String label) {
+		super(id);
+		this.repository = repository;
+		this.datapools = Maps.newHashMap();
+		this.schemas = Maps.newHashMap();
+	}
+
 	/**
 	 * Returns the repository this project belongs to.
 	 * 
 	 * @return {@link Repository} of this project
 	 */
-	Repository getRepository();
+	public Repository getRepository(){
+		return repository;
+	}
 	
 	/**
-	 * Creates a new {@link DataPool}.
+	 * Adds a new {@link DataPool}.
 	 * 
-	 * @param id of the new pool
+	 * @param dataPool which should be added
+	 * @return true if successful; false otherwise
 	 */
-	void createDataPool(String id);
+	public boolean addDataPool(DataPool dataPool){
+		datapools.put(dataPool.getId(), dataPool);
+		return true;
+	}
 	
 	/**
 	 * Returns {@code DataPool}s which belong to this project.
 	 * 
-	 * @return data pools
+	 * @return All {@code DataPool}s
 	 */
-	Set<DataPool> getDataPools();
+	public List<DataPool> getDataPools(){
+		return ImmutableList.<DataPool>builder().addAll(datapools.values()).build();
+	}
 	
 	/**
 	 * Finds the {@code DataPool} with given id.
+	 * 
 	 * @param id of the pool
 	 * @return the pool if found; empty otherwise
 	 */
-	Optional<DataPool> findDataPoolById(String id);
+	public Optional<DataPool> findDataPoolById(String id){
+		return Optional.ofNullable(datapools.get(id));
+	}
+	
+	/**
+	 * Removes and returns the {@code DataPool} with given id.
+	 * 
+	 * @param id of the pool
+	 * @return the pool if found; empty otherwise
+	 */
+	public Optional<DataPool> removeDataPoolById(String id){
+		return Optional.ofNullable(datapools.remove(id));
+	}
 	
 	/**
 	 * Returns all schemas which are linked to 
-	 * @return
+	 * 
+	 * @return all linked schemas
 	 */
-	Set<Schema> getSchemas();
+	public List<Schema> getLinkedSchemas(){
+		return ImmutableList.<Schema>builder().addAll(schemas.values()).build();
+	}
 	
 	/**
-	 * Finds the {@code Schema} with given id.
+	 * Is given schema with given id linked?
+	 * 
+	 * @param id of the schema
+	 */
+	public boolean isSchemaLinked(String id){
+		return findLinkedSchemaById(id).isPresent();
+	}
+	
+	/**
+	 * Finds the schema with given id.
 	 * 
 	 * @param id of the schema
 	 * @return the schema; empty otherwise
 	 */
-	Optional<Schema> findSchemaById(String id);
+	public Optional<Schema> findLinkedSchemaById(String id){
+		return Optional.of(schemas.get(id));
+	}
 	
 	/**
 	 * Adds given schema to this project.
@@ -58,13 +110,27 @@ public interface Project extends Entity<String>{
 	 * @param schema the new schema
 	 * @return true if successful; false otherwise 
 	 */
-	boolean addSchema(Schema schema);
+	public boolean linkSchema(Schema schema){
+		schemas.put(schema.getId(), schema);
+		return true;
+	}
 	
 	/**
-	 * Removes given schema from this project.
+	 * Unlinks given schema from this project.
 	 * 
-	 * @param schema which should be removed
-	 * @return true if successful; false otherwise
+	 * @param id of the schema which should be unlinked
+	 * @return unlinked Schema if successful; empty otherwise
 	 */
-	boolean removeSchema(Schema schema);
+	public Optional<Schema> unlinkSchema(String id){
+		return Optional.ofNullable(schemas.get(id));
+	}
+	
+	/**
+	 * Unlinks all schemas.
+	 * 
+	 * @return all previously linked schemas
+	 */
+	public List<Schema> unlinkAllSchemas(){
+		return schemas.keySet().stream().map(schemas::remove).collect(Collectors.toList());
+	}
 }

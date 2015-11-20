@@ -11,4 +11,19 @@ public interface Entity<T> {
 	 * @return id of the entity
 	 */
 	public T getId();
+	
+	
+	/**
+	 * Sets the label of this entity.
+	 * 
+	 * @return label of this entity
+	 */
+	public void setLabel(String label);
+	
+	/**
+	 * The label of this entity.
+	 * 
+	 * @return label of this entity.
+	 */
+	public String getLabel();
 }
