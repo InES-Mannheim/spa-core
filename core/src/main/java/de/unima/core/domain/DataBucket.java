@@ -13,5 +13,9 @@ public class DataBucket extends AbstractEntity<String> {
 	public DataBucket(String id) {
 		super(id);
 	}
+	
+	public DataBucket(String id, String label) {
+		super(id, label);
+	}
 
 }

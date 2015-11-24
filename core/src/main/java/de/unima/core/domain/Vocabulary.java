@@ -16,6 +16,10 @@ public final class Vocabulary {
 	public static final String containsDataPool = uri("containsDataPool");
 	public static final String linksSchema = uri("linksSchema");
 	public static final String belongsToRepository = uri("belongsToRepository");
+	public static final String DataBucket = uri("DataBucket");
+	public static final String DataPool = uri("DataPool");
+	public static final String containsDataBucket = uri("containsDataBucket");
+	public static final String belongsToProject = uri("belongsToProject");
 	
 	public static String uri(String localName){
 		return NS + localName;

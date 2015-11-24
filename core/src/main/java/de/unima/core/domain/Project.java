@@ -77,6 +77,15 @@ public class Project extends AbstractEntity<String>{
 	}
 	
 	/**
+	 * Removes all {@code DataPool}s from this project.
+	 * 
+	 * @return removed {@code DataPool}s
+	 */
+	public List<DataPool> removeAllDataPools(){
+		return datapools.keySet().stream().map(datapools::remove).collect(Collectors.toList());
+	}
+	
+	/**
 	 * Returns all schemas which are linked to 
 	 * 
 	 * @return all linked schemas

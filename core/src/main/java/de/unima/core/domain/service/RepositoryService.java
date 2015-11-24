@@ -9,10 +9,14 @@ import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.hashids.Hashids;
 
+import de.unima.core.domain.DataBucket;
+import de.unima.core.domain.DataPool;
 import de.unima.core.domain.Project;
 import de.unima.core.domain.Repository;
 import de.unima.core.domain.Schema;
 import de.unima.core.domain.Vocabulary;
+import de.unima.core.domain.repository.DataBucketRepository;
+import de.unima.core.domain.repository.DataPoolRepository;
 import de.unima.core.domain.repository.ProjectRepository;
 import de.unima.core.domain.repository.RepositoryRepository;
 import de.unima.core.domain.repository.SchemaRepository;
@@ -24,19 +28,23 @@ public class RepositoryService {
 
 	private final static String REPOSITORY_URI = "http://www.uni-mannheim.de/spa/Repository/single";
 	
-	private final Repository singleRepository;
+	private final Repository repository;
 	private final Random rand;
 	private final RepositoryRepository repositoryRepository;
 	private final SchemaRepository schemaRepository;
 	private final ProjectRepository projectRepository;
+	private final DataPoolRepository dataPoolRepository;
+	private final DataBucketRepository dataBucketRepository;
 	
 	
 	private RepositoryService(Store store) {
-		this.singleRepository = new Repository(REPOSITORY_URI);
+		this.repository = new Repository(REPOSITORY_URI);
 		this.rand = new Random();
 		this.repositoryRepository = new RepositoryRepository(store);
 		this.schemaRepository = new SchemaRepository(store);
 		this.projectRepository = new ProjectRepository(store);
+		this.dataPoolRepository = new DataPoolRepository(store);
+		this.dataBucketRepository = new DataBucketRepository(store);
 	}
 	
 	public static RepositoryService withDataInMemory(){
@@ -48,71 +56,68 @@ public class RepositoryService {
 	}
 
 	/**
-	 * Creates a new {@link Repository} with a generated URI.
+	 * Creates a new {@link Project} with generated URI.
 	 * 
-	 * The repository is <b>not</b> persisted and must be saved explicitly after
-	 * creation.
+	 * The project and changes to the repository are persisted and don't need to
+	 * be saved explicitly after creation.
 	 * 
-	 * @return new {@code Repository} with generated id
-	 */
-	public Repository createRepositoryWithGeneratedId() {
-		return new Repository(createId(Vocabulary.Repository));
-	}
-	
-	/**
-	 * Creates a new {@link Project} with generated URI for given
-	 * {@link Repository} and label.
-	 * 
-	 * The repository will be updated with given project. The project and
-	 * changes to the repository are persisted and don't need to be saved
-	 * explicitly after creation.
-	 * 
-	 * @param repository
-	 *            where the new project should be added to
 	 * @param label
 	 *            of the new project
+	 * 
 	 * @return new {@code Project} with generated id
 	 */
-	public Project createProjectWithGeneratedIdForRepository(Repository repository, String label) {
+	public Project createProjectWithGeneratedId(String label) {
 		final Project project = new Project(createId(Vocabulary.Project), repository, label);
 		repository.addProject(project);
 		repositoryRepository.save(repository);
 		projectRepository.save(project);
 		return project;
 	}
-
+	
 	/**
-	 * Saves given repository.
+	 * Saves given project.
 	 * 
-	 * This action is cascading: Saving an repository also saves
-	 * all associated schemas and projects.
-	 * 
-	 * @param repository which should be saved
-	 * @return id of the repository; may be empty
-	 * @throws NullPointerException if repository is null
-	 * @throws IllegalArgumentException if id is not set
+	 * @param project which should be saved
+	 * @return id of the project
+	 * @throws IllegalStateException if project could not be saved
 	 */
-	public Optional<String> saveRepository(Repository repository) {
-		schemaRepository.saveAll(repository.getSchemas());
-		projectRepository.saveAll(repository.getProjects());
-		return repositoryRepository.save(repository);
+	public String saveProject(Project project){
+		return projectRepository.save(project).orElseThrow(() -> new IllegalStateException("Could not save project."));
 	}
 	
 	/**
-	 * Deletes given repository.
+	 * Deletes given project.
 	 * 
-	 * This action is cascading: Deleting an repository also deletes
-	 * all associated schemas and projects.
+	 * All schemas linked to this project are unlinked. Further,
+	 * all contained data pools and buckets are removed.
 	 * 
-	 * @param repository which should be deleted
+	 * @param project which should be deleted
 	 * @return number of deleted statements
-	 * @throws NullPointerException if repository is null
-	 * @throws IllegalArgumentException if id is not set
 	 */
-	public Long deleteRepository(Repository repository){
-		schemaRepository.deleteAll(repository.getSchemas());
-		projectRepository.deleteAll(repository.getProjects());
-		return repositoryRepository.delete(repository);
+	public long deleteProject(Project project){
+		final long totalNumberOfDeletedStatements = deleteDataBuckets(project) +
+		deleteDataPools(project) +
+		deleteProjectAndSchemaLinks(project);
+		removeDataPoolsAndSchemasFromProjectEntity(project);
+		return totalNumberOfDeletedStatements;
+	}
+	
+	private long deleteDataBuckets(Project project) {
+		final List<DataBucket> affectedDataBuckets = project.getDataPools().stream().flatMap(pool -> pool.getDataBuckets().stream()).collect(Collectors.toList());
+		return dataBucketRepository.deleteAll(affectedDataBuckets);
+	}
+	
+	private long deleteDataPools(Project project) {
+		return dataPoolRepository.deleteAll(project.getDataPools());
+	}
+	
+	private long deleteProjectAndSchemaLinks(Project project) {
+		return projectRepository.delete(project);
+	}
+
+	private void removeDataPoolsAndSchemasFromProjectEntity(Project project) {
+		project.removeAllDataPools();
+		project.unlinkAllSchemas();
 	}
 
 	/**
@@ -120,20 +125,104 @@ public class RepositoryService {
 	 * a generated schema Id.
 	 * 
 	 * The label is attached to the newly created schema.
-	 * 
-	 * @param repository where the new schema should be attached
 	 * @param label of the new schema
 	 * @param data containing RDF
 	 * @return created schema
 	 * @throws IllegalStateException if schema data could not be stored
 	 */
-	public Schema addNewSchemaDataToRepository(Repository repository, String label, Model data){
+	public Schema addDataAsNewSchema(String label, Model data){
 		final Schema schema = new Schema(createId(Vocabulary.Schema), label);
 		schemaRepository.save(schema);
-		schemaRepository.addDataToSchema(schema, data).orElseThrow(() -> new IllegalStateException("Could not add data to new schema."));
+		schemaRepository.addDataToEntity(schema, data).orElseThrow(() -> new IllegalStateException("Could not add data to new schema."));
 		repository.addSchema(schema);
 		repositoryRepository.save(repository);
 		return schema;
+	}
+	
+	/**
+	 * Replaces data of given schema with given data.
+	 * 
+	 * @param schema which data should be replaced
+	 * @param data containing RDF
+	 * @return saved schema
+	 * @throws IllegalStateException if the schema data could not be stored
+	 */
+	public Schema replaceDataOfSchema(Schema schema, Model data){
+		schemaRepository.save(schema);
+		schemaRepository.addDataToEntity(schema, data).orElseThrow(() -> new IllegalStateException("Could not replace schema data."));
+		if(!repository.findSchemaById(schema.getId()).isPresent()){
+			repository.addSchema(schema);
+			repositoryRepository.save(repository);
+		}
+		return schema;
+	}
+
+	/**
+	 * Unlinks given schema from all affected projects and deletes the
+	 * content.
+	 * 
+	 * @param schema which should be removed
+	 * @return number of statements which have been deleted
+	 */
+	public long deleteSchema(Schema schema){
+		unlinkSchemaFromProjects(repository, schema);
+		repository.removeSchema(schema.getId());
+		return schemaRepository.delete(schema);
+	}
+
+	private void unlinkSchemaFromProjects(Repository repository, Schema schema) {
+		final List<Project> affected = repository.getProjects().stream().filter(project -> project.isSchemaLinked(schema.getId())).map(project -> {
+			project.unlinkSchema(schema.getId());
+			return project;
+		}).collect(Collectors.toList());
+		projectRepository.saveAll(affected);
+	}
+	
+	/**
+	 * Finds data stored for given schema.
+	 * 
+	 * @param schema which data should be returned
+	 * @return the data if present; empty otherwise
+	 */
+	public Optional<Model> findDataForSchema(Schema schema){
+		return schemaRepository.findDataOfEntity(schema);
+	}
+	
+	/**
+	 * Creates a new {@link DataPool} with generated Id and adds it to the given project.
+	 * 
+	 * @param project where to add the created pool
+	 * @param label of the new pool
+	 * @return new {@link DataPool}
+	 */
+	public DataPool createNewDataPoolForProjectWithGeneratedId(Project project, String label){
+		final DataPool datapool = new DataPool(createId(Vocabulary.DataPool), label, project);
+		project.addDataPool(datapool);
+		return datapool;
+	}
+	
+	/**
+	 * Saves given {@code DataPool}.
+	 * 
+	 * @param dataPool which should be saved
+	 * @return id of the pool
+	 */
+	public String saveDataPool(DataPool dataPool){
+		return dataPoolRepository.save(dataPool).orElseThrow(() -> new IllegalStateException("Could not save data pool."));
+	}
+	
+	/**
+	 * Deletes given {@code DataPool}. This includes, the deletion
+	 * of all contained {@code DataBucket}s.
+	 * 
+	 * @param dataPool which should be deleted
+	 */
+	public void deleteDataPool(DataPool dataPool){
+		final Project project = dataPool.getProject();
+		project.removeDataPoolById(dataPool.getId());
+		projectRepository.save(project);
+		dataBucketRepository.deleteAll(dataPool.getDataBuckets());
+		dataPoolRepository.delete(dataPool);
 	}
 	
 	private String createId(String uri) {
@@ -147,54 +236,56 @@ public class RepositoryService {
 	}
 	
 	/**
-	 * Replaces data of given schema with given data.
+	 * Adds given data as new {@code DataBucket} to the given {@code DataPool} and returns
+	 * a generated Id.
 	 * 
-	 * @param repository of the schema
-	 * @param schema which data should be replaced
+	 * @param label of the new data bucket
 	 * @param data containing RDF
-	 * @return saved schema
-	 * @throws IllegalStateException if the schema data could not be stored
+	 * @return created data bucket
+	 * @throws IllegalStateException if the data could not be stored
 	 */
-	public Schema replaceDataOfSchemaInRepository(Repository repository, Schema schema, Model data){
-		schemaRepository.save(schema);
-		schemaRepository.addDataToSchema(schema, data).orElseThrow(() -> new IllegalStateException("Could not save schema data."));
-		if(!repository.findSchemaById(schema.getId()).isPresent()){
-			repository.addSchema(schema);
-			repositoryRepository.save(repository);
-		}
-		return schema;
+	public DataBucket addDataAsNewDataBucketToDataPool(DataPool dataPool, String label, Model data){
+		final DataBucket bucket = new DataBucket(createId(Vocabulary.DataBucket), label);
+		dataBucketRepository.save(bucket);
+		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not add data to new data bucket."));
+		dataPool.addDataBucket(bucket);
+		dataPoolRepository.save(dataPool);
+		return bucket;
+	}
+	
+	/**
+	 * Replaces data of given data bucket with given data.
+	 * 
+	 * @param bucket which data should be replaced
+	 * @param data containing RDF
+	 * @return saved bucket
+	 * @throws IllegalStateException if the bucket data could not be stored
+	 */
+	public DataBucket replaceDataOfDataBucket(DataBucket bucket, Model data){
+		dataBucketRepository.save(bucket);
+		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not replace data bucket data."));
+		return bucket;
 	}
 
 	/**
-	 * Unlinks given schema from all affected projects and deletes the
-	 * content.
+	 * Deletes given data bucket.
 	 * 
-	 * @param repository from which the schema should be removed
-	 * @param schema which should be removed
+	 * @param dataBucket which should be removed
 	 * @return number of statements which have been deleted
 	 */
-	public long deleteSchemaFromRepository(Repository repository, Schema schema){
-		unlinkSchemaFromProjects(repository, schema);
-		repository.removeSchema(schema.getId());
-		return schemaRepository.delete(schema);
-	}
-
-	private void unlinkSchemaFromProjects(Repository repository, Schema schema) {
-		final List<Project> affected = repository.getProjects().stream().filter(project -> project.isSchemaLinked(schema.getId())).map(project -> {
-			project.unlinkSchema(schema.getId());
-			return project;
-		}).collect(Collectors.toList());
-		projectRepository.saveAll(affected);
+	public long deleteDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket){
+		dataPool.removeDataBucketById(dataBucket.getId());
+		dataPoolRepository.save(dataPool);
+		return dataBucketRepository.delete(dataBucket);
 	}
 
 	/**
-	 * Finds data stored for given schema.
+	 * Finds data stored for given {@code DataBucket}.
 	 * 
-	
-	 * @param schema which data should be returned
+	 * @param bucket which data should be returned
 	 * @return the data if present; empty otherwise
 	 */
-	public Optional<Model> findDataForSchema(Schema schema){
-		return schemaRepository.getDataForSchema(schema);
+	public Optional<Model> findDataOfDataBucket(DataBucket bucket){
+		return dataBucketRepository.findDataOfEntity(bucket);
 	}
 }

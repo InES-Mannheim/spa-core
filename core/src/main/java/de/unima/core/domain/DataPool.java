@@ -25,7 +25,11 @@ public class DataPool extends AbstractEntity<String> {
 	final private Project project;
 	
 	public DataPool(String id, Project project) {
-		super(id);
+		this(id, null, project);
+	}
+	
+	public DataPool(String id, String label, Project project) {
+		super(id, label);
 		this.project = project;
 		this.buckets = Maps.newHashMap();
 	}
@@ -67,7 +71,7 @@ public class DataPool extends AbstractEntity<String> {
 	 * 
 	 * @return list of contained data buckets
 	 */
-	public List<DataBucket> getAllDataBuckets(){
+	public List<DataBucket> getDataBuckets(){
 		return ImmutableList.<DataBucket>builder().addAll(buckets.values()).build();
 	}
 	
