@@ -21,7 +21,7 @@ public class Project extends AbstractEntity<String>{
 	private final Map<String, Schema> schemas;
 	
 	public Project(String id, Repository repository, String label) {
-		super(id);
+		super(id, label);
 		this.repository = repository;
 		this.datapools = Maps.newHashMap();
 		this.schemas = Maps.newHashMap();
@@ -122,7 +122,7 @@ public class Project extends AbstractEntity<String>{
 	 * @return unlinked Schema if successful; empty otherwise
 	 */
 	public Optional<Schema> unlinkSchema(String id){
-		return Optional.ofNullable(schemas.get(id));
+		return Optional.ofNullable(schemas.remove(id));
 	}
 	
 	/**

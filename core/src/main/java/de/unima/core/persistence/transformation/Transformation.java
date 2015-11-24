@@ -27,7 +27,7 @@ import org.apache.jena.rdf.model.Statement;
 import com.google.common.base.Throwables;
 
 /**
- * Transformation DSL to transform Java instances into RDF.
+ * Transformation DSL to translate Java instances into RDF.
  */
 public class Transformation<T> {
 
@@ -90,7 +90,7 @@ public class Transformation<T> {
 
 		private void checkIdFieldIsSpecified() {
 			idField.orElseThrow(() -> new IllegalStateException(
-					"Transformation cannot be created because no field of the class is defined as id."));
+					"Transformation cannot be created because id field is undefined."));
 		}
 
 		private String readId(T transformationInstance) {
@@ -199,14 +199,13 @@ public class Transformation<T> {
 		 */
 		@SuppressWarnings("unchecked")
 		public Transformation<T>.SubjectMapping asResources(String predicate, Function<S, String> memberToResource) {
-			caller.addPartialTransformer( type -> subject -> readFieldAsType(type, fieldName, Collection.class)
-												  .map(collection -> { 
-													  // S is assumed to be the type of the members in the collection
-													  return ((Collection<S>) collection).stream()
-															  .map(memberToResource)
-															  .map(resource -> createStatement(subject, createProperty(predicate), createResource(resource)))
-															  .collect(Collectors.toList());
-												  }).orElse(Collections.emptyList()));
+			caller.addPartialTransformer(
+					type -> subject -> readFieldAsType(type, fieldName, Collection.class)
+					        .map(collection -> ((Collection<S>) collection).stream() // S is assumed to be the type of the members in the collection
+					        			.map(memberToResource)
+										.map(resource -> createStatement(subject, createProperty(predicate), createResource(resource)))
+										.collect(Collectors.toList()))
+					        .orElse(Collections.emptyList()));
 			return caller;
 		}
 		

@@ -12,13 +12,18 @@ import java.util.Optional;
 public interface Repository<T extends Entity<R>, R> {
 
 	/**
+	 * Saves all entities.
+	 * 
+	 * @param entities which should be persisted
+	 * @return TODO
+	 */
+	public List<R> saveAll(List<T> entities);
+	
+	/**
 	 * Saves entity.
 	 * 
-	 * If given entity is already known to the system only changes will be
-	 * persisted.
-	 * 
 	 * @param entity
-	 *            should should be persisted
+	 *            which should be persisted
 	 * @return id of the entity if successful; false otherwise
 	 */
 	public Optional<R> save(T entity);
@@ -41,17 +46,18 @@ public interface Repository<T extends Entity<R>, R> {
 
 	/**
 	 * Deletes all entities.
+	 * @param entities TODO
 	 * 
 	 * @return number of deleted statements; empty if not found
 	 */
-	public Optional<Integer> deleteAll();
+	public long deleteAll(List<T> entities);
 
 	/**
-	 * Deletes entity identified by given id.
+	 * Deletes entity.
 	 * 
-	 * @param id
-	 *            of the entity
+	 * @param entity
+	 *            which should be deleted
 	 * @return number of deleted statements; empty if not found
 	 */
-	public Optional<Integer> deleteById(R id);
+	public long delete(T entity);
 }

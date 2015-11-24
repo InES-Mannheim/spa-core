@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ReadWrite;
 import org.apache.jena.tdb.TDBFactory;
+import org.apache.jena.tdb.base.file.Location;
 
 import de.unima.core.storage.Lock;
 import de.unima.core.storage.Store;
@@ -12,14 +13,22 @@ import de.unima.core.storage.StoreConnection;
 
 public class JenaTDBStore implements Store {
 
-	private Dataset dataset;
+	private final Dataset dataset;
 
-	public JenaTDBStore(Path storageFolder) {
-		this.dataset = TDBFactory.createDataset(storageFolder.toString());
+	private JenaTDBStore(Location location){
+		this.dataset = TDBFactory.createDataset(location);
 	}
 	
-	public JenaTDBStore() {
-		this.dataset = TDBFactory.createDataset();
+	public static JenaTDBStore withCommonMemoryLocation(String locationId){
+		return new JenaTDBStore(Location.mem(locationId));
+	}
+	
+	public static JenaTDBStore withUniqueMemoryLocation(){
+		return new JenaTDBStore(Location.mem());
+	}
+	
+	public static JenaTDBStore withFolder(Path pathToFolder){
+		return new JenaTDBStore(Location.create(pathToFolder.toString()));
 	}
 	
 	@Override

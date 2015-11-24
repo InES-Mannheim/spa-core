@@ -10,4 +10,8 @@ public class Schema extends AbstractEntity<String> {
 	public Schema(String id) {
 		super(id);
 	}
+	
+	public Schema(String id, String label) {
+		super(id, label);
+	}
 }

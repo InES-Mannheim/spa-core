@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import de.unima.core.storage.StoreConnection;
+import de.unima.core.storage.StoreSupport;
 import de.unima.core.storage.jena.JenaTDBStore.JenaTdbStoreConnection;
 
 public class JenaTDBStoreTest {
@@ -29,7 +30,7 @@ public class JenaTDBStoreTest {
 
 	@Before
 	public void setUp() throws IOException {
-		this.store = new JenaTDBStore(folder.newFolder().toPath());
+		this.store = JenaTDBStore.withFolder(folder.newFolder().toPath());
 	}
 
 	@Test
@@ -59,6 +60,22 @@ public class JenaTDBStoreTest {
 	@Test
 	public void transactionSupportShouldBeEnabled() {
 		assertThat(store.getConnection().areTransactionsSupported(), is(true));
+	}
+	
+	@Test
+	public void twoMemoryStoresShouldUseTheSameMemoryLocation(){
+		final JenaTDBStore store1 = JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation);
+		final JenaTDBStore store2 = JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation);
+		
+		store1.writeWithConnection(connection -> connection.as(Dataset.class).map(dataset -> 
+			dataset.getDefaultModel().createResource("http://www.test.de/res1").addProperty(VCARD.FN, "test")
+		));
+		
+		final List<Statement> statements = store2.readWithConnection(connection -> connection.as(Dataset.class)
+				.map(dataset -> dataset.getDefaultModel().listStatements().toList())
+				.orElse(Collections.<Statement>emptyList()))
+				.get();
+		assertThat(statements.size(), is(1));
 	}
 
 	@Test

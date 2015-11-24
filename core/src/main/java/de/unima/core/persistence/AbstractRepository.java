@@ -1,23 +1,25 @@
 package de.unima.core.persistence;
 
-import java.nio.file.Path;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.jena.query.Dataset;
 import org.apache.jena.vocabulary.RDFS;
 
 import de.unima.core.persistence.transformation.Transformation;
 import de.unima.core.storage.Store;
-import de.unima.core.storage.jena.JenaTDBStore;
 
 public abstract class AbstractRepository<T extends Entity<R>, R> implements Repository<T, R> {
 	
-	private final Store store;
+	protected final Store store;
 	protected final Transformation<T>.SubjectMapping transformation;
 	
-	public AbstractRepository(Optional<Path> pathToRepository) {
-		this.store = pathToRepository.map(path -> new JenaTDBStore(path)).orElseGet(() -> new JenaTDBStore());
+	public AbstractRepository(Store store) {
+		this.store = store;
 		this.transformation = Transformation.map(getEntityType())
 				.to(getRdfClass())
 				.withId("id")
@@ -31,19 +33,27 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 	protected abstract String getRdfClass();
 	
 	protected void adaptTransformation(){}
+	
+	@Override
+	public List<R> saveAll(List<T> entities) {
+		entities.forEach(this::checkEntityToBeNotNullAndHasIdSet);
+		return store.writeWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
+			return entities.stream().map(entity -> saveEntityInDataSetAsNamedModel(entity, dataset)).collect(Collectors.toList());
+		})).get().get();
+	}
 
 	@Override
 	public Optional<R> save(T entity) {
-		final String graphId = generateGraphId(entity);
+		checkEntityToBeNotNullAndHasIdSet(entity);
 		return store.writeWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
-			dataset.addNamedModel(graphId, transformation.get().apply(entity));
-			return entity.getId();
+			return saveEntityInDataSetAsNamedModel(entity, dataset);
 		})).get();
 	}
 	
-	protected String generateGraphId(T entity){
-		final String id = entity.getId().toString();
-		return id.endsWith("/") ? id + "graph" : id + "/graph";
+	private R saveEntityInDataSetAsNamedModel(T entity, Dataset dataset){
+			final String graphId = generateGraphId(entity);
+			dataset.addNamedModel(graphId, transformation.get().apply(entity));
+			return entity.getId();
 	}
 
 	@Override
@@ -57,16 +67,58 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 	}
 
 	@Override
-	public Optional<Integer> deleteAll() {
-		throw new UnsupportedOperationException();
+	public long deleteAll(List<T> entities) {
+		entities.forEach(this::checkEntityToBeNotNullAndHasIdSet);
+		return store.writeWithConnection(connection -> connection.as(Dataset.class).map(dataset -> 
+			entities.stream().mapToLong(entity -> deleteGraphsOfEntity(entity, dataset)).sum()
+		)).get().get();
 	}
 
 	@Override
-	public Optional<Integer> deleteById(R id) {
-		throw new UnsupportedOperationException();
+	public long delete(T entity) {
+		checkEntityToBeNotNullAndHasIdSet(entity);
+		return store.writeWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
+			return deleteGraphsOfEntity(entity, dataset);
+		})).get().get();
+	}
+
+	private Long deleteGraphsOfEntity(T entity, Dataset dataset) {
+		return deleteGeneratedGraph(dataset, entity) + deleteGraphNamedLikeEntity(entity, dataset);
 	}
 	
-	Store getStore(){
+	private Long deleteGeneratedGraph(Dataset dataset, T entity) {
+		final String graphUri = generateGraphId(entity);
+		return deleteNamedGraph(dataset, graphUri);
+	}
+
+	private Long deleteGraphNamedLikeEntity(T entity, Dataset dataset) {
+		return deleteNamedGraph(dataset, entity.getId().toString());
+	}
+
+	private Long deleteNamedGraph(Dataset dataset, final String graphUri) {
+		return Optional.ofNullable(dataset.getNamedModel(graphUri)).map(model -> {
+			final long size = model.size();
+			dataset.removeNamedModel(graphUri);
+			return size;
+		}).orElse(0l);
+	}
+	
+	protected void checkEntityToBeNotNullAndHasIdSet(T entity) {
+		checkNotNull(entity, "Entity must not be null.");
+		checkArgument(entity.getId() != null,
+				String.format("Id of %s is null. Please set the Id as Uri.", entity.getClass().getSimpleName()));
+	}
+	
+	protected String generateGraphId(T entity){
+		return generateGraphId(entity.getId());
+	}
+	
+	protected String generateGraphId(R id) {
+		final String stringId = id.toString();
+		return stringId.endsWith("/") ? stringId + "graph" : stringId + "/graph";
+	}
+	
+	public final Store getStore(){
 		return store;
 	}
 

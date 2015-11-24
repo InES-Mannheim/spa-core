@@ -10,8 +10,12 @@ public final class Vocabulary {
 	
 	public static final String Repository = uri("Repository");
 	public static final String Project = uri("Project");
+	public static final String Schema = uri("Schema");
 	public static final String containsProject = uri("containsProject");
 	public static final String containsSchema = uri("containsSchema");
+	public static final String containsDataPool = uri("containsDataPool");
+	public static final String linksSchema = uri("linksSchema");
+	public static final String belongsToRepository = uri("belongsToRepository");
 	
 	public static String uri(String localName){
 		return NS + localName;

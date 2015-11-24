@@ -1,18 +1,16 @@
 package de.unima.core.domain.repository;
 
-import java.nio.file.Path;
-import java.util.Optional;
-
 import de.unima.core.domain.Project;
 import de.unima.core.domain.Repository;
 import de.unima.core.domain.Schema;
 import de.unima.core.domain.Vocabulary;
 import de.unima.core.persistence.AbstractRepository;
+import de.unima.core.storage.Store;
 
 public class RepositoryRepository extends AbstractRepository<Repository, String> {
 
-	public RepositoryRepository(Optional<Path> pathToRepository) {
-		super(pathToRepository);
+	public RepositoryRepository(Store store) {
+		super(store);
 		addProjectsAndSchemasToRdfTransformation();
 	}
 
