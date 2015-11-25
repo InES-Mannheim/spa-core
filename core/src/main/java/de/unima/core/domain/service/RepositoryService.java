@@ -247,7 +247,7 @@ public class RepositoryService {
 	public DataBucket addDataAsNewDataBucketToDataPool(DataPool dataPool, String label, Model data){
 		final DataBucket bucket = new DataBucket(createId(Vocabulary.DataBucket), label);
 		dataBucketRepository.save(bucket);
-		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not add data to new data bucket."));
+		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not add data as new data bucket."));
 		dataPool.addDataBucket(bucket);
 		dataPoolRepository.save(dataPool);
 		return bucket;
@@ -261,9 +261,9 @@ public class RepositoryService {
 	 * @return saved bucket
 	 * @throws IllegalStateException if the bucket data could not be stored
 	 */
-	public DataBucket replaceDataOfDataBucket(DataBucket bucket, Model data){
+	public DataBucket replaceDataBucketWithData(DataBucket bucket, Model data){
 		dataBucketRepository.save(bucket);
-		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not replace data bucket data."));
+		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not replace data bucket."));
 		return bucket;
 	}
 
