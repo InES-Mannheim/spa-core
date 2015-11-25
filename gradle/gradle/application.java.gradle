@@ -1,0 +1,25 @@
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+
+	repositories {
+	    jcenter()
+	}
+
+        sourceSets {
+            integration {
+                compileClasspath += sourceSets.test.compileClasspath
+                runtimeClasspath += sourceSets.test.runtimeClasspath
+            } 
+        }
+
+	dependencies {
+	    compile 'com.google.guava:guava:18.0' 
+	    testCompile 'junit:junit:4.12'
+	}
+
+        task intTest(type: Test) {
+            testClassesDir = sourceSets.integration.output.classesDir
+            classpath = sourceSets.integration.runtimeClasspath
+        }
+}
