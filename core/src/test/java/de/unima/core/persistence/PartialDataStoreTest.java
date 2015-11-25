@@ -66,6 +66,16 @@ public class PartialDataStoreTest {
 		final boolean containsStatement = model.get().contains(ResourceFactory.createResource("http://www.test.de/Test/1"), RDFS.label, "test label");
 		assertThat(containsStatement, is(true));
 	}
+	
+	@Test
+	public void whenNamedModelForSchemaIsEmptyThenReturnEmptyOptional(){
+		final String id = "http://www.test.de/House/1";
+		final House entity = new House(id);
+		repository.addDataToEntity(entity, createModelWithSomeData());
+		repository.delete(entity);
+		final Optional<Model> model = repository.findDataOfEntity(entity);
+		assertThat(model.isPresent(), is(false));
+	}
 
 	private Model createModelWithSomeData() {
 		final Model model = ModelFactory.createDefaultModel();

@@ -32,7 +32,7 @@ public abstract class PartialDataStore<T extends Entity<R>, R> extends AbstractR
 
 	public Optional<Model> findDataOfEntity(T entity) {
 		checkEntityToBeNotNullAndHasIdSet(entity);
-		return store.readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> dataset.getNamedModel(entity.getId().toString()))).get();
+		return store.readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> dataset.getNamedModel(entity.getId().toString())).filter(model -> model.size() > 0)).get();
 	}
 
 }
