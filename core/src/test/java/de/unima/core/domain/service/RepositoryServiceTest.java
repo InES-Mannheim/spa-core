@@ -26,15 +26,15 @@ public class RepositoryServiceTest {
 
 	@Before
 	public void setUp(){
-		this.service = RepositoryService.withDataInMemory();
+		this.service = RepositoryService.withDataInUniqueMemory();
 	}
 	
 	@Test
-	public void whenASchemaWasRemovedItShouldNotBeContainedInRepository(){
+	public void whenASchemaWasRemovedCorrespondingDataShouldNotBeContainedInRepository(){
 		final Schema schema = service.addDataAsNewSchema("Test Schema", createModelWithOneStatement());
 		assertThat(service.findDataForSchema(schema).get().size(), is(1l));
 		service.deleteSchema(schema);
-		assertThat(service.findDataForSchema(schema).get().size(), is(0l));
+		assertThat(service.findDataForSchema(schema).isPresent(), is(false));
 	}
 	
 	@Test

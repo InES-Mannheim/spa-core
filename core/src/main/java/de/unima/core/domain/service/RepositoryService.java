@@ -47,8 +47,12 @@ public class RepositoryService {
 		this.dataBucketRepository = new DataBucketRepository(store);
 	}
 	
-	public static RepositoryService withDataInMemory(){
+	public static RepositoryService withDataInSharedMemory(){
 		return new RepositoryService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
+	}
+	
+	public static RepositoryService withDataInUniqueMemory(){
+		return new RepositoryService(JenaTDBStore.withUniqueMemoryLocation());
 	}
 	
 	public static RepositoryService withDataInFolder(Path pathToFolder){
@@ -99,6 +103,7 @@ public class RepositoryService {
 		deleteDataPools(project) +
 		deleteProjectAndSchemaLinks(project);
 		removeDataPoolsAndSchemasFromProjectEntity(project);
+		repository.removeProject(project.getId());
 		return totalNumberOfDeletedStatements;
 	}
 	
