@@ -83,7 +83,7 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 	}
 
 	private Long deleteGraphsOfEntity(T entity, Dataset dataset) {
-		return deleteGeneratedGraph(dataset, entity) + deleteGraphNamedLikeEntity(entity, dataset);
+		return deleteGeneratedGraph(dataset, entity) + deleteGraphNamedLikeEntity(dataset, entity);
 	}
 	
 	private Long deleteGeneratedGraph(Dataset dataset, T entity) {
@@ -91,7 +91,7 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 		return deleteNamedGraph(dataset, graphUri);
 	}
 
-	private Long deleteGraphNamedLikeEntity(T entity, Dataset dataset) {
+	private Long deleteGraphNamedLikeEntity(Dataset dataset, T entity) {
 		return deleteNamedGraph(dataset, entity.getId().toString());
 	}
 
