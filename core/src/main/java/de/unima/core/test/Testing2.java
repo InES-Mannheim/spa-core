@@ -20,7 +20,7 @@ import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
 public class Testing2 {
 
     public static void main(String[] args) {
-        BpmnModelInstance modelInstance = Bpmn.readModelFromFile(new File("tmp/example-spa.bpmn"));
+        BpmnModelInstance modelInstance = Bpmn.readModelFromFile(new File("bin/tmp/example-spa.bpmn"));
         
 //        Collection<ModelElementType> types = modelInstance.getModel().getTypes();
 //        
@@ -88,7 +88,7 @@ public class Testing2 {
         definitions.addChildElement(proc2);
         modelInstance2.setDefinitions(definitions);
         
-        Bpmn.writeModelToFile(new File("tmp/test.bpmn"), modelInstance2);
+        Bpmn.writeModelToFile(new File("bin/tmp/test.bpmn"), modelInstance2);
         
         
 //        System.out.println(modelInstance.getModel().);

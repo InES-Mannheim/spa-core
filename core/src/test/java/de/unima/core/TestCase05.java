@@ -35,9 +35,18 @@ public class TestCase05 {
 	}
 	
 	@Test
-	public void test01_addDataModel() {
+	public void test01_addEmptyProcess() {
 		IOObject<BPMN20File> processModel = new IOObjectImpl<BPMN20File>(new BPMN20FileImpl("tmp/example-spa.bpmn"), new BPMN20ImporterImpl());
-		this.dataPool.addDataModel("SampleBPMN2.0Model", processModel);
+		this.dataPool.addDataModel("Empty BPMN-2.0 Process", processModel);
+				
+		assertTrue(dataPool.updateDataPool());
+		assertTrue(dataPool.isValid());
+	}
+	
+	@Test
+	public void test02_addMailProcess() {
+		IOObject<BPMN20File> processModel = new IOObjectImpl<BPMN20File>(new BPMN20FileImpl("tmp/Mail Process.bpmn"), new BPMN20ImporterImpl());
+		this.dataPool.addDataModel("Mail Process", processModel);
 				
 		assertTrue(dataPool.updateDataPool());
 		assertTrue(dataPool.isValid());
