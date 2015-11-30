@@ -6,12 +6,15 @@ import java.util.Locale;
 
 import org.junit.AfterClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import de.unima.ontmalizer.helper.NamingUtil;
 
 /**
  * @author rahmivolkan
  */
+@RunWith(JUnit4.class)
 public class NamingUtilTest {
     private static Locale defaultLocale = Locale.getDefault();
     

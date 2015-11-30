@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.Writer;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import de.unima.ontmalizer.XSD2OWLMapper;
 
@@ -17,7 +19,7 @@ import de.unima.ontmalizer.XSD2OWLMapper;
  * @author Mustafa
  *
  */
-
+@RunWith(JUnit4.class)
 public class XSD2OWLTest {
 
 	@Test

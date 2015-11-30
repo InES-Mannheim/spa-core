@@ -183,15 +183,15 @@ public class XSD2OWLMapper {
 	public void convertXSD2OWL() {
 		Iterator<XSSimpleType> simpleTypes = schema.iterateSimpleTypes();
 		while (simpleTypes.hasNext())
-			convertSimpleType((XSSimpleType) simpleTypes.next(), null);
+			convertSimpleType(simpleTypes.next(), null);
 	
 		Iterator<XSComplexType> complexTypes = schema.iterateComplexTypes();
 		while (complexTypes.hasNext())
-			convertComplexType((XSComplexType) complexTypes.next(), null);
+			convertComplexType(complexTypes.next(), null);
 	
 		Iterator<XSElementDecl> elements = schema.iterateElementDecls();
 		while (elements.hasNext())
-			convertElement((XSElementDecl) elements.next(), null);
+			convertElement(elements.next(), null);
 		
 		Iterator<XSModelGroupDecl> groups = schema.iterateModelGroupDecls();
 		while (groups.hasNext())
@@ -199,7 +199,7 @@ public class XSD2OWLMapper {
 		
 		Iterator<XSAttGroupDecl> attGroups = schema.iterateAttGroupDecls();
 		while (attGroups.hasNext())
-			convertAttributeGroup((XSAttGroupDecl) attGroups.next());
+			convertAttributeGroup(attGroups.next());
 		
 		createDefaultTextPropertyForMixedClasses();
 	}
@@ -457,7 +457,7 @@ public class XSD2OWLMapper {
 			
 			Iterator<? extends XSAttributeUse> attributeUses = complex.getAttributeUses().iterator();
 			while (attributeUses.hasNext()) {
-				XSAttributeUse attributeUse = (XSAttributeUse) attributeUses.next();
+				XSAttributeUse attributeUse = attributeUses.next();
 				convertAttribute(attributeUse, complexClass);
 			}
 		}	
@@ -513,14 +513,14 @@ public class XSD2OWLMapper {
 				
 			Iterator<? extends XSAttributeUse> attributeUses = complex.getDeclaredAttributeUses().iterator();
 			while (attributeUses.hasNext()) {
-				XSAttributeUse attributeUse = (XSAttributeUse) attributeUses.next();
+				XSAttributeUse attributeUse = attributeUses.next();
 				convertAttribute(attributeUse, complexClass);
 			}
 		}
 		
 		Iterator<? extends XSAttGroupDecl> attGroups = complex.iterateAttGroups();
 		while (attGroups.hasNext()) {
-			XSAttGroupDecl attGroup = (XSAttGroupDecl) attGroups
+			XSAttGroupDecl attGroup = attGroups
 					.next();
 			OntClass attgClass = ontology.createClass(getURI(attGroup));
 			attgClass.addSubClass(complexClass);
@@ -716,7 +716,7 @@ public class XSD2OWLMapper {
 		
 		Iterator<? extends XSAttributeUse> attributes = attGroup.iterateAttributeUses();
 		while (attributes.hasNext())
-			convertAttribute((XSAttributeUse) attributes.next(), attgClass);
+			convertAttribute(attributes.next(), attgClass);
 	}
 	
 	private void createDefaultTextPropertyForMixedClasses() {
