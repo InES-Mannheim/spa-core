@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY BPMN2_Ontology "http://dkm.fbk.eu/index.php/BPMN2_Ontology#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.uni-mannheim.de/spa/bpmn2.0/instances.owl#"
+     xml:base="http://www.uni-mannheim.de/spa/bpmn2.0/instances.owl"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:BPMN2_Ontology="http://dkm.fbk.eu/index.php/BPMN2_Ontology#">
+    <owl:Ontology rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl">
+        <rdfs:comment xml:lang="en">Simple instances for BPMN 2.0 to support the mail sending process.</rdfs:comment>
+        <owl:imports rdf:resource="http://dkm.fbk.eu/index.php/BPMN2_Ontology#"/>
+        <owl:versionIRI rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl/0.0.1"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identiefiedAsNoSpam_EndEvent -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identiefiedAsNoSpam_EndEvent">
+        <rdf:type rdf:resource="&BPMN2_Ontology;endEvent"/>
+        <rdfs:label xml:lang="en">Identified as no spam</rdfs:label>
+        <BPMN2_Ontology:has_incoming rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsNoSpam_SequenceFlow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identiefiedAsSpam_EndEvent -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identiefiedAsSpam_EndEvent">
+        <rdf:type rdf:resource="&BPMN2_Ontology;endEvent"/>
+        <rdfs:label xml:lang="en">Identified as spam</rdfs:label>
+        <BPMN2_Ontology:has_incoming rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsSpam_SequenceFlow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsNoSpam_SequenceFlow -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsNoSpam_SequenceFlow">
+        <rdf:type rdf:resource="&BPMN2_Ontology;sequenceFlow"/>
+        <rdfs:label xml:lang="en">Put into Inbox to identified as no spam Flow</rdfs:label>
+        <BPMN2_Ontology:has_targetRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identiefiedAsNoSpam_EndEvent"/>
+        <BPMN2_Ontology:has_sourceRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identiefiedAsNoSpam_EndEvent"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsSpam_SequenceFlow -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsSpam_SequenceFlow">
+        <rdf:type rdf:resource="&BPMN2_Ontology;sequenceFlow"/>
+        <rdfs:label xml:lang="en">Put into spam folder to identified as spam Flow</rdfs:label>
+        <BPMN2_Ontology:has_targetRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identiefiedAsSpam_EndEvent"/>
+        <BPMN2_Ontology:has_sourceRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#putIntoSpamFolder_ScriptTask"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isNoSpam_SequenceFlow -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isNoSpam_SequenceFlow">
+        <rdf:type rdf:resource="&BPMN2_Ontology;sequenceFlow"/>
+        <rdfs:label xml:lang="en">Spam or no spam to put into inbox Flow</rdfs:label>
+        <BPMN2_Ontology:has_sourceRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpamMailGateway_ExclusiveGateway"/>
+        <BPMN2_Ontology:has_targetRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#putIntoInbox_ScriptTask"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpamMailGateway_ExclusiveGateway -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpamMailGateway_ExclusiveGateway">
+        <rdf:type rdf:resource="&BPMN2_Ontology;exclusiveGateway"/>
+        <rdfs:label xml:lang="en">Spam or no spam</rdfs:label>
+        <BPMN2_Ontology:has_outgoing rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isNoSpam_SequenceFlow"/>
+        <BPMN2_Ontology:has_outgoing rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpam_SequenceFlow"/>
+        <BPMN2_Ontology:has_incoming rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#scanResult_SequenceFlow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpam_SequenceFlow -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpam_SequenceFlow">
+        <rdf:type rdf:resource="&BPMN2_Ontology;sequenceFlow"/>
+        <rdfs:label xml:lang="en">Spam or no spam to put Into Spam Folder Flow</rdfs:label>
+        <BPMN2_Ontology:has_sourceRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpamMailGateway_ExclusiveGateway"/>
+        <BPMN2_Ontology:has_targetRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#putIntoSpamFolder_ScriptTask"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#putIntoInbox_ScriptTask -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#putIntoInbox_ScriptTask">
+        <rdf:type rdf:resource="&BPMN2_Ontology;scriptTask"/>
+        <rdfs:label>Put into inbox</rdfs:label>
+        <BPMN2_Ontology:has_outgoing rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsNoSpam_SequenceFlow"/>
+        <BPMN2_Ontology:has_incoming rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isNoSpam_SequenceFlow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#putIntoSpamFolder_ScriptTask -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#putIntoSpamFolder_ScriptTask">
+        <rdf:type rdf:resource="&BPMN2_Ontology;scriptTask"/>
+        <rdfs:label>Put into spam folder</rdfs:label>
+        <BPMN2_Ontology:has_outgoing rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#identifiedAsSpam_SequenceFlow"/>
+        <BPMN2_Ontology:has_incoming rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpam_SequenceFlow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#scanMail_ScriptTask -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#scanMail_ScriptTask">
+        <rdf:type rdf:resource="&BPMN2_Ontology;scriptTask"/>
+        <rdfs:label xml:lang="en">Scan E-Mail</rdfs:label>
+        <BPMN2_Ontology:has_incoming rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#startScan_SequenceFlow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#scanResult_SequenceFlow -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#scanResult_SequenceFlow">
+        <rdf:type rdf:resource="&BPMN2_Ontology;sequenceFlow"/>
+        <rdfs:label xml:lang="en">Scan to Spam or no Spam Flow</rdfs:label>
+        <BPMN2_Ontology:has_targetRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#isSpamMailGateway_ExclusiveGateway"/>
+        <BPMN2_Ontology:has_sourceRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#scanMail_ScriptTask"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#startScanMail_StartEvent -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#startScanMail_StartEvent">
+        <rdf:type rdf:resource="&BPMN2_Ontology;startEvent"/>
+        <rdfs:label xml:lang="en">Start Scan Process</rdfs:label>
+        <rdfs:comment xml:lang="en">Start scanning of given E-Mail</rdfs:comment>
+        <BPMN2_Ontology:has_outgoing rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#startScan_SequenceFlow"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#startScan_SequenceFlow -->
+
+    <owl:NamedIndividual rdf:about="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#startScan_SequenceFlow">
+        <rdf:type rdf:resource="&BPMN2_Ontology;sequenceFlow"/>
+        <rdfs:label xml:lang="en">Start to Scan E-Mail Flow</rdfs:label>
+        <BPMN2_Ontology:has_targetRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#scanMail_ScriptTask"/>
+        <BPMN2_Ontology:has_sourceRef rdf:resource="http://www.uni-mannheim.de/spa/bpmn2.0/scanMailProcess.owl#startScanMail_StartEvent"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

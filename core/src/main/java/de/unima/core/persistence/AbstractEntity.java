@@ -1,28 +1,34 @@
 package de.unima.core.persistence;
 
 import org.apache.jena.ext.com.google.common.base.Objects;
-import org.apache.jena.ontology.OntModel;
 
 public abstract class AbstractEntity<T> implements Entity<T> {
-
-	private final Store<T> store;
 	
-	public AbstractEntity(Store<T> store){
-		this.store = store;
+	protected T id;
+	private String label;
+	
+	public AbstractEntity(T id) {
+		this(id, null);
 	}
-
+	
+	public AbstractEntity(T id, String label) {
+		this.id = id;
+		this.setLabel(label);
+	}
+	
 	@Override
-	public boolean save() {
-		return store.save(this);
+	public T getId() {
+		return id;
 	}
 	
-	@Override
-	public boolean load() {
-		return store.load(this).map(this::setData).orElse(true);
+	public String getLabel() {
+		return label;
 	}
 	
-	protected abstract boolean setData(OntModel data);
-	
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof Entity)) return false;
