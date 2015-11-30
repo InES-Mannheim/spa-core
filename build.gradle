@@ -1,13 +1,12 @@
 subprojects {
-apply plugin: 'java'
-apply plugin: 'eclipse'
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	
+	repositories {
+		jcenter()
+	}
 
-repositories {
-    jcenter()
-	maven { url "https://jitpack.io" }
-}
-
-dependencies {
-    testCompile 'junit:junit:4.12'
-}
+	dependencies {
+		testCompile 'junit:junit:4.12'
+	}
 }

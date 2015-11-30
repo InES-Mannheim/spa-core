@@ -1,4 +1,4 @@
 include 'core'
 include 'api'
-rootProject.name = 'spa-core'
-include 'core-git-dependencies:ontmalizer'
+include 'ontmalizer'
+rootProject.name = 'spa'
