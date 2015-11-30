@@ -29,11 +29,10 @@ import de.unima.core.domain.DataPool;
 import de.unima.core.domain.Project;
 import de.unima.core.domain.Repository;
 import de.unima.core.domain.Schema;
-import de.unima.core.domain.service.RepositoryService;
 
-public class StorageITest {
+public class StorageIntegrationTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(StorageITest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StorageIntegrationTest.class);
 	
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -65,18 +64,23 @@ public class StorageITest {
 		final Repository repository = project.getRepository();
 		final DataPool dataPool = persistentService.createNewDataPoolForProjectWithGeneratedId(project, "Test data pool with some data.");
 		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Partial process data which is consitent with the schema.", createProcessData());
+		
+		project.linkSchema(schema);
+		persistentService.saveProject(project);
 	
 		assertThat(project.getRepository().getSchemas(), hasItem(schema));
+		assertThat(project.getLinkedSchemas(), hasItem(schema));
 		assertThat(project.getDataPools(), hasItem(dataPool));
 		assertThat(dataPool.getDataBuckets(), hasItem(bucket));
 		
 		persistentService.deleteDataPool(dataPool);
-		
 		assertThat(project.getDataPools(), not(hasItem(dataPool)));
 		assertThat(persistentService.findDataOfDataBucket(bucket).isPresent(), is(false));
+
+		persistentService.deleteSchema(schema);
+		assertThat(project.getLinkedSchemas(), not(hasItem(schema)));
 		
 		persistentService.deleteProject(project);
-		
 		assertThat(repository.getProjects(), not(hasItem(project)));
 	}
 
