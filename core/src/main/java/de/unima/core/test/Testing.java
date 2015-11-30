@@ -1,7 +1,5 @@
 package de.unima.core.test;
 
-import java.util.Map;
-
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 

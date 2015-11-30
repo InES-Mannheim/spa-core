@@ -1,6 +1,5 @@
 package de.unima.core;
 
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;

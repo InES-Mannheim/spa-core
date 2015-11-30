@@ -1,21 +1,11 @@
 package de.unima.core.spp.impl;
 
-import java.util.Iterator;
 import java.util.UUID;
 
 import org.apache.jena.query.Dataset;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ReadWrite;
-import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.tdb.TDB;
 import org.apache.jena.tdb.TDBFactory;
-import org.apache.jena.tdb.TDBLoader;
-
 import de.unima.core.spp.SPPController;
 
 public class SPPControllerImpl implements SPPController{

@@ -7,4 +7,5 @@ dependencies {
     compile 'org.apache.jena:jena-shaded-guava:3.0.0'
     compile 'org.apache.jena:jena-iri:3.0.0'
     compile 'org.apache.jena:jena-tdb:3.0.0'
+	compile 'com.github.srdc:ontmalizer:master-SNAPSHOT'
 }

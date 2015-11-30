@@ -4,6 +4,7 @@ apply plugin: 'eclipse'
 
 repositories {
     jcenter()
+	maven { url "https://jitpack.io" }
 }
 
 dependencies {

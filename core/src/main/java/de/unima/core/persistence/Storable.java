@@ -2,8 +2,6 @@ package de.unima.core.persistence;
 
 import org.apache.jena.ontology.OntModel;
 
-import de.unima.core.io.Importer;
-
 public interface Storable {
 	
 	public boolean load();

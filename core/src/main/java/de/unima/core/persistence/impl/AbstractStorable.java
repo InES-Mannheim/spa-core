@@ -49,10 +49,12 @@ public abstract class AbstractStorable implements Storable {
 		this.store = s;
 	}
 	
+	@Override
 	abstract public OntModel getData();
 	
 	abstract protected void setData(OntModel d);
 	
+	@Override
 	abstract public String getID();
 
 }
