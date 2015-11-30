@@ -2,6 +2,7 @@ package de.unima.core.domain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -110,7 +111,7 @@ public class Project extends AbstractEntity<String>{
 	 * @return the schema; empty otherwise
 	 */
 	public Optional<Schema> findLinkedSchemaById(String id){
-		return Optional.of(schemas.get(id));
+		return Optional.ofNullable(schemas.get(id));
 	}
 	
 	/**
@@ -140,6 +141,8 @@ public class Project extends AbstractEntity<String>{
 	 * @return all previously linked schemas
 	 */
 	public List<Schema> unlinkAllSchemas(){
-		return schemas.keySet().stream().map(schemas::remove).collect(Collectors.toList());
+		final List<Schema> ret = schemas.entrySet().stream().map(Entry::getValue).collect(Collectors.toList());
+		schemas.clear();
+		return ret;
 	}
 }
