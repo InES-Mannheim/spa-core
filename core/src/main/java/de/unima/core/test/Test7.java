@@ -50,6 +50,7 @@ public class Test7 {
     
     Definitions defs = modelInstance.getDefinitions();
     
+    System.out.println(System.currentTimeMillis());
     
     Collection<Process> modelProcesses = modelInstance.getModelElementsByType(Process.class);
 
@@ -234,11 +235,11 @@ public class Test7 {
     
     
     for(Statement s:ontModelInstance.listStatements().toList()){
-    if(s.toString().contains("D5-BC0B-D4"))
-        System.out.println(s.toString());
+//    if(s.toString().contains("D5-BC0B-D4"))
+//        System.out.println(s.toString());
     }
     System.out.println(ontModelInstance.size());
-
+    System.out.println(System.currentTimeMillis());
   }
 
 }
