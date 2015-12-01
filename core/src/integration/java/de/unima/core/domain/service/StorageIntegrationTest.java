@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.jena.ext.com.google.common.collect.Lists;
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.Before;
@@ -29,6 +31,8 @@ import de.unima.core.domain.DataPool;
 import de.unima.core.domain.Project;
 import de.unima.core.domain.Repository;
 import de.unima.core.domain.Schema;
+import de.unima.core.io.impl.BPMN20FileImpl;
+import de.unima.core.io.impl.BPMN20ImporterImpl;
 
 public class StorageIntegrationTest {
 
@@ -83,6 +87,38 @@ public class StorageIntegrationTest {
 		persistentService.deleteProject(project);
 		assertThat(repository.getProjects(), not(hasItem(project)));
 	}
+	
+	@Test
+	public void Bpmn2ImportIntegrationTest() throws IOException{
+		LOGGER.info("BPM 2 import test.");
+		// Import schema as BPMN 2.0
+		final Schema schema = persistentService.addDataAsNewSchema("BPMN 2.0", loadBpmn2Schema());
+		// Create new project with specified schema
+		final Project project = persistentService.createProjectWithGeneratedId("Test Project");
+		project.linkSchema(schema);
+		persistentService.saveProject(project);
+		// Create data pool in project
+		final DataPool dataPool = persistentService.createNewDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
+		final BPMN20ImporterImpl importer = new BPMN20ImporterImpl("http://spa.org/TestProject/SampleDataPool#");
+		// Import data as new data bucket
+		final OntModel importedData = importer.importData(new BPMN20FileImpl(getFilePath("example-spa.bpmn").toString()));
+		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Example SPA process", importedData);
+		// Load data according to data schema; not consistent with data model
+		final Model m = persistentService.findDataOfDataBucket(bucket).get();
+		
+		// assert that statements are loaded
+		final List<String> expectedStringStatements = Lists.newArrayList(
+				"[http://spa.org/TestProject/SampleDataPool#StartEvent_1, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://dkm.fbk.eu/index.php/BPMN2_Ontology#startEvent]"
+				,"[http://spa.org/TestProject/SampleDataPool#StartEvent_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#id, \"StartEvent_1\"]"
+				,"[http://spa.org/TestProject/SampleDataPool#StartEvent_1, http://spa.org/TestProject/SampleDataPool#isInterrupting, \"true\"^^http://www.w3.org/2001/XMLSchema#boolean]"
+				,"[http://spa.org/TestProject/SampleDataPool#Process_1, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://dkm.fbk.eu/index.php/BPMN2_Ontology#process]"
+				,"[http://spa.org/TestProject/SampleDataPool#Process_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#id, \"Process_1\"]"
+				,"[http://spa.org/TestProject/SampleDataPool#Process_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#isExecutable, \"false\"^^http://www.w3.org/2001/XMLSchema#boolean]"
+				,"[http://spa.org/TestProject/SampleDataPool#Process_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#isClosed, \"false\"^^http://www.w3.org/2001/XMLSchema#boolean]"
+				,"[http://spa.org/TestProject/SampleDataPool#Process_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#has_startEvent, http://spa.org/TestProject/SampleDataPool#StartEvent_1]"
+				,"[http://spa.org/TestProject/SampleDataPool#Process_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#processType, \"None\"]");
+		m.listStatements().toList().stream().map(Object::toString).forEach(statement -> assertThat(expectedStringStatements.contains(statement.toString()), is(true)));
+	}
 
 	private Model createProcessData() throws IOException {
 		return loadFileAsModel("scanMailProcessModel.owl");
@@ -93,8 +129,12 @@ public class StorageIntegrationTest {
 	}
 
 	private Model loadFileAsModel(final String fileName) throws IOException {
-		final Path path = Paths.get(this.getClass().getResource("/"+fileName).getFile());
+		final Path path = getFilePath(fileName);
 		final InputStream inputStreamForFile = Files.newInputStream(path, StandardOpenOption.READ);
 		return ModelFactory.createDefaultModel().read(inputStreamForFile, null);
+	}
+
+	private Path getFilePath(final String fileName) {
+		return Paths.get(this.getClass().getResource("/"+fileName).getFile());
 	}
 }
