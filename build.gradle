@@ -1,12 +1,1 @@
-subprojects {
-apply plugin: 'java'
-apply plugin: 'eclipse'
-
-repositories {
-    jcenter()
-}
-
-dependencies {
-    testCompile 'junit:junit:4.12'
-}
-}
+apply from: 'gradle/gradle/application.java.gradle'

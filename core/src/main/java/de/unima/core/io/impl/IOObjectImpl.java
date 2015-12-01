@@ -7,10 +7,10 @@ import de.unima.core.io.Exporter;
 import de.unima.core.io.IOObject;
 import de.unima.core.io.Importer;
 
-public class IOObjectImpl<S extends DataSource> implements IOObject {
+public class IOObjectImpl<S extends DataSource> implements IOObject<S> {
 	
 	private Importer<S> importer;
-	private Exporter exporter;
+	private Exporter<S> exporter;
 	private OntModel data;
 	private S source;
 
