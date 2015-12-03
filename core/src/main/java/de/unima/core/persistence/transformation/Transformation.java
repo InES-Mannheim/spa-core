@@ -60,6 +60,7 @@ public class Transformation<T> {
 		private final List<Function<T, Function<Resource, List<Statement>>>> partialTransformers;
 
 		private Optional<String> idField = Optional.empty();
+		private Function<Model, T> constructor;
 
 		public SubjectMapping(String rdfClass) {
 			this.rdfClass = rdfClass;
@@ -142,6 +143,24 @@ public class Transformation<T> {
 		 */
 		public <S> PredicateAndObjectMapping<S> with(String fieldName, Class<S> fieldType) {
 			return new PredicateAndObjectMapping<>(this, fieldName, fieldType);
+		}
+		
+		/**
+		 * Uses the provided constructor function to create instances from RDF.
+		 * 
+		 * @param constructor which is used to create instances from RDF
+		 */
+		public void createEntityWith(Function<Model, T> constructor) {
+			this.constructor = constructor;
+		}
+
+		/**
+		 * Returns a constructor for creating entities from a model.
+		 * 
+		 * @return constructor function if defined; empty otherwise
+		 */
+		public Optional<Function<Model, T>> inverse() {
+			return Optional.ofNullable(constructor);
 		}
         
 	}

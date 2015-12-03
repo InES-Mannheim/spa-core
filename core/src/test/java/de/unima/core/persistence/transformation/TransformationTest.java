@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
 import org.junit.Before;
@@ -147,24 +148,53 @@ public class TransformationTest {
 	
 	@Test
 	public void anotherObjectShouldBeReferencedAsUri(){
-		Function <House, Model> houseToModel = housetransformationWithId.with("window", Window.class).asResource(Vocabulary.hasWindow, window -> window.getId()).get();
+		final Function <House, Model> houseToModel = housetransformationWithId.with("window", Window.class).asResource(Vocabulary.hasWindow, window -> window.getId()).get();
 		final Model model = houseToModel.apply(new House());
 		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.hasWindow), ResourceFactory.createResource(Vocabulary.Window+"/1")), is(true));
 	}
 	
 	@Test
 	public void gettersShouldBeUsedBeforeFieldAcess(){
-		Function <House, Model> houseToModel = housetransformationWithId.withString("noProperty").asLiteral(Vocabulary.name).get();
+		final Function <House, Model> houseToModel = housetransformationWithId.withString("noProperty").asLiteral(Vocabulary.name).get();
 		final Model model = houseToModel.apply(new House());
 		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.name), ResourceFactory.createTypedLiteral("test")), is(true));
 	}
 	
 	@Test
 	public void aListOfOtherObjectsShouldBeReferencedAsUris(){
-		Function <House, Model> houseToModel = housetransformationWithId.with("windows", Window.class).asResources(Vocabulary.hasWindow, window -> window.getId()).get();
+		final Function <House, Model> houseToModel = housetransformationWithId.with("windows", Window.class).asResources(Vocabulary.hasWindow, window -> window.getId()).get();
 		final Model model = houseToModel.apply(new House());
 		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.hasWindow), ResourceFactory.createResource(Vocabulary.Window+"/1")), is(true));
 		assertThat(model.contains(null, ResourceFactory.createProperty(Vocabulary.hasWindow), ResourceFactory.createResource(Vocabulary.Window+"/2")), is(true));
+	}
+	
+	@Test
+	public void transformationShouldTakeAFunctionWhichIsUsedToCreateAnEntityFromRdf(){
+		final Function<Model, House> constructorFunction = model -> new House();
+		housetransformationWithId.createEntityWith(constructorFunction);
+		final Function<Model, House> constructorFunctionFromTransformation = housetransformationWithId.inverse().get();
+		assertThat(constructorFunctionFromTransformation, is(constructorFunction));
+	}
+	
+	@Test
+	public void whenConstructorFunctionIsDefinedItMustCreateAnInstanceOfAnEntity(){
+		final Function<Model, House> constructorFunction = model -> {
+			final Resource id = model.listSubjects().next();
+			final String name = model.listObjectsOfProperty(id, ResourceFactory.createProperty(Vocabulary.name)).next().asLiteral().getString();
+			final int number = model.listObjectsOfProperty(id, ResourceFactory.createProperty(Vocabulary.number)).next().asLiteral().getInt();
+			return new House(id.toString(), name, number);
+		};
+		housetransformationWithId.createEntityWith(constructorFunction);
+		housetransformationWithId.withInteger("number")
+				.asLiteral(Vocabulary.number)
+				.withString("name")
+				.asLiteral(Vocabulary.name);
+		final House house = new House();
+		
+		final Model model = housetransformationWithId.get().apply(house);
+		final House createdHouse = housetransformationWithId.inverse().get().apply(model);
+		
+		assertThat(createdHouse, is(house));
 	}
 
 	public final static class House extends AbstractEntity<String> {
@@ -180,7 +210,11 @@ public class TransformationTest {
 		}
 		
 		public House(String name, int number) {
-			super(Vocabulary.House+"/instance/"+Objects.hash(name, number));
+			this(Vocabulary.House+"/instance/"+Objects.hash(name, number), name, number);
+		}
+		
+		public House(String id, String name, int number) {
+			super(id);
 			this.name = name;
 			this.number = number;
 			this.window = new Window(Vocabulary.Window+"/1", "Large window on the left");
