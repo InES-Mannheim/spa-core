@@ -40,4 +40,9 @@ public abstract class AbstractEntity<T> implements Entity<T> {
 		return Objects.hashCode(this.getId());
 	}
 	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+" ["+id+"]";
+	}
+	
 }
