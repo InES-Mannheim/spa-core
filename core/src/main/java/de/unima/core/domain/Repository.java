@@ -1,5 +1,6 @@
 package de.unima.core.domain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,13 +16,23 @@ import de.unima.core.persistence.AbstractEntity;
  */
 public class Repository extends AbstractEntity<String> {
 
-	final Map<String, Project> projects;
-	final Map<String, Schema> schemas;
+	private final Map<String, Project> projects;
+	private final Map<String, Schema> schemas;
 	
 	public Repository(String id) {
+		this(id, Collections.emptyList(), Collections.emptyList());
+	}
+	
+	public Repository(String id, List<Project> projects, List<Schema> schemas){
 		super(id);
-		projects = Maps.newHashMap();
-		schemas = Maps.newHashMap();
+		this.projects = Maps.newHashMap();
+		for(Project project:projects){
+			this.projects.put(project.getId(), project);
+		}
+		this.schemas = Maps.newHashMap();
+		for(Schema schema:schemas){
+			this.schemas.put(schema.getId(), schema);
+		}
 	}
 
 	/**

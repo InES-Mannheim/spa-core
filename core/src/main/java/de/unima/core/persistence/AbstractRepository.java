@@ -4,7 +4,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -16,6 +18,8 @@ import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
+
+import com.google.common.collect.Lists;
 
 import de.unima.core.storage.Store;
 
@@ -51,26 +55,33 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 	
 	protected void adaptTransformationToRdf(){}
 	
-	protected Function<Class<T>, Function<Model, T>> createInstanceConstructor(){
+	private final Function<Class<T>, Function<Model, T>> createInstanceConstructor(){
 		return type -> model -> {
-			return extractId.apply(model).map(id -> extractLabel.apply(model).map(label -> {
-				return instantiateWithArguments(type, id.toString(), label);
-			}).orElseGet(() -> {
-				return instantiateWithArguments(type, id.toString());
-			})).orElseThrow(() -> {
-				return new IllegalStateException("Could not create instance because no constructor with single 'id' or tuple of 'id' and 'label' was found.");
-			});
+			final ArrayList<Object> constructorArguments = extractId.apply(model)
+					.map(id -> extractLabel.apply(model)
+						.map(label -> Lists.<Object>newArrayList(id.toString(), label))
+						.orElseGet(() -> Lists.<Object>newArrayList(id.toString())))
+					.orElseGet(() -> new ArrayList<>());
+			constructorArguments.addAll(additionalConstructorArguments().apply(model));
+			return instantiateWithArguments(type, constructorArguments.toArray()).orElseThrow(() -> 
+				new IllegalStateException(String.format("Could not instaniate type '%s' with arguments %s.", 
+						type.getName(), 
+						constructorArguments)));
 		};
 	}
 	
-	private static <R> R instantiateWithArguments(Class<R> type, Object... arguments){
+	protected Function<Model, List<?>> additionalConstructorArguments(){
+		return model -> Collections.emptyList();
+	}
+	
+	private static <R> Optional<R> instantiateWithArguments(Class<R> type, Object... arguments){
 		try {
 			final Constructor<R> constructorWithIdAndLabel = type.getDeclaredConstructor(Arrays.stream(arguments)
 					.map(Object::getClass)
 					.toArray(Class[]::new));
-			return constructorWithIdAndLabel.newInstance(arguments);
+			return Optional.of(constructorWithIdAndLabel.newInstance(arguments));
 		} catch (Exception e){
-			return null;
+			return Optional.empty();
 		}
 	}
 	

@@ -71,7 +71,7 @@ public class ProjectRepositoryTest {
 
 	private Project createProject() {
 		final Repository repo = new Repository("http://www.test.de/Repository/1");
-		final Project project = new Project("http://www.test.de/Project/1", repo , "first");
+		final Project project = new Project("http://www.test.de/Project/1", "first" , repo);
 		project.addDataPool(new DataPool("http://www.test.de/DataPool/1", project));
 		project.linkSchema(new Schema("http://www.test.de/Schema/1"));
 		return project;

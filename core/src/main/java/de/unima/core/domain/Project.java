@@ -1,5 +1,6 @@
 package de.unima.core.domain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,11 +22,21 @@ public class Project extends AbstractEntity<String>{
 	private final Map<String, DataPool> datapools;
 	private final Map<String, Schema> schemas;
 	
-	public Project(String id, Repository repository, String label) {
+	public Project(String id, String label, Repository repository) {
+		this(id, label, repository, Collections.emptyList(), Collections.emptyList());
+	}
+	
+	public Project(String id, String label, Repository repository, List<DataPool> dataPools, List<Schema> schemas){
 		super(id, label);
 		this.repository = repository;
 		this.datapools = Maps.newHashMap();
+		for(DataPool pool:dataPools){
+			this.datapools.put(pool.getId(), pool);
+		}
 		this.schemas = Maps.newHashMap();
+		for(Schema schema:schemas){
+			this.schemas.put(schema.getId(), schema);
+		}
 	}
 
 	/**

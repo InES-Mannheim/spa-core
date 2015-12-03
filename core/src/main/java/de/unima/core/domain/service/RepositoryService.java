@@ -71,7 +71,7 @@ public class RepositoryService {
 	 * @return new {@code Project} with generated id
 	 */
 	public Project createProjectWithGeneratedId(String label) {
-		final Project project = new Project(createId(Vocabulary.Project), repository, label);
+		final Project project = new Project(createId(Vocabulary.Project), label, repository);
 		repository.addProject(project);
 		repositoryRepository.save(repository);
 		projectRepository.save(project);

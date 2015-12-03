@@ -1,5 +1,6 @@
 package de.unima.core.domain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,9 +30,16 @@ public class DataPool extends AbstractEntity<String> {
 	}
 	
 	public DataPool(String id, String label, Project project) {
+		this(id, label, project, Collections.emptyList());
+	}
+	
+	public DataPool(String id, String label, Project project, List<DataBucket> buckets){
 		super(id, label);
 		this.project = project;
 		this.buckets = Maps.newHashMap();
+		for(DataBucket bucket: buckets){
+			this.buckets.put(bucket.getId(), bucket);
+		}
 	}
 
 	/**

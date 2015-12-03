@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -172,6 +173,10 @@ public class AbstractRepositoryTest {
 		assertThat(allNamedModelsEmpty, is(true));
 	}
 	
+	private List<House> create5Houses() {
+		return IntStream.range(0, 5).mapToObj(House::new).collect(Collectors.toList());
+	}
+	
 	private Model getGraphForEntityFromSimpleRepository(final String id) {
 		return simpleHouseRepository.getStore().readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
 			return dataset.getNamedModel(id+"/graph");
@@ -220,12 +225,15 @@ public class AbstractRepositoryTest {
 		assertThat(house.get().getLabel(), is("New"));
 	}
 	
-	private List<House> create5Houses() {
-		return IntStream.range(0, 5).mapToObj(House::new).collect(Collectors.toList());
+	@Test
+	public void whenEntityWithConstructorDependencyToOtherEntityShouldBeLoadedItIsConstructedCorrectly(){
+		final House toBeStoredHouse = new House("http://www.test.de/House/1", "New", new Window("http://www.test.de/Window/1"));
+		houseWithWindowsRepository.save(toBeStoredHouse);
+		final Optional<House> house = houseWithWindowsRepository.findById("http://www.test.de/House/1");
+		assertThat(house.get().getWindows().get(0), is(toBeStoredHouse.getWindows().get(0)));
 	}
 	
 	private static class HouseRepository extends AbstractRepository<House, String>{
-		
 		
 		public HouseRepository(Store store) {
 			super(store);
@@ -243,12 +251,22 @@ public class AbstractRepositoryTest {
 		
 		@Override
 		protected void adaptTransformationToRdf() {
-			transformation.with("windows", Window.class).asResources("http://www.test.de/hasWindow", AbstractEntity::getId);
+			transformation.with("windows", Window.class).asResources("http://www.test.de/hasWindow", AbstractEntity::getId)
+			.with("singleFrontWindow", Window.class).asResource("http://www.test.de/hasSingleFrontWindow", AbstractEntity::getId);
+		}
+		
+		@Override
+		protected Function<Model, List<?>> additionalConstructorArguments() {
+			return model -> {
+				final Window window = new Window(model.listObjectsOfProperty(ResourceFactory.createProperty("http://www.test.de/hasSingleFrontWindow")).next().asResource().toString());
+				return Lists.newArrayList(window);
+			};
 		}
 	}
 	
 	private static class House extends AbstractEntity<String>{
 		private final List<Window> windows;
+		private final Window singleFrontWindow;
 		
 		public House(int id){
 			this("http://www.test.de/House/"+id);
@@ -263,17 +281,21 @@ public class AbstractRepositoryTest {
 		}
 		
 		public House(String id, String name) {
-			super(id, name);
-			windows = Lists.newArrayList(new Window("http://www.test.de/Window/1", "First"),new Window("http://www.test.de/Window/2", "Second"));
+			this(id, name, null);
 		}
 		
 		public House(String id, String name, Window window){
 			super(id, name);
-			this.windows = Lists.newArrayList(window);
+			windows = Lists.newArrayList(new Window("http://www.test.de/Window/1", "First"),new Window("http://www.test.de/Window/2", "Second"));
+			this.singleFrontWindow = window;
 		}
 		
 		public List<Window> getWindows() {
 			return windows;
+		}
+		
+		public Window getSingleFrontWindow(){
+			return singleFrontWindow;
 		}
 	}
 	

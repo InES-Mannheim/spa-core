@@ -25,7 +25,7 @@ public class RepositoryRepositoryTest {
 	@Test
 	public void whenRepositoryIsSavedSchemasAndProjectsUrisMustBeSavedAlso(){
 		final Repository repo = new Repository("http://www.test.de/Repository/1");
-		repo.addProject(new Project("http://www.test.de/Project/1", repo, "First project"));
+		repo.addProject(new Project("http://www.test.de/Project/1", "First project", repo));
 		repo.addSchema(new Schema("http://www.test.de/Schema/1"));
 		repository.save(repo);
 		
@@ -45,7 +45,7 @@ public class RepositoryRepositoryTest {
 	}
 	
 	final void add100Projects(Repository repo){
-		IntStream.range(0, 100).forEach(number -> repo.addProject(new Project("http://www.test.de/Project/"+number, repo, number+" project")));
+		IntStream.range(0, 100).forEach(number -> repo.addProject(new Project("http://www.test.de/Project/"+number, number+" project", repo)));
 	}
 	
 	final void add100Schemas(Repository repo){
