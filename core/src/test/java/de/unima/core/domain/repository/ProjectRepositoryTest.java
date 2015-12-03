@@ -1,7 +1,10 @@
 package de.unima.core.domain.repository;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+
+import java.util.Optional;
 
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
@@ -44,7 +47,6 @@ public class ProjectRepositoryTest {
 		
 		final boolean containsSchemasAndDataPools = projectRepository.getStore().readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
 			final Model namedModel = dataset.getNamedModel("http://www.test.de/Project/1/graph");
-			System.out.println(namedModel);
 			return namedModel.contains(ResourceFactory.createStatement(project, RDF.type, type)) &&
 			namedModel.contains(ResourceFactory.createStatement(project, linksSchema, schema)) &&
 			namedModel.contains(project, RDFS.label, ResourceFactory.createTypedLiteral("first")) &&
@@ -68,7 +70,18 @@ public class ProjectRepositoryTest {
 		
 		assertThat(modelIsEmpty, is(true));
 	}
-
+	
+	@Test
+	public void savedProjectShouldBeSameAsLoadedProject(){
+		final Project project = createProject();
+		projectRepository.save(project);
+		final Optional<Project> loadedProject = projectRepository.findById(project.getId());
+		assertThat(loadedProject.isPresent(),is(true));
+		assertThat(loadedProject.get(), is(equalTo(project)));
+		assertThat(loadedProject.get().getLinkedSchemas().get(0), is(equalTo(project.getLinkedSchemas().get(0))));
+		assertThat(loadedProject.get().getDataPools().get(0), is(equalTo(project.getDataPools().get(0))));
+	}
+	
 	private Project createProject() {
 		final Repository repo = new Repository("http://www.test.de/Repository/1");
 		final Project project = new Project("http://www.test.de/Project/1", "first" , repo);

@@ -3,7 +3,6 @@ package de.unima.core.persistence;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,6 +11,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.NodeIterator;
@@ -63,25 +63,21 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 						.orElseGet(() -> Lists.<Object>newArrayList(id.toString())))
 					.orElseGet(() -> new ArrayList<>());
 			constructorArguments.addAll(additionalConstructorArguments().apply(model));
-			return instantiateWithArguments(type, constructorArguments.toArray()).orElseThrow(() -> 
-				new IllegalStateException(String.format("Could not instaniate type '%s' with arguments %s.", 
-						type.getName(), 
-						constructorArguments)));
+			return instantiateWithArguments(type, constructorArguments.toArray()); 
 		};
 	}
 	
-	protected Function<Model, List<?>> additionalConstructorArguments(){
+	protected Function<Model, List<? extends Object>> additionalConstructorArguments(){
 		return model -> Collections.emptyList();
 	}
 	
-	private static <R> Optional<R> instantiateWithArguments(Class<R> type, Object... arguments){
+	private static <R> R instantiateWithArguments(Class<R> type, Object... arguments){
 		try {
-			final Constructor<R> constructorWithIdAndLabel = type.getDeclaredConstructor(Arrays.stream(arguments)
-					.map(Object::getClass)
-					.toArray(Class[]::new));
-			return Optional.of(constructorWithIdAndLabel.newInstance(arguments));
+			return ConstructorUtils.invokeConstructor(type, arguments);
 		} catch (Exception e){
-			return Optional.empty();
+				throw new IllegalStateException(String.format("Could not instaniate type '%s' with arguments %s.", 
+						type.getName(), 
+						Arrays.toString(arguments)), e);
 		}
 	}
 	

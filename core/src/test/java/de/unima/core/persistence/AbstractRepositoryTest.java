@@ -264,7 +264,7 @@ public class AbstractRepositoryTest {
 		}
 	}
 	
-	private static class House extends AbstractEntity<String>{
+	public static class House extends AbstractEntity<String>{
 		private final List<Window> windows;
 		private final Window singleFrontWindow;
 		
@@ -299,7 +299,7 @@ public class AbstractRepositoryTest {
 		}
 	}
 	
-	private static class Window extends AbstractEntity<String>{
+	public static class Window extends AbstractEntity<String>{
 		public Window(String id){
 			super(id);
 		}

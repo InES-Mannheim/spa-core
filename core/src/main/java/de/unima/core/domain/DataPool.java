@@ -22,8 +22,16 @@ import de.unima.core.persistence.AbstractEntity;
  */
 public class DataPool extends AbstractEntity<String> {
 
-	final Map<String, DataBucket> buckets;
-	final private Project project;
+	private final Map<String, DataBucket> buckets;
+	private Project project;
+	
+	public DataPool(String id){
+		this(id, null, null);
+	}
+	
+	public DataPool(String id, String label){
+		this(id, label, null);
+	}
 	
 	public DataPool(String id, Project project) {
 		this(id, null, project);
