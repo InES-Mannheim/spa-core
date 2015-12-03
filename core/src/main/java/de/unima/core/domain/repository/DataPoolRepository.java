@@ -14,7 +14,7 @@ public class DataPoolRepository extends AbstractRepository<DataPool, String>{
 	}
 	
 	@Override
-	protected void adaptTransformation() {
+	protected void adaptTransformationToRdf() {
 		transformation.with("dataBuckets", DataBucket.class)
 			.asResources(Vocabulary.containsDataBucket, DataBucket::getId)
 			.with("project", Project.class)

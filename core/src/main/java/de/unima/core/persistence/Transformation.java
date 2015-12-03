@@ -1,6 +1,6 @@
-package de.unima.core.persistence.transformation;
+package de.unima.core.persistence;
 
-import static de.unima.core.persistence.transformation.Transformation.TransformationSupport.readFieldAsType;
+import static de.unima.core.persistence.Transformation.TransformationSupport.readFieldAsType;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;

@@ -15,7 +15,7 @@ public class ProjectRepository extends AbstractRepository<Project, String>{
 	}
 	
 	@Override
-	protected void adaptTransformation() {
+	protected void adaptTransformationToRdf() {
 		transformation.with("dataPools", DataPool.class)
 			.asResources(Vocabulary.containsDataPool, dataPool -> dataPool.getId())
 			.with("linkedSchemas", Schema.class)

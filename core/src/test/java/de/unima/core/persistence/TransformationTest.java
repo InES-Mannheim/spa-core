@@ -1,4 +1,4 @@
-package de.unima.core.persistence.transformation;
+package de.unima.core.persistence;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -20,8 +20,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.google.common.collect.Lists;
-
-import de.unima.core.persistence.AbstractEntity;
 
 public class TransformationTest {
 

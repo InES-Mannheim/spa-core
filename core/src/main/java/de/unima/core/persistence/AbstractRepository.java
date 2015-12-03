@@ -3,20 +3,36 @@ package de.unima.core.persistence;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.jena.query.Dataset;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
 
-import de.unima.core.persistence.transformation.Transformation;
 import de.unima.core.storage.Store;
 
 public abstract class AbstractRepository<T extends Entity<R>, R> implements Repository<T, R> {
 	
 	protected final Store store;
+	
 	protected final Transformation<T>.SubjectMapping transformation;
+	
+	protected final Function<Model, Optional<Resource>> extractId = model -> {
+		final ResIterator subjects = model.listSubjects();
+		return subjects.hasNext() ? Optional.ofNullable(subjects.next()) : Optional.empty(); 
+	};
+	protected final Function<Model, Optional<String>> extractLabel = model -> {
+		final NodeIterator objects = model.listObjectsOfProperty(RDFS.label);
+		return objects.hasNext() ? Optional.ofNullable(objects.next().asLiteral().getString()) : Optional.empty();
+	};
 	
 	public AbstractRepository(Store store) {
 		this.store = store;
@@ -25,14 +41,38 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 				.withId("id")
 				.withString("label")
 				.asLiteral(RDFS.label.toString());
-		adaptTransformation();
+		adaptTransformationToRdf();
+		transformation.createEntityWith(createInstanceConstructor().apply(getEntityType()));
 	}
 	
 	protected abstract Class<T> getEntityType();
 	
 	protected abstract String getRdfClass();
 	
-	protected void adaptTransformation(){}
+	protected void adaptTransformationToRdf(){}
+	
+	protected Function<Class<T>, Function<Model, T>> createInstanceConstructor(){
+		return type -> model -> {
+			return extractId.apply(model).map(id -> extractLabel.apply(model).map(label -> {
+				return instantiateWithArguments(type, id.toString(), label);
+			}).orElseGet(() -> {
+				return instantiateWithArguments(type, id.toString());
+			})).orElseThrow(() -> {
+				return new IllegalStateException("Could not create instance because no constructor with single 'id' or tuple of 'id' and 'label' was found.");
+			});
+		};
+	}
+	
+	private static <R> R instantiateWithArguments(Class<R> type, Object... arguments){
+		try {
+			final Constructor<R> constructorWithIdAndLabel = type.getDeclaredConstructor(Arrays.stream(arguments)
+					.map(Object::getClass)
+					.toArray(Class[]::new));
+			return constructorWithIdAndLabel.newInstance(arguments);
+		} catch (Exception e){
+			return null;
+		}
+	}
 	
 	@Override
 	public List<R> saveAll(List<T> entities) {
@@ -51,9 +91,9 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 	}
 	
 	private R saveEntityInDataSetAsNamedModel(T entity, Dataset dataset){
-			final String graphId = generateGraphId(entity);
-			dataset.addNamedModel(graphId, transformation.get().apply(entity));
-			return entity.getId();
+		final String graphId = generateGraphId(entity);
+		dataset.addNamedModel(graphId, transformation.get().apply(entity));
+		return entity.getId();
 	}
 
 	@Override
@@ -63,7 +103,12 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 
 	@Override
 	public Optional<T> findById(R id) {
-		throw new UnsupportedOperationException();
+		checkNotNull(id, "Could not find entity as id is null.");
+		return store.readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
+			final Model model = dataset.getNamedModel(generateGraphId(id));
+			if(model.isEmpty()) return null;
+			return transformation.inverse().get().apply(model);
+		})).get();
 	}
 
 	@Override
@@ -82,6 +127,12 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 		})).get().get();
 	}
 
+	protected final void checkEntityToBeNotNullAndHasIdSet(T entity) {
+		checkNotNull(entity, "Entity must not be null.");
+		checkArgument(entity.getId() != null,
+				String.format("Id of %s is null. Please set the Id as Uri.", entity.getClass().getSimpleName()));
+	}
+	
 	private Long deleteGraphsOfEntity(T entity, Dataset dataset) {
 		return deleteGeneratedGraph(dataset, entity) + deleteGraphNamedLikeEntity(dataset, entity);
 	}
@@ -89,6 +140,15 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 	private Long deleteGeneratedGraph(Dataset dataset, T entity) {
 		final String graphUri = generateGraphId(entity);
 		return deleteNamedGraph(dataset, graphUri);
+	}
+	
+	private String generateGraphId(T entity){
+		return generateGraphId(entity.getId());
+	}
+	
+	private String generateGraphId(R id) {
+		final String stringId = id.toString();
+		return stringId.endsWith("/") ? stringId + "graph" : stringId + "/graph";
 	}
 
 	private Long deleteGraphNamedLikeEntity(Dataset dataset, T entity) {
@@ -101,21 +161,6 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 			dataset.removeNamedModel(graphUri);
 			return size;
 		}).orElse(0l);
-	}
-	
-	protected void checkEntityToBeNotNullAndHasIdSet(T entity) {
-		checkNotNull(entity, "Entity must not be null.");
-		checkArgument(entity.getId() != null,
-				String.format("Id of %s is null. Please set the Id as Uri.", entity.getClass().getSimpleName()));
-	}
-	
-	protected String generateGraphId(T entity){
-		return generateGraphId(entity.getId());
-	}
-	
-	protected String generateGraphId(R id) {
-		final String stringId = id.toString();
-		return stringId.endsWith("/") ? stringId + "graph" : stringId + "/graph";
 	}
 	
 	public final Store getStore(){

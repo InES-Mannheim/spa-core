@@ -2,6 +2,7 @@ package de.unima.core.persistence;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -177,6 +178,48 @@ public class AbstractRepositoryTest {
 		})).get().get();
 	}
 	
+	@Test
+	public void whenEntityIsLoadedItShouldBeEmptyIfNotFound(){
+		final Optional<House> house = simpleHouseRepository.findById("http://www.test.de/House/notFound");
+		assertThat(house.isPresent(), is(false));
+	}
+	
+	@Test
+	public void whenEntityIsLoadedItShouldNotBeEmptyIfFound(){
+		final House toBeStoredHouse = new House("http://www.test.de/House/1", "House 1");
+		simpleHouseRepository.save(toBeStoredHouse);
+		final Optional<House> house = simpleHouseRepository.findById("http://www.test.de/House/1");
+		assertThat(house.isPresent(), is(true));
+	}
+	
+	@Test
+	public void whenEntityIsLoadedItShouldBeEqualToStoredEntity(){
+		final House toBeStoredHouse = new House("http://www.test.de/House/1", "House 1");
+		simpleHouseRepository.save(toBeStoredHouse);
+		final Optional<House> loadedHouse = simpleHouseRepository.findById(toBeStoredHouse.getId());
+		assertThat(loadedHouse.get(), is(toBeStoredHouse));
+		assertThat(loadedHouse.get().getLabel(), is(toBeStoredHouse.getLabel()));
+	}
+	
+	@Test
+	public void whenEntityHasNoLabelItShouldBeLoadedAnyWay(){
+		final House toBeStoredHouse = new House("http://www.test.de/House/1");
+		simpleHouseRepository.save(toBeStoredHouse);
+		final Optional<House> house = simpleHouseRepository.findById("http://www.test.de/House/1");
+		assertThat(house.get(), is(toBeStoredHouse));
+		assertThat(house.get().getLabel(), is(nullValue()));
+	}
+	
+	@Test
+	public void whenTwoEntitiesAreStoredAndOneIsLoadedItShouldBeTheRightOne(){
+		final House toBeStoredHouse = new House("http://www.test.de/House/1", "New");
+		simpleHouseRepository.save(toBeStoredHouse);
+		simpleHouseRepository.save(new House("http://www.test.de/House/2", "Other"));
+		final Optional<House> house = simpleHouseRepository.findById("http://www.test.de/House/1");
+		assertThat(house.get(), is(toBeStoredHouse));
+		assertThat(house.get().getLabel(), is("New"));
+	}
+	
 	private List<House> create5Houses() {
 		return IntStream.range(0, 5).mapToObj(House::new).collect(Collectors.toList());
 	}
@@ -199,7 +242,7 @@ public class AbstractRepositoryTest {
 		}
 		
 		@Override
-		protected void adaptTransformation() {
+		protected void adaptTransformationToRdf() {
 			transformation.with("windows", Window.class).asResources("http://www.test.de/hasWindow", AbstractEntity::getId);
 		}
 	}
@@ -222,6 +265,11 @@ public class AbstractRepositoryTest {
 		public House(String id, String name) {
 			super(id, name);
 			windows = Lists.newArrayList(new Window("http://www.test.de/Window/1", "First"),new Window("http://www.test.de/Window/2", "Second"));
+		}
+		
+		public House(String id, String name, Window window){
+			super(id, name);
+			this.windows = Lists.newArrayList(window);
 		}
 		
 		public List<Window> getWindows() {
