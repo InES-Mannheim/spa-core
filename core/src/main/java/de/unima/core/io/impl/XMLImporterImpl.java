@@ -3,31 +3,26 @@ package de.unima.core.io.impl;
 import java.io.File;
 
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.ModelFactory;
 
 import de.unima.core.io.Importer;
-import tr.com.srdc.ontmalizer.XSD2OWLMapper;
+import de.unima.core.io.XMLFile;
+import de.unima.ontmalizer.XML2OWLMapper;
 
-public class XMLImporterImpl implements Importer<XSD2001FileImpl> {
+public class XMLImporterImpl implements Importer<XMLFile> {
 	
 	private String id;
-	private OntModel typeModel;
+	private OntModel schemeOntologyModel;
 	
-	public XMLImporterImpl(XSD2001FileImpl xsdSource) {
-		XSD2OWLMapper mapping = new XSD2OWLMapper(new File("xes.xsd"));
-	    mapping.setObjectPropPrefix("");
-	    mapping.setDataTypePropPrefix("");
-	    mapping.convertXSD2OWL();
-	    (OntModel)mapping.getOntology();
+	public XMLImporterImpl(OntModel schemeOntologyModel) {
+		this.schemeOntologyModel = schemeOntologyModel;
 	}
 
 	@Override
-	public OntModel importData(XSD2001FileImpl xmlSource) {
-		
-		OntModel m = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
-		// TODO Implement the import from BPMN-Data into OntModel
-		return m;
+	public OntModel importData(XMLFile xmlSource) {
+		XML2OWLMapper mapping = new XML2OWLMapper(new File(xmlSource.getPath()), schemeOntologyModel);
+	    mapping.convertXML2OWL();
+	    schemeOntologyModel.add(mapping.getModel());
+		return schemeOntologyModel;
 	}
 
 	@Override
