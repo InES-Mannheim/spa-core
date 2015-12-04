@@ -1,4 +1,5 @@
 dependencies {
+    compile project(':ontmalizer')
     compile project(':api')
 
     compile 'org.camunda.bpm.model:camunda-bpmn-model:7.3.0'
