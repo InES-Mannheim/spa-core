@@ -1,8 +1,11 @@
 package de.unima.ontmalizer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -211,6 +214,10 @@ public class XML2OWLMapper {
 		this(xmlFile, new XSD2OWLMapper(ontology));
 	}
 	
+	public XML2OWLMapper(File xmlFile, OntModel ontology) {
+		this(xmlFile, new XSD2OWLMapper(ontology));
+	}
+	
 	/**
 	 * Converts the XML instance to a RDF data model. 
 	 */
@@ -312,9 +319,11 @@ public class XML2OWLMapper {
 					Literal value = model.createTypedLiteral(node.getFirstChild().getNodeValue().trim(), objectType.getResource().getURI());
 					subject.addLiteral(prop, value);
 				}
+				
+				traverseAttributes(node, object, objectType.getResource());
 			}	
 			
-			traverseAttributes(node, object, objectType.getResource());
+			
 
 		}
 		// This case is only valid for instances of mixed classes

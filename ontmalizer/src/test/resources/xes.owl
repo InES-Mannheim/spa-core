@@ -1,0 +1,572 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:dtype="http://www.srdc.com.tr/ontmalizer#"
+    xmlns="http://code.deckfour.org/xes#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" > 
+  <rdf:Description rdf:nodeID="A0">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#openxes.version"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#xes.version">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A1">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#classifier"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#GlobalsType">
+    <rdfs:subClassOf rdf:nodeID="A2"/>
+    <rdfs:subClassOf rdf:nodeID="A3"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributableType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A4">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#name"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A5">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeBooleanType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#boolean"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#list">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A3">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#scope"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeIntType">
+    <rdfs:subClassOf rdf:nodeID="A6"/>
+    <rdfs:subClassOf rdf:nodeID="A7"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributeType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A8">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#list"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A9">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#global"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#log">
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#LogType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A10">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A11">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#string"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#ClassifierType">
+    <rdfs:subClassOf rdf:nodeID="A12"/>
+    <rdfs:subClassOf rdf:nodeID="A13"/>
+    <rdfs:subClassOf rdf:nodeID="A14"/>
+    <rdfs:subClassOf rdf:nodeID="A15"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeFloatType">
+    <rdfs:subClassOf rdf:nodeID="A10"/>
+    <rdfs:subClassOf rdf:nodeID="A16"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributeType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#id">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A17">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#Name"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#key"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A18">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#float"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeType">
+    <rdfs:subClassOf rdf:nodeID="A17"/>
+    <rdfs:subClassOf rdf:nodeID="A19"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributableType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A20">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A21">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#token"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#xes.features"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#LogType">
+    <rdfs:subClassOf rdf:nodeID="A9"/>
+    <rdfs:subClassOf rdf:nodeID="A22"/>
+    <rdfs:subClassOf rdf:nodeID="A23"/>
+    <rdfs:subClassOf rdf:nodeID="A24"/>
+    <rdfs:subClassOf rdf:nodeID="A0"/>
+    <rdfs:subClassOf rdf:nodeID="A25"/>
+    <rdfs:subClassOf rdf:nodeID="A26"/>
+    <rdfs:subClassOf rdf:nodeID="A21"/>
+    <rdfs:subClassOf rdf:nodeID="A27"/>
+    <rdfs:subClassOf rdf:nodeID="A28"/>
+    <rdfs:subClassOf rdf:nodeID="A29"/>
+    <rdfs:subClassOf rdf:nodeID="A30"/>
+    <rdfs:subClassOf rdf:nodeID="A31"/>
+    <rdfs:subClassOf rdf:nodeID="A1"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="A32"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#ElementType"/>
+    <rdfs:subClassOf rdf:nodeID="A33"/>
+    <rdfs:subClassOf rdf:nodeID="A34"/>
+    <rdfs:subClassOf rdf:nodeID="A35"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A19">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#key"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A36">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeListType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#list"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A30">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#global"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#extension">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeContainerType">
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributableType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#ElementType">
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributableType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A16">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#int">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#boolean">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#prefix">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#float">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A37">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#float"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A38">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A23">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#xes.features"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A39">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#string"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#string">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeStringType">
+    <rdfs:subClassOf rdf:nodeID="A40"/>
+    <rdfs:subClassOf rdf:nodeID="A41"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributeType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A42">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeFloatType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#float"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A25">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#GlobalsType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#global"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A43">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A44">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#int"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#scope">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#uri">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#ExtensionType">
+    <rdfs:subClassOf rdf:nodeID="A45"/>
+    <rdfs:subClassOf rdf:nodeID="A46"/>
+    <rdfs:subClassOf rdf:nodeID="A47"/>
+    <rdfs:subClassOf rdf:nodeID="A48"/>
+    <rdfs:subClassOf rdf:nodeID="A49"/>
+    <rdfs:subClassOf rdf:nodeID="A4"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A40">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#date">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A50">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#event"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A31">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#xes.version"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A45">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#uri"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A51">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#id"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A52">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#int"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A41">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A22">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#extension"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A53">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A54">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeIntType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#int"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#keys">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#TraceType">
+    <rdfs:subClassOf rdf:nodeID="A50"/>
+    <rdfs:subClassOf rdf:nodeID="A55"/>
+    <rdfs:subClassOf rdf:nodeID="A56"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#ElementType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#EventType">
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#ElementType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A55">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#event"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A33">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#xes.version"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A46">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#uri"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A57">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#id"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A13">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#keys"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A58">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributableType">
+    <rdfs:subClassOf rdf:nodeID="A36"/>
+    <rdfs:subClassOf rdf:nodeID="A37"/>
+    <rdfs:subClassOf rdf:nodeID="A57"/>
+    <rdfs:subClassOf rdf:nodeID="A8"/>
+    <rdfs:subClassOf rdf:nodeID="A18"/>
+    <rdfs:subClassOf rdf:nodeID="A59"/>
+    <rdfs:subClassOf rdf:nodeID="A51"/>
+    <rdfs:subClassOf rdf:nodeID="A60"/>
+    <rdfs:subClassOf rdf:nodeID="A5"/>
+    <rdfs:subClassOf rdf:nodeID="A61"/>
+    <rdfs:subClassOf rdf:nodeID="A62"/>
+    <rdfs:subClassOf rdf:nodeID="A54"/>
+    <rdfs:subClassOf rdf:nodeID="A39"/>
+    <rdfs:subClassOf rdf:nodeID="A63"/>
+    <rdfs:subClassOf rdf:nodeID="A64"/>
+    <rdfs:subClassOf rdf:nodeID="A52"/>
+    <rdfs:subClassOf rdf:nodeID="A65"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="A66"/>
+    <rdfs:subClassOf rdf:nodeID="A44"/>
+    <rdfs:subClassOf rdf:nodeID="A67"/>
+    <rdfs:subClassOf rdf:nodeID="A42"/>
+    <rdfs:subClassOf rdf:nodeID="A68"/>
+    <rdfs:subClassOf rdf:nodeID="A11"/>
+    <rdfs:subClassOf rdf:nodeID="A69"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A6">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A69">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#date"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A67">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#container"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#name">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#global">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A28">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#extension"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeBooleanType">
+    <rdfs:subClassOf rdf:nodeID="A58"/>
+    <rdfs:subClassOf rdf:nodeID="A70"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributeType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A56">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#EventType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#event"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A32">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#trace"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A47">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#NCName"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#prefix"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A68">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeIDType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#id"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A14">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#NCName"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#name"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#container">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A70">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A7">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#value"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A65">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#date"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A64">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#container"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#classifier">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#openxes.version">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A35">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#ExtensionType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#extension"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#xes.features">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A12">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#token"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#keys"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A27">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#trace"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A48">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#prefix"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A66">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#boolean"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#key">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A24">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#classifier"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeIDType">
+    <rdfs:subClassOf rdf:nodeID="A20"/>
+    <rdfs:subClassOf rdf:nodeID="A38"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributeType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#trace">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A63">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#date"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A61">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#AttributeContainerType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#container"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A15">
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#name"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A2">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#NCName"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#scope"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#value">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A29">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#openxes.version"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeListType">
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributeType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A34">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#TraceType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#trace"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A49">
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#NCName"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#name"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A62">
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">0</owl:minCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#boolean"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#event">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://code.deckfour.org/xes#AttributeDateType">
+    <rdfs:subClassOf rdf:nodeID="A43"/>
+    <rdfs:subClassOf rdf:nodeID="A53"/>
+    <rdfs:subClassOf rdf:resource="http://code.deckfour.org/xes#AttributeType"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A60">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#string"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A59">
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2147483647</owl:maxCardinality>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#list"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A26">
+    <owl:allValuesFrom rdf:resource="http://code.deckfour.org/xes#ClassifierType"/>
+    <owl:onProperty rdf:resource="http://code.deckfour.org/xes#classifier"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+</rdf:RDF>

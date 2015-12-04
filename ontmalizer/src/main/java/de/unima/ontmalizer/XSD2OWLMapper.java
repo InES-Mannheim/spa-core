@@ -113,6 +113,16 @@ public class XSD2OWLMapper {
 		initOntology();
 	}
 	
+	
+	public XSD2OWLMapper(OntModel model) {
+		this.ontology = model;
+		abstractClasses = new ArrayList<OntClass>();
+		mixedClasses = new ArrayList<OntClass>();
+		hasValue = ontology.createProperty(Constants.ONTMALIZER_VALUE_PROP_NAME);
+		opprefix = "";
+		dtpprefix = "";
+	}
+	
 	private void parseXSD(File file) {
 		try {
 			if (!file.exists()) {

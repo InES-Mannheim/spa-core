@@ -1,6 +1,4 @@
 dependencies {
-    compile project(':ontmalizer')
-
     compile 'com.sun.xsom:xsom:20100725'
     compile 'org.apache.jena:jena-arq:3.0.0'
     compile 'org.apache.jena:jena-core:3.0.0'
