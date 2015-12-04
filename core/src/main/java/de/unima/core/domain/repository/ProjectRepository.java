@@ -44,7 +44,7 @@ public class ProjectRepository extends AbstractRepository<Project, String>{
 		};
 	}
 
-	private static List<Repository> extractRepository(final Model model) {
+	private static List<Repository> extractRepository(Model model) {
 		final NodeIterator objects = model.listObjectsOfProperty(ResourceFactory.createProperty(Vocabulary.belongsToRepository));
 		final Optional<String> repoId = objects.hasNext()?Optional.ofNullable(objects.next().asResource().toString()):Optional.empty();
 		return repoId.map(Repository::new).map(Lists::newArrayList).orElseGet(Lists::newArrayList);
@@ -59,7 +59,7 @@ public class ProjectRepository extends AbstractRepository<Project, String>{
 		return datapools;
 	}
 	
-	private List<Schema> extractSchemas(Model model) {
+	private static List<Schema> extractSchemas(Model model) {
 		final NodeIterator objects = model.listObjectsOfProperty(ResourceFactory.createProperty(Vocabulary.linksSchema));
 		final List<Schema> schemas = Lists.newArrayList();
 		while(objects.hasNext()){
@@ -77,5 +77,5 @@ public class ProjectRepository extends AbstractRepository<Project, String>{
 	protected String getRdfClass() {
 		return Vocabulary.Project;
 	}
-
+	
 }

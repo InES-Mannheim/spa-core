@@ -22,6 +22,10 @@ public class Project extends AbstractEntity<String>{
 	private final Map<String, DataPool> datapools;
 	private final Map<String, Schema> schemas;
 	
+	public Project(String id){
+		this(id, null, null);
+	}
+	
 	public Project(String id, String label, Repository repository) {
 		this(id, label, repository, Collections.emptyList(), Collections.emptyList());
 	}
@@ -57,6 +61,20 @@ public class Project extends AbstractEntity<String>{
 	public boolean addDataPool(DataPool dataPool){
 		datapools.put(dataPool.getId(), dataPool);
 		return true;
+	}
+	
+	/**
+	 * Replaces current data pools with given data pools.
+	 * 
+	 * @param datapools which should replace current data pools
+	 * @return data pools which have been removed from the project
+	 */
+	public List<DataPool> replaceDataPools(List<DataPool> datapools){
+		final List<DataPool> removedPools = this.datapools.entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList());
+		this.datapools.clear();
+		datapools.forEach(datapool -> this.datapools.put(datapool.getId(), datapool));
+		removedPools.removeAll(datapools);
+		return removedPools;
 	}
 	
 	/**
@@ -155,5 +173,19 @@ public class Project extends AbstractEntity<String>{
 		final List<Schema> ret = schemas.entrySet().stream().map(Entry::getValue).collect(Collectors.toList());
 		schemas.clear();
 		return ret;
+	}
+
+	/**
+	 * Replaces current linked schemas with given schemas.
+	 * 
+	 * @param schemas which should replace current schemas
+	 * @return schemas which have been unlinked from the project
+	 */
+	public List<Schema> replaceLinkedSchemas(List<Schema> schemas) {
+		final List<Schema> unlinkedSchemas = this.schemas.entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList());
+		this.schemas.clear();
+		schemas.forEach(schema -> this.schemas.put(schema.getId(), schema));
+		unlinkedSchemas.removeAll(schemas);
+		return unlinkedSchemas;
 	}
 }

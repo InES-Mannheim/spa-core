@@ -79,13 +79,61 @@ public class RepositoryService {
 	}
 	
 	/**
+	 * Finds project with given id.
+	 * 
+	 * All {@code DataPool}s and linked {@code Schema}s of the project are loaded, too.
+	 * 
+	 * @param id as URI; for example: http://www.test.com/1
+	 * @return project if found; empty otherwise
+	 */
+	public Optional<Project> findProjectById(String id){
+		final Optional<Project> foundProject = projectRepository.findById(id);
+		loadAndAddDataPoolsIfPresent(foundProject);
+		loadAndAddSchemassIfPresent(foundProject);
+		return foundProject;
+	}
+
+	private void loadAndAddDataPoolsIfPresent(final Optional<Project> foundProject) {
+		if(!foundProject.isPresent()){
+			return;
+		}
+		final List<DataPool> loadedDataPools = foundProject.get().getDataPools()
+			.stream()
+			.map(pool -> findDataPoolById(pool.getId()))
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.map(pool -> {
+				pool.setProject(foundProject.get());
+				return pool;	
+			})
+			.collect(Collectors.toList());
+		foundProject.get().replaceDataPools(loadedDataPools);
+	}
+	
+	private void loadAndAddSchemassIfPresent(Optional<Project> foundProject) {
+		if(!foundProject.isPresent()){
+			return;
+		}
+		final List<Schema> loadedSchemas = foundProject.get().getLinkedSchemas()
+			.stream()
+			.map(schema -> schemaRepository.findById(schema.getId()))
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.collect(Collectors.toList());
+		foundProject.get().replaceLinkedSchemas(loadedSchemas);
+	}
+	
+	/**
 	 * Saves given project.
+	 * 
+	 * This action also saves all contained {@code DataPool}s.
 	 * 
 	 * @param project which should be saved
 	 * @return id of the project
 	 * @throws IllegalStateException if project could not be saved
 	 */
 	public String saveProject(Project project){
+		project.getDataPools().forEach(this::saveDataPool);
 		return projectRepository.save(project).orElseThrow(() -> new IllegalStateException("Could not save project."));
 	}
 	
@@ -184,12 +232,24 @@ public class RepositoryService {
 	}
 	
 	/**
+	 * Finds schema by id.
+	 * 
+	 * The id must be an URI (e.g. http://www.test.com/1)
+	 * 
+	 * @param id of the Schema as URI
+	 * @return found Schema; empty otherwise
+	 */
+	public Optional<Schema> findSchemaById(String id){
+		return schemaRepository.findById(id);
+	}
+	
+	/**
 	 * Finds data stored for given schema.
 	 * 
 	 * @param schema which data should be returned
 	 * @return the data if present; empty otherwise
 	 */
-	public Optional<Model> findDataForSchema(Schema schema){
+	public Optional<Model> findDataOfSchema(Schema schema){
 		return schemaRepository.findDataOfEntity(schema);
 	}
 	
@@ -214,6 +274,37 @@ public class RepositoryService {
 	 */
 	public String saveDataPool(DataPool dataPool){
 		return dataPoolRepository.save(dataPool).orElseThrow(() -> new IllegalStateException("Could not save data pool."));
+	}
+
+	/**
+	 * Finds data pool by id.
+	 *
+	 * All related data buckets are loaded.
+	 * 
+	 * <b>Note:</b> Each found data pool refers to the project it belongs to.
+	 * Thus, {@code DataPool#getProject()} is not null. However, the 
+	 * project is not fully loaded and should not be saved.
+	 * 
+	 * @param id of the pool
+	 * @return found data pool; empty otherwise
+	 */
+	public Optional<DataPool> findDataPoolById(String id){
+		final Optional<DataPool> foundDataPool = dataPoolRepository.findById(id);
+		loadAndAddDataBucketsIfPresent(foundDataPool);
+		return foundDataPool;
+	}
+
+	private void loadAndAddDataBucketsIfPresent(final Optional<DataPool> foundDataPool) {
+		if(!foundDataPool.isPresent()){
+			return;
+		}
+		final List<DataBucket> loadedDataBuckets = foundDataPool.get().getDataBuckets()
+			.stream()
+			.map(bucket -> dataBucketRepository.findById(bucket.getId()))
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.collect(Collectors.toList());
+		foundDataPool.get().replaceDataBuckets(loadedDataBuckets);
 	}
 	
 	/**
@@ -273,17 +364,17 @@ public class RepositoryService {
 	}
 
 	/**
-	 * Deletes given data bucket.
+	 * Removes given data bucket.
 	 * 
 	 * @param dataBucket which should be removed
 	 * @return number of statements which have been deleted
 	 */
-	public long deleteDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket){
+	public long removeDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket){
 		dataPool.removeDataBucketById(dataBucket.getId());
 		dataPoolRepository.save(dataPool);
 		return dataBucketRepository.delete(dataBucket);
 	}
-
+	
 	/**
 	 * Finds data stored for given {@code DataBucket}.
 	 * 

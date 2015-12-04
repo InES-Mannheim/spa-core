@@ -53,11 +53,11 @@ public class StorageIntegrationTest {
 		final Model bpmn2Schema = loadBpmn2Schema();
 		LOGGER.info(String.format("Storing BPMN 2 schema with %s statements. 10 times", bpmn2Schema.size()));
 		final List<Schema> schemas = IntStream.range(0, 10).mapToObj(number -> persistentService.addDataAsNewSchema("Schema Nr. "+number, bpmn2Schema)).collect(Collectors.toList());
-		schemas.forEach(schema -> assertThat(persistentService.findDataForSchema(schema).isPresent(), is(true)));
-		schemas.forEach(schema -> assertThat(persistentService.findDataForSchema(schema).get().size(),is(bpmn2Schema.size())));
+		schemas.forEach(schema -> assertThat(persistentService.findDataOfSchema(schema).isPresent(), is(true)));
+		schemas.forEach(schema -> assertThat(persistentService.findDataOfSchema(schema).get().size(),is(bpmn2Schema.size())));
 		
 		schemas.forEach(persistentService::deleteSchema);
-		schemas.forEach(schema -> assertThat(persistentService.findDataForSchema(schema).isPresent(), is(false)));
+		schemas.forEach(schema -> assertThat(persistentService.findDataOfSchema(schema).isPresent(), is(false)));
 	}
 	
 	@Test

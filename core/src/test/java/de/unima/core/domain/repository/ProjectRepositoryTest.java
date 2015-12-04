@@ -2,6 +2,7 @@ package de.unima.core.domain.repository;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class ProjectRepositoryTest {
 	
 	@Test
 	public void whenRepositoryIsSavedItShouldContainLinkedSchemasAndContainingDataBuckets(){
-		projectRepository.save(createProject());
+		projectRepository.save(createProjectWithOneLinkedSchemaAndOneDataPool());
 		
 		final boolean containsSchemasAndDataPools = projectRepository.getStore().readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
 			final Model namedModel = dataset.getNamedModel("http://www.test.de/Project/1/graph");
@@ -59,7 +60,7 @@ public class ProjectRepositoryTest {
 	
 	@Test
 	public void whenSavedRepositoryIsDeletedTheCorrespondingNamedModelShouldBeEmpty(){
-		final Project project = createProject();
+		final Project project = createProjectWithOneLinkedSchemaAndOneDataPool();
 		
 		projectRepository.save(project);
 		projectRepository.delete(project);
@@ -73,7 +74,7 @@ public class ProjectRepositoryTest {
 	
 	@Test
 	public void savedProjectShouldBeSameAsLoadedProject(){
-		final Project project = createProject();
+		final Project project = createProjectWithOneLinkedSchemaAndOneDataPool();
 		projectRepository.save(project);
 		final Optional<Project> loadedProject = projectRepository.findById(project.getId());
 		assertThat(loadedProject.isPresent(),is(true));
@@ -82,11 +83,26 @@ public class ProjectRepositoryTest {
 		assertThat(loadedProject.get().getDataPools().get(0), is(equalTo(project.getDataPools().get(0))));
 	}
 	
-	private Project createProject() {
+	private Project createProjectWithOneLinkedSchemaAndOneDataPool() {
 		final Repository repo = new Repository("http://www.test.de/Repository/1");
 		final Project project = new Project("http://www.test.de/Project/1", "first" , repo);
 		project.addDataPool(new DataPool("http://www.test.de/DataPool/1", project));
 		project.linkSchema(new Schema("http://www.test.de/Schema/1"));
 		return project;
+	}
+	
+	@Test
+	public void whenProjectHasNoDataPoolsAndNoLinkedSchemaItShouldBeLoaded(){
+		final Project project = createProjectWithRepository();
+		projectRepository.save(project);
+		final Optional<Project> loadedProject = projectRepository.findById(project.getId());
+		assertThat(loadedProject.isPresent(), is(true));
+		assertThat(loadedProject.get(), is(project));
+		assertThat(loadedProject.get().getDataPools(), is(empty()));
+	}
+	
+	private Project createProjectWithRepository(){
+		final Repository repo = new Repository("http://www.test.de/Repository/1");
+		return new Project("http://www.test.de/Project/1", "first" , repo);
 	}
 }

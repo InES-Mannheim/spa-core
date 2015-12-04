@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.jena.ext.com.google.common.collect.Maps;
 
@@ -81,6 +82,20 @@ public class DataPool extends AbstractEntity<String> {
 	public Optional<DataBucket> findDataBucketById(String id){
 		return Optional.ofNullable(buckets.get(id));
 	}
+	
+	/**
+	 * Replaces current data buckets with given buckets.
+	 * 
+	 * @param buckets which should replace current buckets
+	 * @return which have been removed from the pool
+	 */
+	public List<DataBucket> replaceDataBuckets(List<DataBucket> buckets){
+		final List<DataBucket> removedBuckets = this.buckets.entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList());
+		this.buckets.clear();
+		buckets.forEach(bucket -> this.buckets.put(bucket.getId(), bucket));
+		removedBuckets.removeAll(buckets);
+		return removedBuckets;
+	}
     
 	/**
 	 * Retrieves all {@code DataBucket}s in this pool.
@@ -89,6 +104,15 @@ public class DataPool extends AbstractEntity<String> {
 	 */
 	public List<DataBucket> getDataBuckets(){
 		return ImmutableList.<DataBucket>builder().addAll(buckets.values()).build();
+	}
+	
+	/**
+	 * Set the project this {@code DataPool} belongs to.
+	 * 
+	 * @param project of this {@code DataPool}
+	 */
+	public void setProject(Project project) {
+		this.project = project;
 	}
 	
 	/**
