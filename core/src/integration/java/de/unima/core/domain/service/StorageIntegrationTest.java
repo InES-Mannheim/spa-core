@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,6 +34,9 @@ import de.unima.core.domain.Repository;
 import de.unima.core.domain.Schema;
 import de.unima.core.io.impl.BPMN20FileImpl;
 import de.unima.core.io.impl.BPMN20ImporterImpl;
+import de.unima.core.io.impl.XMLFileImpl;
+import de.unima.core.io.impl.XMLImporterImpl;
+import de.unima.core.io.impl.XSDImporterImpl;
 
 public class StorageIntegrationTest {
 
@@ -91,7 +95,7 @@ public class StorageIntegrationTest {
 	@Test
 	public void Bpmn2ImportIntegrationTest() throws IOException{
 		LOGGER.info("BPM 2 import test.");
-		// Import schema as BPMN 2.0
+		// Import schema for BPMN 2.0
 		final Schema schema = persistentService.addDataAsNewSchema("BPMN 2.0", loadBpmn2Schema());
 		// Create new project with specified schema
 		final Project project = persistentService.createProjectWithGeneratedId("Test Project");
@@ -99,8 +103,8 @@ public class StorageIntegrationTest {
 		persistentService.saveProject(project);
 		// Create data pool in project
 		final DataPool dataPool = persistentService.createNewDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
-		final BPMN20ImporterImpl importer = new BPMN20ImporterImpl("http://spa.org/TestProject/SampleDataPool#");
 		// Import data as new data bucket
+		final BPMN20ImporterImpl importer = new BPMN20ImporterImpl("http://spa.org/TestProject/SampleDataPool#");
 		final OntModel importedData = importer.importData(new BPMN20FileImpl(getFilePath("example-spa.bpmn").toString()));
 		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Example SPA process", importedData);
 		// Load data according to data schema; not consistent with data model
@@ -119,11 +123,42 @@ public class StorageIntegrationTest {
 				,"[http://spa.org/TestProject/SampleDataPool#Process_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#processType, \"None\"]");
 		m.listStatements().toList().stream().map(Object::toString).forEach(statement -> assertThat(expectedStringStatements.contains(statement.toString()), is(true)));
 	}
+	
+	@Test
+	public void xesImportIntegrationTest() throws IOException {
+		LOGGER.info("XES import test.");
+		
+		// Create owl file from xsd
+		final XSDImporterImpl importer = new XSDImporterImpl();
+		final OntModel model = importer.importData(new XMLFileImpl(getFilePath("xes.xsd").toString()));
+	
+		// Add owl file as new schema
+		final Schema schema = persistentService.addDataAsNewSchema("XES2.0", model);
+		
+		// Create new project and link schema
+		final Project project = persistentService.createProjectWithGeneratedId("Test Project");
+		project.linkSchema(schema);
+		persistentService.saveProject(project);
+		
+		// Create data pool in project
+		final DataPool dataPool = persistentService.createNewDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
+
+		// Import xes data as xml
+		final XMLImporterImpl xesImporter = new XMLImporterImpl(model);
+		final Model importedXesData = xesImporter.importData(new XMLFileImpl(getFilePath("running-example.xes").toString()));
+		
+		// Add data as new data bucket
+		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Running example", importedXesData);
+		final Optional<Model> foundDataForBucket = persistentService.findDataOfDataBucket(bucket);
+		
+		// assert that the statements are loaded
+		assertThat(foundDataForBucket.isPresent(), is(true));
+	}
 
 	private Model createProcessData() throws IOException {
 		return loadFileAsModel("scanMailProcessModel.owl");
 	}
-
+	
 	private Model loadBpmn2Schema() throws IOException {
 		return loadFileAsModel("BPMN_2.0_ontology.owl");
 	}

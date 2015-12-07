@@ -1,0 +1,481 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:dtype="http://www.srdc.com.tr/ontmalizer#"
+    xmlns="http://www.srdc.com.tr/ontmalizer/instance#"
+    xmlns:xes="http://code.deckfour.org/xes#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xml:base="http://unima.de/running-examplex#" > 
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_41">
+    <xes:value>Pete</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_53">
+    <xes:value>Ellen</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_21">
+    <xes:value>Ellen</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_8">
+    <xes:value>3</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_33">
+    <xes:value>Sara</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_45">
+    <xes:value>decide</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_13">
+    <xes:value>Pete</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_25">
+    <xes:value>decide</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_log_1">
+    <xes:classifier rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ClassifierType_1"/>
+    <xes:extension rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ExtensionType_3"/>
+    <xes:trace rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_TraceType_1"/>
+    <xes:extension rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ExtensionType_2"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_7"/>
+    <xes:xes.version rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.0</xes:xes.version>
+    <xes:classifier rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ClassifierType_2"/>
+    <xes:extension rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ExtensionType_1"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#log"/>
+    <xes:global rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_GlobalsType_2"/>
+    <xes:global rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_GlobalsType_1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_8">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_49"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_48"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_47"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_9"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_46"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_45"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_37">
+    <xes:value>examine thoroughly</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_GlobalsType_2">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_6"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_5"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_4"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_1"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_3"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_2"/>
+    <xes:scope rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">event</xes:scope>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#GlobalsType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_TraceType_1">
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_2"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_9"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_4"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#TraceType"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_8"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_6"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_1"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_8"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_3"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_5"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_7"/>
+    <xes:event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_9"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_49">
+    <xes:value>200</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_17">
+    <xes:value>examine casually</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_29">
+    <xes:value>200</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_4">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_29"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_28"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_27"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_5"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_26"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_25"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_9">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-01-09T09:55:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_5">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-01-06T09:18:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_1">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-04-13T14:02:31.199+02:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ClassifierType_2">
+    <xes:name rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">activity classifier</xes:name>
+    <xes:keys rdf:datatype="http://www.w3.org/2001/XMLSchema#token">Activity</xes:keys>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#ClassifierType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_7">
+    <xes:value>Fluxicon Nitro</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">creator</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_3">
+    <xes:value>resource</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ExtensionType_3">
+    <xes:uri rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://code.deckfour.org/xes/org.xesext</xes:uri>
+    <xes:prefix rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">org</xes:prefix>
+    <xes:name rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">Organizational</xes:name>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#ExtensionType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_40">
+    <xes:value>check ticket</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_52">
+    <xes:value>pay compensation</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_9">
+    <xes:value>Fluxicon Nitro</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">creator</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_20">
+    <xes:value>check ticket</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_32">
+    <xes:value>reinitiate request</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_44">
+    <xes:value>100</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_12">
+    <xes:value>register request</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_24">
+    <xes:value>100</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_36">
+    <xes:value>Sean</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_48">
+    <xes:value>Sara</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_GlobalsType_1">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_1"/>
+    <xes:scope rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">trace</xes:scope>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#GlobalsType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_7">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_44"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_43"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_42"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_8"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_41"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_40"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_16">
+    <xes:value>Mike</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_28">
+    <xes:value>Sara</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_3">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_24"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_23"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_22"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_4"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_21"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_20"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_6">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-01-06T12:18:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_2">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2010-12-30T14:32:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_4">
+    <xes:value>string</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ClassifierType_1">
+    <xes:name rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">Activity</xes:name>
+    <xes:keys rdf:datatype="http://www.w3.org/2001/XMLSchema#token">Activity</xes:keys>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#ClassifierType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_2">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_19"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_18"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_17"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_3"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_16"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_15"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_51">
+    <xes:value>Ellen</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_31">
+    <xes:value>Sara</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_43">
+    <xes:value>Pete</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_11">
+    <xes:value>Pete</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_23">
+    <xes:value>Ellen</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_35">
+    <xes:value>examine thoroughly</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_47">
+    <xes:value>decide</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_15">
+    <xes:value>examine casually</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_27">
+    <xes:value>decide</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_39">
+    <xes:value>400</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_6">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_39"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_38"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_37"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_7"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_36"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_35"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_19">
+    <xes:value>400</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_7">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-01-06T13:06:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_3">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2010-12-30T15:06:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_5">
+    <xes:value>string</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ExtensionType_1">
+    <xes:uri rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://code.deckfour.org/xes/concept.xesext</xes:uri>
+    <xes:prefix rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">concept</xes:prefix>
+    <xes:name rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">Concept</xes:name>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#ExtensionType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_1">
+    <xes:value>name</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_50">
+    <xes:value>pay compensation</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_1">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_14"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_13"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_12"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_2"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_11"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_10"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_30">
+    <xes:value>reinitiate request</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_42">
+    <xes:value>check ticket</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_54">
+    <xes:value>200</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_10">
+    <xes:value>register request</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_22">
+    <xes:value>check ticket</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_10">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-01-15T10:45:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_34">
+    <xes:value>200</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_46">
+    <xes:value>Sara</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_14">
+    <xes:value>50</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_9">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_54"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_53"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_52"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_10"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_51"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_50"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_26">
+    <xes:value>Sara</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_38">
+    <xes:value>Sean</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_EventType_5">
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_34"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_33"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_32"/>
+    <xes:date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_6"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_31"/>
+    <xes:string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_30"/>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#EventType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_18">
+    <xes:value>Mike</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_8">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-01-08T11:43:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeDateType_4">
+    <xes:value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2010-12-30T16:34:00.000+01:00</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeDateType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_6">
+    <xes:value>string</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_ExtensionType_2">
+    <xes:uri rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://code.deckfour.org/xes/time.xesext</xes:uri>
+    <xes:prefix rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">time</xes:prefix>
+    <xes:name rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">Time</xes:name>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#ExtensionType"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6784284_AttributeStringType_2">
+    <xes:value>name</xes:value>
+    <xes:key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</xes:key>
+    <rdf:type rdf:resource="http://code.deckfour.org/xes#AttributeStringType"/>
+  </rdf:Description>
+</rdf:RDF>
