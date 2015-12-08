@@ -3,8 +3,12 @@ package de.unima.core.persistence;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -231,6 +235,31 @@ public class AbstractRepositoryTest {
 		houseWithWindowsRepository.save(toBeStoredHouse);
 		final Optional<House> house = houseWithWindowsRepository.findById("http://www.test.de/House/1");
 		assertThat(house.get().getWindows().get(0), is(toBeStoredHouse.getWindows().get(0)));
+	}
+	
+	@Test
+	public void whenEntitesAreStoredThenFindAllShouldNotBeEmpty(){
+		final ArrayList<House> houses = Lists.newArrayList(new House("http://www.test.de/House/1", "New"), new House("http://www.test.de/House/2", "New2"));
+		simpleHouseRepository.saveAll(houses);
+		final List<House> foundHouses = simpleHouseRepository.findAll();
+
+		assertThat(foundHouses, is(not(empty())));
+	}
+	
+	@Test
+	public void whenAllEntitiesShouldBeFoundTheContentOfAllNamedGraphsIsReturned(){
+		final ArrayList<House> houses = Lists.newArrayList(new House("http://www.test.de/House/1", "New"), new House("http://www.test.de/House/2", "New2"));
+		simpleHouseRepository.saveAll(houses);
+		final List<House> foundHouses = simpleHouseRepository.findAll();
+		
+		assertThat(foundHouses,hasItem(houses.get(0)));
+		assertThat(foundHouses,hasItem(houses.get(1)));
+	}
+	
+	@Test
+	public void whenRepostioryIsEmptyNoEntitiesShouldBeFound(){
+		final List<House> found = simpleHouseRepository.findAll();
+		assertThat(found,is(empty()));
 	}
 	
 	private static class HouseRepository extends AbstractRepository<House, String>{

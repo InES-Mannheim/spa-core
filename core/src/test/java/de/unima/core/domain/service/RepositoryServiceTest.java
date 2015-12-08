@@ -44,15 +44,15 @@ public class RepositoryServiceTest {
 	
 	@Test
 	public void whenProjectIsCreatedItShouldBeLinkedToAProject(){
-		final Project project = service.createProjectWithGeneratedId("Test");
+		final Project project = service.createPersistentProjectWithGeneratedId("Test");
 		assertThat(project.getRepository(), is(notNullValue()));
 		assertThat(project.getRepository().getProjects().contains(project), is(true));
 	}
 	
 	@Test
 	public void whenProjectIsLoadedAllLinkedSchemasAndDataPoolsShouldBeLoadedToo(){
-		final Project project = service.createProjectWithGeneratedId("Test");
-		final DataPool pool = service.createNewDataPoolForProjectWithGeneratedId(project, "Test");
+		final Project project = service.createPersistentProjectWithGeneratedId("Test");
+		final DataPool pool = service.createPeristentDataPoolForProjectWithGeneratedId(project, "Test");
 		final DataBucket firstBucket = service.addDataAsNewDataBucketToDataPool(pool, "First bucket", ModelFactory.createDefaultModel());
 		final DataBucket secondBucket = service.addDataAsNewDataBucketToDataPool(pool, "Second bucket", ModelFactory.createDefaultModel());
 		final DataBucket thirdBucket = service.addDataAsNewDataBucketToDataPool(pool, "Third bucket", ModelFactory.createDefaultModel());
@@ -80,7 +80,7 @@ public class RepositoryServiceTest {
 	@Test
 	public void whenSchemaIsLinkedToProjectItShouldBeUnlinkedAfterDeletion(){
 		final Schema schema = service.addDataAsNewSchema("Test Schema", createModelWithOneStatement());
-		final Project project = service.createProjectWithGeneratedId("Test");
+		final Project project = service.createPersistentProjectWithGeneratedId("Test");
 		project.linkSchema(schema);
 		assertThat(project.getLinkedSchemas().size(), is(1));
 		service.deleteSchema(schema);

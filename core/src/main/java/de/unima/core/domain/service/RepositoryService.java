@@ -24,6 +24,10 @@ import de.unima.core.storage.Store;
 import de.unima.core.storage.StoreSupport;
 import de.unima.core.storage.jena.JenaTDBStore;
 
+/**
+ * The {@code RepositoryService} provides methods to create, save, update and
+ * delete entities of the domain.
+ */
 public class RepositoryService {
 
 	private final static String REPOSITORY_URI = "http://www.uni-mannheim.de/spa/Repository/single";
@@ -35,7 +39,6 @@ public class RepositoryService {
 	private final ProjectRepository projectRepository;
 	private final DataPoolRepository dataPoolRepository;
 	private final DataBucketRepository dataBucketRepository;
-	
 	
 	private RepositoryService(Store store) {
 		this.repository = new Repository(REPOSITORY_URI);
@@ -62,15 +65,14 @@ public class RepositoryService {
 	/**
 	 * Creates a new {@link Project} with generated URI.
 	 * 
-	 * The project and changes to the repository are persisted and don't need to
-	 * be saved explicitly after creation.
+	 * <p>The project and changes to the repository are persisted.
 	 * 
 	 * @param label
 	 *            of the new project
 	 * 
 	 * @return new {@code Project} with generated id
 	 */
-	public Project createProjectWithGeneratedId(String label) {
+	public Project createPersistentProjectWithGeneratedId(String label) {
 		final Project project = new Project(createId(Vocabulary.Project), label, repository);
 		repository.addProject(project);
 		repositoryRepository.save(repository);
@@ -79,11 +81,26 @@ public class RepositoryService {
 	}
 	
 	/**
+	 * Finds all projects.
+	 * 
+	 * <p>{@code DataPool}s and linked {@code Schema}s of each project are not
+	 * loaded. To fully load a project use
+	 * {@link RepositoryService#findProjectById(String)};
+	 * 
+	 * @return list of persisted projects
+	 */
+	public List<Project> findAllProjects(){
+		return projectRepository.findAll();
+	}
+	
+	/**
 	 * Finds project with given id.
 	 * 
-	 * All {@code DataPool}s and linked {@code Schema}s of the project are loaded, too.
+	 * <p> All {@code DataPool}s and linked {@code Schema}s of the project are
+	 * loaded.
 	 * 
-	 * @param id as URI; for example: http://www.test.com/1
+	 * @param id
+	 *            as URI; for example: http://www.test.com/1
 	 * @return project if found; empty otherwise
 	 */
 	public Optional<Project> findProjectById(String id){
@@ -126,11 +143,13 @@ public class RepositoryService {
 	/**
 	 * Saves given project.
 	 * 
-	 * This action also saves all contained {@code DataPool}s.
+	 * <p> This action also saves all contained {@code DataPool}s.
 	 * 
-	 * @param project which should be saved
+	 * @param project
+	 *            which should be saved
 	 * @return id of the project
-	 * @throws IllegalStateException if project could not be saved
+	 * @throws IllegalStateException
+	 *             if project could not be saved
 	 */
 	public String saveProject(Project project){
 		project.getDataPools().forEach(this::saveDataPool);
@@ -140,10 +159,11 @@ public class RepositoryService {
 	/**
 	 * Deletes given project.
 	 * 
-	 * All schemas linked to this project are unlinked. Further,
-	 * all contained data pools and buckets are removed.
+	 * <p> All schemas linked to this project are unlinked. Further, all contained
+	 * data pools and buckets are removed.
 	 * 
-	 * @param project which should be deleted
+	 * @param project
+	 *            which should be deleted
 	 * @return number of deleted statements
 	 */
 	public long deleteProject(Project project){
@@ -175,13 +195,17 @@ public class RepositoryService {
 
 	/**
 	 * Adds given schema data as new schema to the given repository and returns
-	 * a generated schema Id.
+	 * a generated schema Id. 
 	 * 
-	 * The label is attached to the newly created schema.
-	 * @param label of the new schema
-	 * @param data containing RDF
+	 * <p> Changes made to the repository and the created schema are persisted.
+	 * 
+	 * @param label
+	 *            of the new schema
+	 * @param data
+	 *            containing RDF
 	 * @return created schema
-	 * @throws IllegalStateException if schema data could not be stored
+	 * @throws IllegalStateException
+	 *             if schema data could not be stored
 	 */
 	public Schema addDataAsNewSchema(String label, Model data){
 		final Schema schema = new Schema(createId(Vocabulary.Schema), label);
@@ -195,10 +219,13 @@ public class RepositoryService {
 	/**
 	 * Replaces data of given schema with given data.
 	 * 
-	 * @param schema which data should be replaced
-	 * @param data containing RDF
+	 * @param schema
+	 *            which data should be replaced
+	 * @param data
+	 *            containing RDF
 	 * @return saved schema
-	 * @throws IllegalStateException if the schema data could not be stored
+	 * @throws IllegalStateException
+	 *             if the schema data could not be stored
 	 */
 	public Schema replaceDataOfSchema(Schema schema, Model data){
 		schemaRepository.save(schema);
@@ -211,10 +238,10 @@ public class RepositoryService {
 	}
 
 	/**
-	 * Unlinks given schema from all affected projects and deletes the
-	 * content.
+	 * Unlinks given schema from all affected projects and deletes the content.
 	 * 
-	 * @param schema which should be removed
+	 * @param schema
+	 *            which should be removed
 	 * @return number of statements which have been deleted
 	 */
 	public long deleteSchema(Schema schema){
@@ -224,27 +251,37 @@ public class RepositoryService {
 	}
 
 	private void unlinkSchemaFromProjects(Repository repository, Schema schema) {
-		final List<Project> affected = repository.getProjects().stream().filter(project -> project.isSchemaLinked(schema.getId())).map(project -> {
-			project.unlinkSchema(schema.getId());
-			return project;
-		}).collect(Collectors.toList());
+		final List<Project> affected = repository.getProjects().stream()
+				.filter(project -> project.isSchemaLinked(schema.getId())).map(project -> {
+					project.unlinkSchema(schema.getId());
+					return project;
+				}).collect(Collectors.toList());
 		projectRepository.saveAll(affected);
 	}
 	
 	/**
-	 * Finds schema by id.
+	 * Finds all {@code Schema}s.
+	 * 
+	 * @return list of persisted {@code Schema}s
+	 */
+	public List<Schema> findAllSchemas(){
+		return schemaRepository.findAll();
+	}
+	
+	/**
+	 * Finds {@code Schema} by id.
 	 * 
 	 * The id must be an URI (e.g. http://www.test.com/1)
 	 * 
 	 * @param id of the Schema as URI
-	 * @return found Schema; empty otherwise
+	 * @return found {@code Schema}; empty otherwise
 	 */
 	public Optional<Schema> findSchemaById(String id){
 		return schemaRepository.findById(id);
 	}
 	
 	/**
-	 * Finds data stored for given schema.
+	 * Finds data stored for given {@code Schema}.
 	 * 
 	 * @param schema which data should be returned
 	 * @return the data if present; empty otherwise
@@ -254,39 +291,63 @@ public class RepositoryService {
 	}
 	
 	/**
-	 * Creates a new {@link DataPool} with generated Id and adds it to the given project.
+	 * Creates a {@link DataPool} with generated Id and adds it to the given
+	 * project.
 	 * 
-	 * @param project where to add the created pool
-	 * @param label of the new pool
+	 * <p>
+	 * <b>Note:</b> The changes to the project and the new {@code DataPool} are
+	 * persisted.
+	 * 
+	 * @param project
+	 *            to add the created pool
+	 * @param label
+	 *            of the new pool
 	 * @return new {@link DataPool}
 	 */
-	public DataPool createNewDataPoolForProjectWithGeneratedId(Project project, String label){
+	public DataPool createPeristentDataPoolForProjectWithGeneratedId(Project project, String label){
 		final DataPool datapool = new DataPool(createId(Vocabulary.DataPool), label, project);
 		project.addDataPool(datapool);
+		dataPoolRepository.save(datapool);
+		projectRepository.save(project);
 		return datapool;
 	}
 	
 	/**
 	 * Saves given {@code DataPool}.
 	 * 
-	 * @param dataPool which should be saved
+	 * @param dataPool
+	 *            which should be saved
 	 * @return id of the pool
 	 */
 	public String saveDataPool(DataPool dataPool){
 		return dataPoolRepository.save(dataPool).orElseThrow(() -> new IllegalStateException("Could not save data pool."));
 	}
+	
+	/**
+	 * Finds all {@code DataPool}s.
+	 * 
+	 * <p>
+	 * <b>Note:</b> The labels of the contained {@code DataBucket}s are not
+	 * loaded.
+	 * 
+	 * @return list of persistent {@code DataPool}s
+	 */
+	public List<DataPool> findAllDataPools(){
+		return dataPoolRepository.findAll();
+	}
 
 	/**
-	 * Finds data pool by id.
+	 * Finds {@code DataPool} by id and all contained data buckets.
 	 *
-	 * All related data buckets are loaded.
-	 * 
+	 * <p>
 	 * <b>Note:</b> Each found data pool refers to the project it belongs to.
-	 * Thus, {@code DataPool#getProject()} is not null. However, the 
-	 * project is not fully loaded and should not be saved.
+	 * Thus, {@code DataPool#getProject()} is not null. However, the project is
+	 * not fully loaded and should not be saved. To load the project, see
+	 * {@link RepositoryService#findProjectById(String)}.
 	 * 
-	 * @param id of the pool
-	 * @return found data pool; empty otherwise
+	 * @param id
+	 *            of the pool
+	 * @return found {@code DataPool}; empty otherwise
 	 */
 	public Optional<DataPool> findDataPoolById(String id){
 		final Optional<DataPool> foundDataPool = dataPoolRepository.findById(id);
@@ -308,10 +369,11 @@ public class RepositoryService {
 	}
 	
 	/**
-	 * Deletes given {@code DataPool}. This includes, the deletion
-	 * of all contained {@code DataBucket}s.
+	 * Deletes given {@code DataPool}. This includes, the deletion of all
+	 * contained {@code DataBucket}s.
 	 * 
-	 * @param dataPool which should be deleted
+	 * @param dataPool
+	 *            which should be deleted
 	 */
 	public void deleteDataPool(DataPool dataPool){
 		final Project project = dataPool.getProject();
@@ -332,13 +394,19 @@ public class RepositoryService {
 	}
 	
 	/**
-	 * Adds given data as new {@code DataBucket} to the given {@code DataPool} and returns
-	 * a generated Id.
+	 * Adds given data as new {@code DataBucket} to the given {@code DataPool}
+	 * and returns a generated Id.
 	 * 
-	 * @param label of the new data bucket
-	 * @param data containing RDF
-	 * @return created data bucket
-	 * @throws IllegalStateException if the data could not be stored
+	 * <p><b>Note:</b> Changes made to given {@code DataPool} are persisted. Further,
+	 * the created {@code DataBucket} is also persisted.
+	 * 
+	 * @param label
+	 *            of the new  {@code DataBucket}
+	 * @param data
+	 *            containing RDF
+	 * @return created  {@code DataBucket}
+	 * @throws IllegalStateException
+	 *             if the data could not be stored
 	 */
 	public DataBucket addDataAsNewDataBucketToDataPool(DataPool dataPool, String label, Model data){
 		final DataBucket bucket = new DataBucket(createId(Vocabulary.DataBucket), label);
@@ -350,12 +418,15 @@ public class RepositoryService {
 	}
 	
 	/**
-	 * Replaces data of given data bucket with given data.
+	 * Replaces data of given  {@code DataBucket}t with given data.
 	 * 
-	 * @param bucket which data should be replaced
-	 * @param data containing RDF
+	 * @param bucket
+	 *            which data should be replaced
+	 * @param data
+	 *            containing RDF
 	 * @return saved bucket
-	 * @throws IllegalStateException if the bucket data could not be stored
+	 * @throws IllegalStateException
+	 *             if the bucket data could not be stored
 	 */
 	public DataBucket replaceDataBucketWithData(DataBucket bucket, Model data){
 		dataBucketRepository.save(bucket);
@@ -364,9 +435,10 @@ public class RepositoryService {
 	}
 
 	/**
-	 * Removes given data bucket.
+	 * Removes given {@code DataBucket}.
 	 * 
-	 * @param dataBucket which should be removed
+	 * @param dataBucket
+	 *            which should be removed
 	 * @return number of statements which have been deleted
 	 */
 	public long removeDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket){
@@ -378,7 +450,8 @@ public class RepositoryService {
 	/**
 	 * Finds data stored for given {@code DataBucket}.
 	 * 
-	 * @param bucket which data should be returned
+	 * @param bucket
+	 *            which data should be returned
 	 * @return the data if present; empty otherwise
 	 */
 	public Optional<Model> findDataOfDataBucket(DataBucket bucket){

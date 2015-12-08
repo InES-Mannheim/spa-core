@@ -23,6 +23,12 @@ import com.google.common.collect.Lists;
 
 import de.unima.core.storage.Store;
 
+/**
+ * Abstract implementation of {@link Repository} providing common {@code CRUD} functionality. 
+ *
+ * @param <T> type of the {@link Entity}
+ * @param <R> type of the {@code id}
+ */
 public abstract class AbstractRepository<T extends Entity<R>, R> implements Repository<T, R> {
 	
 	protected final Store store;
@@ -33,6 +39,7 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 		final ResIterator subjects = model.listSubjects();
 		return subjects.hasNext() ? Optional.ofNullable(subjects.next()) : Optional.empty(); 
 	};
+	
 	protected final Function<Model, Optional<String>> extractLabel = model -> {
 		final NodeIterator objects = model.listObjectsOfProperty(RDFS.label);
 		return objects.hasNext() ? Optional.ofNullable(objects.next().asLiteral().getString()) : Optional.empty();
@@ -105,17 +112,31 @@ public abstract class AbstractRepository<T extends Entity<R>, R> implements Repo
 
 	@Override
 	public List<T> findAll() {
-		throw new UnsupportedOperationException();
+		return store.readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
+			return Lists.newArrayList(dataset.listNames())
+					.stream()
+					.filter(this::isNamedGraphOfThisEntityType)
+					.map(name -> findByIdWithoutTransaction(name, dataset))
+					.collect(Collectors.toList());
+		})).get().get();
+	}
+	
+	private boolean isNamedGraphOfThisEntityType(String graphId){
+		return graphId.startsWith(getRdfClass()); 
 	}
 
 	@Override
 	public Optional<T> findById(R id) {
 		checkNotNull(id, "Could not find entity as id is null.");
 		return store.readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
-			final Model model = dataset.getNamedModel(generateGraphId(id));
-			if(model.isEmpty()) return null;
-			return transformation.inverse().get().apply(model);
+			return findByIdWithoutTransaction(generateGraphId(id), dataset);
 		})).get();
+	}
+
+	private T findByIdWithoutTransaction(String graphId, Dataset dataset) {
+		final Model model = dataset.getNamedModel(graphId);
+		if(model.isEmpty()) return null;
+		return transformation.inverse().get().apply(model);
 	}
 
 	@Override

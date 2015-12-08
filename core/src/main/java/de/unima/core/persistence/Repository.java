@@ -15,7 +15,7 @@ public interface Repository<T extends Entity<R>, R> {
 	 * Saves all entities.
 	 * 
 	 * @param entities which should be persisted
-	 * @return TODO
+	 * @return list with id of each saved entity
 	 */
 	public List<R> saveAll(List<T> entities);
 	
@@ -46,7 +46,8 @@ public interface Repository<T extends Entity<R>, R> {
 
 	/**
 	 * Deletes all entities.
-	 * @param entities TODO
+	 * 
+	 * @param entities which data should be deleted
 	 * 
 	 * @return number of deleted statements; empty if not found
 	 */
