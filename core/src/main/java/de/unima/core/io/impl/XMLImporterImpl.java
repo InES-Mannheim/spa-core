@@ -4,11 +4,10 @@ import java.io.File;
 
 import org.apache.jena.ontology.OntModel;
 
-import de.unima.core.io.Importer;
-import de.unima.core.io.XMLFile;
+import de.unima.core.io.FileBasedImporter;
 import de.unima.ontmalizer.XML2OWLMapper;
 
-public class XMLImporterImpl implements Importer<XMLFile> {
+public class XMLImporterImpl implements FileBasedImporter {
 	
 	private String id;
 	private OntModel schemeOntologyModel;
@@ -18,8 +17,8 @@ public class XMLImporterImpl implements Importer<XMLFile> {
 	}
 
 	@Override
-	public OntModel importData(XMLFile xmlSource) {
-		XML2OWLMapper mapping = new XML2OWLMapper(new File(xmlSource.getPath()), schemeOntologyModel);
+	public OntModel importData(File xmlSource) {
+		XML2OWLMapper mapping = new XML2OWLMapper(xmlSource, schemeOntologyModel);
 	    mapping.convertXML2OWL();
 	    schemeOntologyModel.add(mapping.getModel());
 		return schemeOntologyModel;

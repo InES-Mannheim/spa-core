@@ -4,16 +4,15 @@ import java.io.File;
 
 import org.apache.jena.ontology.OntModel;
 
-import de.unima.core.io.Importer;
-import de.unima.core.io.XMLFile;
+import de.unima.core.io.FileBasedImporter;
 import de.unima.ontmalizer.XSD2OWLMapper;
 
-public class XSDImporterImpl implements Importer<XMLFile> {
+public class XSDImporterImpl implements FileBasedImporter {
 	
 	private String id;
 
 	@Override
-	public OntModel importData(XMLFile xmlSource) {
+	public OntModel importData(File xmlSource) {
 		XSD2OWLMapper mapping = new XSD2OWLMapper(new File(xmlSource.getPath()));
 	    mapping.setObjectPropPrefix("");
 	    mapping.setDataTypePropPrefix("");

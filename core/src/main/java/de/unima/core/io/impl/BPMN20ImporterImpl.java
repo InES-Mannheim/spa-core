@@ -28,10 +28,9 @@ import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
 
-import de.unima.core.io.BPMN20File;
-import de.unima.core.io.Importer;
+import de.unima.core.io.FileBasedImporter;
 
-public class BPMN20ImporterImpl implements Importer<BPMN20File> {
+public class BPMN20ImporterImpl implements FileBasedImporter {
 	
 	private String id;
 	private final String individualNameSpace;
@@ -44,7 +43,7 @@ public class BPMN20ImporterImpl implements Importer<BPMN20File> {
     }
 
 	@Override
-	public OntModel importData(BPMN20File bpmn_source) {
+	public OntModel importData(File bpmnSource) {
 	    //Preparing jena models
 	    OntModel schemaModel = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
 	    schemaModel.read(SCHEMAPATH);
@@ -55,7 +54,7 @@ public class BPMN20ImporterImpl implements Importer<BPMN20File> {
 	    String blankSubnodeProperty = SCHEMA_NAMESPACE + "has_";
 	    
 	    //Preparing camunda
-	    BpmnModelInstance modelInstance = Bpmn.readModelFromFile(new File(bpmn_source.getPath()));
+	    BpmnModelInstance modelInstance = Bpmn.readModelFromFile(bpmnSource);
 	    
 	    Definitions defs = modelInstance.getDefinitions();
 	    
