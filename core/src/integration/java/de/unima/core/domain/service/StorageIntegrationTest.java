@@ -37,8 +37,8 @@ import de.unima.core.domain.Schema;
 import de.unima.core.io.impl.BPMN20FileImpl;
 import de.unima.core.io.impl.BPMN20ImporterImpl;
 import de.unima.core.io.impl.XMLFileImpl;
-import de.unima.core.io.impl.XMLImporterImpl;
-import de.unima.core.io.impl.XSDImporterImpl;
+import de.unima.core.io.impl.XMLToOntModelImporter;
+import de.unima.core.io.impl.XSDToOntModelImporter;
 
 public class StorageIntegrationTest {
 
@@ -166,7 +166,7 @@ public class StorageIntegrationTest {
 		LOGGER.info("XES import test.");
 		
 		// Create owl file from xsd
-		final XSDImporterImpl importer = new XSDImporterImpl();
+		final XSDToOntModelImporter importer = new XSDToOntModelImporter();
 		final OntModel model = importer.importData(new XMLFileImpl(getFilePath("xes.xsd").toString()));
 	
 		// Add owl file as new schema
@@ -181,7 +181,7 @@ public class StorageIntegrationTest {
 		final DataPool dataPool = persistentService.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
 
 		// Import xes data as xml
-		final XMLImporterImpl xesImporter = new XMLImporterImpl(model);
+		final XMLToOntModelImporter xesImporter = new XMLToOntModelImporter(model);
 		final Model importedXesData = xesImporter.importData(new XMLFileImpl(getFilePath("running-example.xes").toString()));
 		
 		// Add data as new data bucket

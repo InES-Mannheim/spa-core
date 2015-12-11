@@ -8,7 +8,7 @@ import de.unima.core.io.Importer;
 import de.unima.core.io.XMLFile;
 import de.unima.ontmalizer.XSD2OWLMapper;
 
-public class XSDImporterImpl implements Importer<XMLFile> {
+public class XSDToOntModelImporter implements Importer<XMLFile> {
 	
 	private String id;
 

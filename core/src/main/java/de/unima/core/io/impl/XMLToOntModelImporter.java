@@ -8,12 +8,12 @@ import de.unima.core.io.Importer;
 import de.unima.core.io.XMLFile;
 import de.unima.ontmalizer.XML2OWLMapper;
 
-public class XMLImporterImpl implements Importer<XMLFile> {
+public class XMLToOntModelImporter implements Importer<XMLFile> {
 	
 	private String id;
 	private OntModel schemeOntologyModel;
 	
-	public XMLImporterImpl(OntModel schemeOntologyModel) {
+	public XMLToOntModelImporter(OntModel schemeOntologyModel) {
 		this.schemeOntologyModel = schemeOntologyModel;
 	}
 
