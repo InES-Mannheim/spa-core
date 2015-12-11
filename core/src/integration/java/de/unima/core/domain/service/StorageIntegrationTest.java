@@ -7,8 +7,10 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -207,6 +209,12 @@ public class StorageIntegrationTest {
 	}
 
 	private Path getFilePath(final String fileName) {
-		return Paths.get(this.getClass().getResource("/"+fileName).getFile());
+		try {
+			final File file = new File(this.getClass().getResource("/"+fileName).toURI());
+			return Paths.get(file.getAbsolutePath());
+		} catch (NullPointerException | URISyntaxException exception) {
+			LOGGER.error("Unable to retrieve path for file \"" + fileName + "\"");
+			throw new RuntimeException(exception);
+		}
 	}
 }
