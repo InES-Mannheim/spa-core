@@ -7,6 +7,7 @@ import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
@@ -28,7 +29,7 @@ import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
 
-public class BPMN20ImporterImpl implements FileBasedImporter {
+public class BPMN20ImporterImpl implements FileBasedImporter<Model> {
 	
 	private String id;
 	private final String individualNameSpace;
@@ -41,7 +42,7 @@ public class BPMN20ImporterImpl implements FileBasedImporter {
     }
 
 	@Override
-	public OntModel importData(File bpmnSource) {
+	public Model importData(File bpmnSource) {
 	    //Preparing jena models
 	    OntModel schemaModel = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
 	    schemaModel.read(SCHEMAPATH);

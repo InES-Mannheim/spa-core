@@ -144,7 +144,7 @@ public class StorageIntegrationTest {
 		final DataPool dataPool = persistentService.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
 		// Import data as new data bucket
 		final BPMN20ImporterImpl importer = new BPMN20ImporterImpl("http://spa.org/TestProject/SampleDataPool#");
-		final OntModel importedData = importer.importData(getFilePath("example-spa.bpmn").toFile());
+		final Model importedData = importer.importData(getFilePath("example-spa.bpmn").toFile());
 		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Example SPA process", importedData);
 		// Load data according to data schema; not consistent with data model
 		final Model m = persistentService.findDataOfDataBucket(bucket).get();
@@ -169,10 +169,10 @@ public class StorageIntegrationTest {
 		
 		// Create owl file from xsd
 		final XSDImporterImpl importer = new XSDImporterImpl();
-		final OntModel model = importer.importData(getFilePath("xes.xsd").toFile());
+		final OntModel xesOntology = importer.importData(getFilePath("xml/xes.xsd").toFile());
 	
 		// Add owl file as new schema
-		final Schema schema = persistentService.addDataAsNewSchema("XES2.0", model);
+		final Schema schema = persistentService.addDataAsNewSchema("XES2.0", xesOntology);
 		
 		// Create new project and link schema
 		final Project project = persistentService.createPersistentProjectWithGeneratedId("Test Project");
@@ -183,7 +183,7 @@ public class StorageIntegrationTest {
 		final DataPool dataPool = persistentService.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
 
 		// Import xes data as xml
-		final XMLImporterImpl xesImporter = new XMLImporterImpl(model);
+		final XMLImporterImpl xesImporter = new XMLImporterImpl(xesOntology);
 		final Model importedXesData = xesImporter.importData(getFilePath("running-example.xes").toFile());
 		
 		// Add data as new data bucket
