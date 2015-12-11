@@ -29,14 +29,15 @@ import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.unima.core.domain.DataBucket;
-import de.unima.core.domain.DataPool;
-import de.unima.core.domain.Project;
-import de.unima.core.domain.Repository;
-import de.unima.core.domain.Schema;
-import de.unima.core.io.impl.BPMN20ImporterImpl;
-import de.unima.core.io.impl.XMLImporterImpl;
-import de.unima.core.io.impl.XSDImporterImpl;
+import de.unima.core.domain.model.DataBucket;
+import de.unima.core.domain.model.DataPool;
+import de.unima.core.domain.model.Project;
+import de.unima.core.domain.model.Repository;
+import de.unima.core.domain.model.Schema;
+import de.unima.core.io.file.BPMN20ImporterImpl;
+import de.unima.core.io.file.XMLImporterImpl;
+import de.unima.core.io.file.XSDImporterImpl;
+import de.unima.core.persistence.local.LocalPeristenceService;
 
 public class StorageIntegrationTest {
 
@@ -45,11 +46,11 @@ public class StorageIntegrationTest {
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 	
-	private RepositoryService persistentService;
+	private LocalPeristenceService persistentService;
 	
 	@Before
 	public void setUp() throws IOException{
-		this.persistentService = RepositoryService.withDataInFolder(temporaryFolder.newFolder().toPath());
+		this.persistentService = LocalPeristenceService.withDataInFolder(temporaryFolder.newFolder().toPath());
 	}
 	
 	@Test
@@ -88,8 +89,11 @@ public class StorageIntegrationTest {
 		assertThat(project.getDataPools(), not(hasItem(dataPool)));
 		assertThat(persistentService.findDataOfDataBucket(bucket).isPresent(), is(false));
 
-		persistentService.deleteSchema(schema);
+		project.unlinkSchema(schema.getId());
 		assertThat(project.getLinkedSchemas(), not(hasItem(schema)));
+		assertThat(persistentService.findProjectById(project.getId()).get().getLinkedSchemas(), hasItem(schema));
+		persistentService.deleteSchema(schema);
+		assertThat(persistentService.findProjectById(project.getId()).get().getLinkedSchemas(), not(hasItem(schema)));
 		
 		persistentService.deleteProject(project);
 		assertThat(repository.getProjects(), not(hasItem(project)));

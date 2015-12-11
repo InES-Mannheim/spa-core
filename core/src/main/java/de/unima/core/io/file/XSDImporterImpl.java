@@ -1,0 +1,28 @@
+package de.unima.core.io.file;
+
+import java.io.File;
+
+import org.apache.jena.ontology.OntModel;
+
+import de.unima.ontmalizer.XSD2OWLMapper;
+
+public class XSDImporterImpl implements FileBasedImporter {
+	
+	private String id;
+
+	@Override
+	public OntModel importData(File xmlSource) {
+		XSD2OWLMapper mapping = new XSD2OWLMapper(new File(xmlSource.getPath()));
+	    mapping.setObjectPropPrefix("");
+	    mapping.setDataTypePropPrefix("");
+	    mapping.convertXSD2OWL();
+		return mapping.getOntology();
+	}
+
+	@Override
+	public String getID() {
+
+		return this.id;
+	}
+
+}
