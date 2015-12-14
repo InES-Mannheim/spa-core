@@ -1,3 +1,5 @@
 include 'core'
 include 'ontmalizer'
+include 'spex'
+include 'open_xes'
 rootProject.name = 'spa-core'
