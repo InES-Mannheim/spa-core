@@ -2,6 +2,10 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 
+        tasks.withType(JavaCompile){
+            options.encoding = 'UTF-8'
+        }
+
 	repositories {
 	    jcenter()
 	}
