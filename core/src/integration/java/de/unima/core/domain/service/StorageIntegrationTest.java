@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,6 +29,8 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.deckfour.xes.in.XParser;
+import org.deckfour.xes.in.XParserRegistry;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.out.XesXmlSerializer;
 import org.junit.Before;
@@ -202,8 +205,9 @@ public class StorageIntegrationTest {
 	}
 	
 	@Test
-	public void xesExportIntegrationTest() throws IOException {
-		final Path exportPath = getFilePath("xes.owl");
+	public void xesExportIntegrationTest() throws Exception {
+		LOGGER.info("XES export test.");
+		
 		final OntModel schemaModel = ModelFactory.createOntologyModel();
 		schemaModel.read("xes.owl");
 		
@@ -217,17 +221,31 @@ public class StorageIntegrationTest {
 		final OntModelToXESExporter xesExporter = new OntModelToXESExporter();
 		final Set<XLog> logs = xesExporter.exportModel(combinedSchemaAndInstanceModel);
 		
-		int i=0;
+		Set<File> savedFiles = saveXESLogsToFiles(logs);
+		assertThat(savedFiles.isEmpty(), is(not(true)));
+		
+		for(File savedFile:savedFiles) {
+			for(XParser parser : XParserRegistry.instance().getAvailable()) {
+				if(parser.canParse(savedFile)) {
+					List<XLog> importedLogs = parser.parse(savedFile);
+					assertThat(importedLogs.isEmpty(), is(not(true)));
+				}
+			}
+		}
+	}
+	
+	private Set<File> saveXESLogsToFiles(Set<XLog> logs) throws IOException {
+		final Set<File> savedXESFiles = new HashSet<File>();
 		for(XLog log:logs) {
-			final String filePath = exportPath.getParent() + "/running-example-exported-" + i++ + ".xes";
-			final OutputStream outputStream = new FileOutputStream(new File(filePath));
+			File xesFile = temporaryFolder.newFile();
+			final OutputStream outputStream = new FileOutputStream(xesFile);
 			final XesXmlSerializer serializer = new XesXmlSerializer();
 			serializer.serialize(log, outputStream);
 			outputStream.flush();
 			outputStream.close();
+			savedXESFiles.add(xesFile);
 		}
-	
-		assertThat(new File(exportPath.getParent() + "/running-example-exported-0.xes").exists(), is(true));
+		return savedXESFiles;
 	}
 
 	private Model createProcessData() throws IOException {
