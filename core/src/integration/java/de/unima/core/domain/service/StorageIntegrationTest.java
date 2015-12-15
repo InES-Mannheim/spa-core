@@ -47,10 +47,10 @@ import de.unima.core.domain.Repository;
 import de.unima.core.domain.Schema;
 import de.unima.core.io.impl.BPMN20FileImpl;
 import de.unima.core.io.impl.BPMN20ImporterImpl;
-import de.unima.core.io.impl.OntModelToXESExporter;
 import de.unima.core.io.impl.XMLFileImpl;
 import de.unima.core.io.impl.XMLToOntModelImporter;
 import de.unima.core.io.impl.XSDToOntModelImporter;
+import de.unima.core.io.impl.XESExporter.OntModelToXESExporter;
 
 public class StorageIntegrationTest {
 
@@ -219,7 +219,7 @@ public class StorageIntegrationTest {
 		combinedSchemaAndInstanceModel.add(instanceModel);
 	    
 		final OntModelToXESExporter xesExporter = new OntModelToXESExporter();
-		final Set<XLog> logs = xesExporter.exportModel(combinedSchemaAndInstanceModel);
+		final Set<XLog> logs = xesExporter.export(combinedSchemaAndInstanceModel);
 		
 		Set<File> savedFiles = saveXESLogsToFiles(logs);
 		assertThat(savedFiles.isEmpty(), is(not(true)));
