@@ -40,6 +40,9 @@ import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
+
 import de.unima.core.domain.DataBucket;
 import de.unima.core.domain.DataPool;
 import de.unima.core.domain.Project;
@@ -262,13 +265,11 @@ public class StorageIntegrationTest {
 		return ModelFactory.createDefaultModel().read(inputStreamForFile, null);
 	}
 
-	private Path getFilePath(final String fileName) {
+	private static Path getFilePath(final String fileName) {
 		try {
-			final File file = new File(this.getClass().getResource("/"+fileName).toURI());
-			return Paths.get(file.getAbsolutePath());
-		} catch (NullPointerException | URISyntaxException exception) {
-			LOGGER.error("Unable to retrieve path for file \"" + fileName + "\"");
-			throw new RuntimeException(exception);
+			return Paths.get(Resources.getResource(fileName).toURI());
+		} catch (URISyntaxException e) {
+			throw Throwables.propagate(e);
 		}
 	}
 }
