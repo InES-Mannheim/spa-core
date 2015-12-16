@@ -43,17 +43,16 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 
-import de.unima.core.domain.DataBucket;
-import de.unima.core.domain.DataPool;
-import de.unima.core.domain.Project;
-import de.unima.core.domain.Repository;
-import de.unima.core.domain.Schema;
-import de.unima.core.io.impl.BPMN20FileImpl;
-import de.unima.core.io.impl.BPMN20ImporterImpl;
-import de.unima.core.io.impl.XMLFileImpl;
-import de.unima.core.io.impl.XMLToOntModelImporter;
-import de.unima.core.io.impl.XSDToOntModelImporter;
+import de.unima.core.domain.model.DataBucket;
+import de.unima.core.domain.model.DataPool;
+import de.unima.core.domain.model.Project;
+import de.unima.core.domain.model.Repository;
+import de.unima.core.domain.model.Schema;
+import de.unima.core.io.file.BPMN20ImporterImpl;
+import de.unima.core.io.file.XMLImporter;
+import de.unima.core.io.file.XSDImporter;
 import de.unima.core.io.impl.xes.OntModelToXESExporter;
+import de.unima.core.persistence.local.LocalPeristenceService;
 
 public class StorageIntegrationTest {
 
@@ -62,11 +61,11 @@ public class StorageIntegrationTest {
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 	
-	private RepositoryService persistentService;
+	private LocalPeristenceService persistentService;
 	
 	@Before
 	public void setUp() throws IOException{
-		this.persistentService = RepositoryService.withDataInFolder(temporaryFolder.newFolder().toPath());
+		this.persistentService = LocalPeristenceService.withDataInFolder(temporaryFolder.newFolder().toPath());
 	}
 	
 	@Test
@@ -105,8 +104,11 @@ public class StorageIntegrationTest {
 		assertThat(project.getDataPools(), not(hasItem(dataPool)));
 		assertThat(persistentService.findDataOfDataBucket(bucket).isPresent(), is(false));
 
-		persistentService.deleteSchema(schema);
+		project.unlinkSchema(schema.getId());
 		assertThat(project.getLinkedSchemas(), not(hasItem(schema)));
+		assertThat(persistentService.findProjectById(project.getId()).get().getLinkedSchemas(), hasItem(schema));
+		persistentService.deleteSchema(schema);
+		assertThat(persistentService.findProjectById(project.getId()).get().getLinkedSchemas(), not(hasItem(schema)));
 		
 		persistentService.deleteProject(project);
 		assertThat(repository.getProjects(), not(hasItem(project)));
@@ -157,7 +159,7 @@ public class StorageIntegrationTest {
 		final DataPool dataPool = persistentService.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
 		// Import data as new data bucket
 		final BPMN20ImporterImpl importer = new BPMN20ImporterImpl("http://spa.org/TestProject/SampleDataPool#");
-		final OntModel importedData = importer.importData(new BPMN20FileImpl(getFilePath("example-spa.bpmn").toString()));
+		final Model importedData = importer.importData(getFilePath("example-spa.bpmn").toFile());
 		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Example SPA process", importedData);
 		// Load data according to data schema; not consistent with data model
 		final Model m = persistentService.findDataOfDataBucket(bucket).get();
@@ -181,11 +183,11 @@ public class StorageIntegrationTest {
 		LOGGER.info("XES import test.");
 		
 		// Create owl file from xsd
-		final XSDToOntModelImporter schemaimporter = new XSDToOntModelImporter();
-		final OntModel schemaModel = schemaimporter.importData(new XMLFileImpl(getFilePath("xes.xsd").toString()));
+		final XSDImporter importer = new XSDImporter();
+		final OntModel xesOntology = importer.importData(getFilePath("xml/xes.xsd").toFile());
 	
 		// Add owl file as new schema
-		final Schema schema = persistentService.addDataAsNewSchema("XES2.0", schemaModel);
+		final Schema schema = persistentService.addDataAsNewSchema("XES2.0", xesOntology);
 		
 		// Create new project and link schema
 		final Project project = persistentService.createPersistentProjectWithGeneratedId("Test Project");
@@ -196,11 +198,11 @@ public class StorageIntegrationTest {
 		final DataPool dataPool = persistentService.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
 
 		// Import xes data as xml
-		final XMLToOntModelImporter instanceImporter = new XMLToOntModelImporter(schemaModel);
-		final Model instanceModel = instanceImporter.importData(new XMLFileImpl(getFilePath("running-example.xes").toString()));
+		final XMLImporter xesImporter = new XMLImporter(xesOntology);
+		final Model importedXesData = xesImporter.importData(getFilePath("running-example.xes").toFile());
 		
 		// Add data as new data bucket
-		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Running example", instanceModel);
+		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Running example", importedXesData);
 		final Optional<Model> foundDataForBucket = persistentService.findDataOfDataBucket(bucket);
 		
 		// assert that the statements are loaded

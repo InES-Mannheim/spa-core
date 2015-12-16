@@ -1,8 +1,12 @@
 package de.unima.core.io;
 
-import org.apache.jena.ontology.OntModel;
+import org.apache.jena.rdf.model.Model;
 
-public interface Importer<S extends DataSource> {
-	public OntModel importData(S ds);
-	public String getID();
+/**
+ * {@code Importer} provides means to convert data into RDF.
+ * 
+ * @param <T> source of the importer
+ */
+public interface Importer<T,R extends Model> {
+	public R importData(T dataSource);
 }

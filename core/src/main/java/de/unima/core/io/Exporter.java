@@ -1,5 +1,10 @@
 package de.unima.core.io;
 
-public interface Exporter<S extends DataSource> {
-	public void export();
+/**
+ * Provides means to export data.
+ * 
+ * @param <T> format of the data.
+ */
+public interface Exporter<T> {
+	public T export();
 }
