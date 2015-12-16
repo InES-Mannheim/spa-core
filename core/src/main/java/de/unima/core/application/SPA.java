@@ -9,76 +9,90 @@ import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.local.LocalPeristenceService;
 
 public interface SPA {
 	
 	/**
 	 * Creates a new {@link Project} with generated URI.
 	 * 
-	 * <p>The project and changes to the repository are persisted.
+	 * <p>The {@code Project} and changes to the repository are persisted.
 	 * 
 	 * @param label
-	 *            of the new project
+	 *            of the new {@code Project}
 	 * 
 	 * @return new {@code Project} with generated id
 	 */
 	Project createProject(String label);
 
 	/**
-	 * Finds all projects.
+	 * Finds all {@link Project}s.
 	 * 
-	 * <p>{@code DataPool}s and linked {@code Schema}s of each project are not
-	 * loaded. To fully load a project use
-	 * {@link LocalPeristenceService#findProjectById(String)};
+	 * <p>{@link DataPool}s and linked {@link Schema}s of each {@code Project} are not
+	 * loaded. To fully load a {@code Project} use
+	 * {@link SPA#findProjectById(String)};
 	 * 
-	 * @return list of persisted projects
+	 * @return list of persisted {@code Project}s
 	 */
 	List<Project> findAllProjects();
 
 	/**
-	 * Finds project with given id.
+	 * Finds {@link Project} with given id.
 	 * 
-	 * <p> All {@code DataPool}s and linked {@code Schema}s of the project are
+	 * <p> All {@link DataPool}s and linked {@link Schema}s of the {@code Project} are
 	 * loaded.
 	 * 
 	 * @param id
 	 *            as URI; for example: http://www.test.com/1
-	 * @return project if found; empty otherwise
+	 * @return {@code Project} if found; empty otherwise
 	 */
 	Optional<Project> findProjectById(String id);
 
 	/**
-	 * Saves given project.
+	 * Saves given {@link Project}.
 	 * 
 	 * <p> This action also saves all contained {@code DataPool}s.
 	 * 
 	 * @param project
 	 *            which should be saved
-	 * @return id of the project
+	 * @return id of the {@code Project}
 	 * @throws IllegalStateException
-	 *             if project could not be saved
+	 *             if {@code Project} could not be saved
 	 */
 	String saveProject(Project project);
 
 	/**
-	 * Deletes given project.
+	 * Deletes given {@link Project}.
 	 * 
-	 * <p> All schemas linked to this project are unlinked. Further, all contained
-	 * data pools and buckets are removed.
+	 * <p> All schemas linked to this {@code Project} are unlinked. Further, all contained
+	 * {@link DataPool}s and {@code DataBucket} are removed.
 	 * 
 	 * @param project
 	 *            which should be deleted
 	 */
 	void deleteProject(Project project);
 	
-
+	/**
+	 * Imports data as new {@link Schema} and generates an Id.
+	 * 
+	 * <p>
+	 * <b>Note:</b> The created {@code Schema} is persisted.
+	 * 
+	 * @param input
+	 *            schema
+	 * @param format
+	 *            of the schema
+	 * @param label
+	 *            of the new {@code Schema}
+	 * @return created {@code Schema}
+	 * @throws IllegalArgumentException
+	 *             if the format is not supported
+	 */
 	Schema importSchema(File input, String format, String label);
 
 	/**
-	 * Unlinks given schema from all affected projects and deletes the content.
+	 * Unlinks given schema from all affected {@link Project}s and deletes the content.
 	 * 
-	 * <p><b>Note:</b> Affected projects need to be reloaded.
+	 * <p><b>Note:</b> Affected {@code Project}s need to be reloaded.
 	 * 
 	 * @param schema
 	 *            which should be removed
@@ -86,16 +100,16 @@ public interface SPA {
 	void deleteSchema(Schema schema);
 
 	/**
-	 * Finds all {@code Schema}s.
+	 * Finds all {@link Schema}s.
 	 * 
 	 * @return list of persisted {@code Schema}s
 	 */
 	List<Schema> findAllSchemas();
 
 	/**
-	 * Finds {@code Schema} by id.
+	 * Finds {@link Schema} by id.
 	 * 
-	 * The id must be an URI (e.g. http://www.test.com/1)
+	 * <p><b>Note:</b> The id must be an URI (e.g. http://www.test.com/1)
 	 * 
 	 * @param id of the Schema as URI
 	 * @return found {@code Schema}; empty otherwise
@@ -103,7 +117,7 @@ public interface SPA {
 	Optional<Schema> findSchemaById(String id);
 
 	/**
-	 * Exports data stored for given {@code Schema}.
+	 * Exports data stored for given {@link Schema}.
 	 * 
 	 * @param schema which data should be returned
 	 * @return the data if present otherwise empty
@@ -112,34 +126,34 @@ public interface SPA {
 
 	/**
 	 * Creates a {@link DataPool} with generated Id and adds it to the given
-	 * project.
+	 * {@link Project}.
 	 * 
 	 * <p>
-	 * <b>Note:</b> The changes to the project and the new {@code DataPool} are
+	 * <b>Note:</b> The changes to the {@code Project} and the new {@code DataPool} are
 	 * persisted.
 	 * 
 	 * @param project
 	 *            to add the created pool
 	 * @param label
 	 *            of the new pool
-	 * @return new {@link DataPool}
+	 * @return new {@code DataPool}
 	 */
 	DataPool createDataPool(Project project, String label);
 
 	/**
-	 * Saves given {@code DataPool}.
+	 * Saves given {@link DataPool}.
 	 * 
 	 * @param dataPool
 	 *            which should be saved
-	 * @return id of the pool
+	 * @return id of the {@code DataPool}
 	 */
 	String saveDataPool(DataPool dataPool);
 
 	/**
-	 * Finds all {@code DataPool}s.
+	 * Finds all {@link DataPool}s.
 	 * 
 	 * <p>
-	 * <b>Note:</b> The labels of the contained {@code DataBucket}s are not
+	 * <b>Note:</b> The labels of the contained {@link DataBucket}s are not
 	 * loaded.
 	 * 
 	 * @return list of persistent {@code DataPool}s
@@ -147,23 +161,23 @@ public interface SPA {
 	List<DataPool> findAllDataPools();
 
 	/**
-	 * Finds {@code DataPool} by id and all contained data buckets.
+	 * Finds {@link DataPool} by id and all contained {@link DataBucket}.
 	 *
 	 * <p>
-	 * <b>Note:</b> Each found data pool refers to the project it belongs to.
-	 * Thus, {@code DataPool#getProject()} is not null. However, the project is
-	 * not fully loaded and should not be saved. To load the project, see
-	 * {@link LocalPeristenceService#findProjectById(String)}.
+	 * <b>Note:</b> Each found data pool refers to the {@link Project} it belongs to.
+	 * Thus, {@code DataPool#getProject()} is not null. However, the {@code Project} is
+	 * not fully loaded and should not be saved. To load the {@code Project}, see
+	 * {@link SPA#findProjectById(String)}.
 	 * 
 	 * @param id
-	 *            of the pool
+	 *            of the {@code DataPool}
 	 * @return found {@code DataPool}; empty otherwise
 	 */
 	Optional<DataPool> findDataPoolById(String id);
 
 	/**
-	 * Deletes given {@code DataPool}. This includes, the deletion of all
-	 * contained {@code DataBucket}s.
+	 * Deletes given {@link DataPool}. This includes, the deletion of all
+	 * contained {@link DataBucket}s.
 	 * 
 	 * @param dataPool
 	 *            which should be deleted
@@ -171,7 +185,7 @@ public interface SPA {
 	void deleteDataPool(DataPool dataPool);
 
 	/**
-	 * Imports data as new {@code DataBucket} into given {@code DataPool} and
+	 * Imports data as new {@link DataBucket} into given {@link DataPool} and
 	 * returns a generated Id.
 	 * 
 	 * <p>
