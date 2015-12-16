@@ -49,24 +49,24 @@ public class LocalSPATest {
 	@Test
 	public void whenFileFormatIsNotSupportedThenAnIllegalArgumentExceptionShouldBeThrown(){
 		expected.expect(IllegalArgumentException.class);
-		spa.importFileAsSchema(new File(""), "Nope", "na");
+		spa.importSchema(new File(""), "Nope", "na");
 	}
 	
 	@Test
 	public void whenOntologyIsImportedFromXsdASchemaShouldBeCreated(){
-		final Schema schema = spa.importFileAsSchema(getFilePath("xml/xes.xsd").toFile(), "XSD", "XES");
+		final Schema schema = spa.importSchema(getFilePath("xml/xes.xsd").toFile(), "XSD", "XES");
 		assertThat(schema, is(not(nullValue())));
 		assertThat(schema.getLabel(), is("XES"));
 	}
 	
 	@Test
 	public void whenXmlIsImportedADataBucketShouldBeCreated(){
-		final Schema schema = spa.importFileAsSchema(getFilePath("xml/xes.xsd").toFile(), "XSD", "XES");
-		final Project project = spa.createPersistentProjectWithGeneratedId("Test");
+		final Schema schema = spa.importSchema(getFilePath("xml/xes.xsd").toFile(), "XSD", "XES");
+		final Project project = spa.createProject("Test");
 		project.linkSchema(schema);
 		spa.saveProject(project);
-		final DataPool pool = spa.createPeristentDataPoolForProjectWithGeneratedId(project, "Pool1");
-		final DataBucket bucket = spa.importXmlAsDataBucket(getFilePath("running-example.xes").toFile(), "example xes", pool, schema);
+		final DataPool pool = spa.createDataPool(project, "Pool1");
+		final DataBucket bucket = spa.importData(getFilePath("running-example.xes").toFile(), "XES", "example xes", pool);
 		
 		assertThat(bucket.getLabel(), is(equalTo("example xes")));
 		final Optional<Model> model = service.findDataOfDataBucket(bucket);
@@ -75,12 +75,12 @@ public class LocalSPATest {
 	
 	@Test
 	public void whenBpmnIsImportedADataBucketShouldBeCreated(){
-		final Schema schema = spa.importFileAsSchema(getFilePath("BPMN_2.0_ontology.owl").toFile(), "RDF", "BPMN2 ontology");
-		final Project project = spa.createPersistentProjectWithGeneratedId("Test Project");
+		final Schema schema = spa.importSchema(getFilePath("BPMN_2.0_ontology.owl").toFile(), "RDF", "BPMN2 ontology");
+		final Project project = spa.createProject("Test Project");
 		project.linkSchema(schema);
 		spa.saveProject(project);
-		final DataPool dataPool = spa.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
-		final DataBucket bucket = spa.importFileAsDataBucketIntoDataPool(getFilePath("example-spa.bpmn").toFile(), "BPMN2", "Bucket 1", dataPool);
+		final DataPool dataPool = spa.createDataPool(project, "Sample Data Pool");
+		final DataBucket bucket = spa.importData(getFilePath("example-spa.bpmn").toFile(), "BPMN2", "Bucket 1", dataPool);
 		final Model foundData = service.findDataOfDataBucket(bucket).get();
 		final List<String> expectedStringStatements = Lists.newArrayList(
 				"[http://www.uni-mannheim/spa/local/bpmn/StartEvent_1, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://dkm.fbk.eu/index.php/BPMN2_Ontology#startEvent]"

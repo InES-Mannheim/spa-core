@@ -15,7 +15,7 @@ public interface ImporterSupport {
 	 * Adds a new importer.
 	 * 
 	 * @param importer which should be added
-	 * @param key TODO
+	 * @param key for the importer 
 	 * @param T source type
 	 * @return key of the new importer
 	 */
@@ -24,7 +24,7 @@ public interface ImporterSupport {
 	/**
 	 * Removes importer.
 	 * 
-	 * @param id of the importer
+	 * @param key of the importer
 	 * @param T source type
 	 * @return removed importer or empty if not found
 	 */
@@ -33,11 +33,11 @@ public interface ImporterSupport {
 	/**
 	 * Finds importer.
 	 * 
-	 * @param id of the importer
+	 * @param key of the importer
 	 * @param T source type
 	 * @return found importer or empty otherwise
 	 */
-	<T,R extends Model> Optional<Importer<T,R>> findImporterById(Key id);
+	<T,R extends Model> Optional<Importer<T,R>> findImporterByKey(Key key);
 	
 	/**
 	 * Determines if there is an importer with given key

@@ -41,13 +41,13 @@ public class AnyImporterSupportTest {
 	
 	@Test
 	public void whenImporterIsNotPresentAndShouldBeFoundThenReturnEmpty(){
-		assertThat(importerSupport.findImporterById(new Key("BPMN2")).isPresent(), is(false));
+		assertThat(importerSupport.findImporterByKey(new Key("BPMN2")).isPresent(), is(false));
 	}
 	
 	@Test
 	public void whenImporterIsPresentAndIsFoundThenItShouldBeReturned(){
 		importerSupport.addImporter(createSimpleFileBasedImporter(), "BPMN2");
-		assertThat(importerSupport.findImporterById(new Key("BPMN2")).isPresent(), is(true));
+		assertThat(importerSupport.findImporterByKey(new Key("BPMN2")).isPresent(), is(true));
 	}
 	
 	private Importer<File, Model> createSimpleFileBasedImporter(){
@@ -55,11 +55,6 @@ public class AnyImporterSupportTest {
 			@Override
 			public Model importData(File dataSource) {
 				return ModelFactory.createOntologyModel();
-			}
-			
-			@Override
-			public String getID() {
-				return "BPMN2";
 			}
 		};
 	}

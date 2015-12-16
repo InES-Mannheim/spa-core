@@ -1,7 +1,5 @@
 package de.unima.core.application.local;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Paths;
@@ -9,11 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 
 import de.unima.core.application.SPA;
 import de.unima.core.domain.model.DataBucket;
@@ -28,7 +22,7 @@ import de.unima.core.io.ImporterSupport;
 import de.unima.core.io.ImporterSupport.Key;
 import de.unima.core.io.file.BPMN20ImporterImpl;
 import de.unima.core.io.file.RDFImporterImpl;
-import de.unima.core.io.file.XMLImporterImpl;
+import de.unima.core.io.file.XESImporter;
 import de.unima.core.io.file.XSDImporterImpl;
 import de.unima.core.persistence.local.LocalPeristenceService;
 
@@ -45,26 +39,27 @@ public class LocalSPA implements SPA {
 	}
 	
 	public static SPA withDataInUniqueMemory(){
-		return addXsdRdfBpmnImportSupport(LocalPeristenceService.withDataInUniqueMemory());
+		return createWithDefaultImporters(LocalPeristenceService.withDataInUniqueMemory());
 	}
 	
 	public static SPA withDataInSharedMemory(){
-		return addXsdRdfBpmnImportSupport(LocalPeristenceService.withDataInSharedMemory());
+		return createWithDefaultImporters(LocalPeristenceService.withDataInSharedMemory());
 	}
 	
 	public static SPA withDataInFolder(String fullPathToFolder){
-		return addXsdRdfBpmnImportSupport(LocalPeristenceService.withDataInFolder(Paths.get(fullPathToFolder)));
+		return createWithDefaultImporters(LocalPeristenceService.withDataInFolder(Paths.get(fullPathToFolder)));
 	}
 	
-	private static SPA addXsdRdfBpmnImportSupport(PersistenceService persistenceService){
-		final ImporterSupport xsdRdfBpmn = new AnyImporterSupport();
-		xsdRdfBpmn.addImporter(new BPMN20ImporterImpl(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
-		xsdRdfBpmn.addImporter(new XSDImporterImpl(), "XSD");
-		xsdRdfBpmn.addImporter(new RDFImporterImpl(), "RDF");
-		return new LocalSPA(persistenceService, xsdRdfBpmn);
+	private static SPA createWithDefaultImporters(PersistenceService persistenceService){
+		final ImporterSupport importerSupport = new AnyImporterSupport();
+		importerSupport.addImporter(new BPMN20ImporterImpl(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
+		importerSupport.addImporter(new XSDImporterImpl(), "XSD");
+		importerSupport.addImporter(new XESImporter(), "XES");
+		importerSupport.addImporter(new RDFImporterImpl(), "RDF");
+		return new LocalSPA(persistenceService, importerSupport);
 	}
 
-	public Project createPersistentProjectWithGeneratedId(String label) {
+	public Project createProject(String label) {
 		return persistenceService.createPersistentProjectWithGeneratedId(label);
 	}
 
@@ -96,7 +91,7 @@ public class LocalSPA implements SPA {
 		return persistenceService.findSchemaById(id);
 	}
 
-	public DataPool createPeristentDataPoolForProjectWithGeneratedId(Project project, String label) {
+	public DataPool createDataPool(Project project, String label) {
 		return persistenceService.createPeristentDataPoolForProjectWithGeneratedId(project, label);
 	}
 
@@ -117,55 +112,39 @@ public class LocalSPA implements SPA {
 	}
 
 	@Override
-	public Schema importFileAsSchema(File input, String format, String label) {
+	public Schema importSchema(File input, String format, String label) {
 		return importFile(input, format, data -> persistenceService.addDataAsNewSchema(label, data)); 
 	}
 
 	@Override
-	public OutputStream exportDataOfSchema(Schema schema, String format) {
+	public OutputStream exportSchema(Schema schema, String format) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public DataBucket importFileAsDataBucketIntoDataPool(File input, String format, String label, DataPool dataPool) {
+	public DataBucket importData(File input, String format, String label, DataPool dataPool) {
 		return importFile(input, format, data -> persistenceService.addDataAsNewDataBucketToDataPool(dataPool, label, data));
 	}
 	
 	private <T extends Entity<String>, R extends Model> T importFile(File input, String format, Function<R, T> dataToDomainObject) {
-		final Optional<Importer<File, R>> importer = importerSupport.findImporterById(Key.of(format));
+		final Optional<Importer<File, R>> importer = importerSupport.findImporterByKey(Key.of(format));
 		return importer.map(imp -> imp.importData(input))
 				.map(dataToDomainObject)
 				.orElseThrow(() -> new IllegalArgumentException(String.format("Format '%s' is not supported. Must be one of %s.", format, importerSupport.listKeysAsString())));
 	}
-	
-	@Override
-	public DataBucket importXmlAsDataBucket(File xmlFile, String label, DataPool dataPool, Schema schema) {
-		checkArgument(xmlFile != null && xmlFile.exists(), "XML file must not be null and must exist.");
-		checkArgument(!StringUtils.isEmpty(label), "Label must not be empty or null.");
-		checkArgument(dataPool != null, "Data pool must not be null");
-		checkArgument(schema != null, "Schema must not be null");
-		return persistenceService.findDataOfSchema(schema).map(plainData -> {
-				final OntModel ontology = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-				ontology.add(plainData);
-				return ontology;})
-			.map(ontology -> new XMLImporterImpl(ontology).importData(xmlFile))
-			.map(convertedData -> persistenceService.addDataAsNewDataBucketToDataPool(dataPool, label, convertedData))
-			.orElseThrow(() -> new IllegalStateException(String
-				.format("Could not import file %s with label %s into data pool %s under schema %s", xmlFile, label, dataPool, schema)));
-	}
 
 	@Override
-	public void removeDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket) {
+	public void removeDataBucket(DataPool dataPool, DataBucket dataBucket) {
 		persistenceService.removeDataBucketFromDataPool(dataPool, dataBucket);
 	}
 
 	@Override
-	public OutputStream findDataOfDataBucket(DataBucket bucket) {
+	public OutputStream exportData(DataBucket bucket) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List<String> listSupportedImportFormats() {
+	public List<String> getSupportedImportFormats() {
 		return importerSupport.listKeysAsString();
 	}
 }

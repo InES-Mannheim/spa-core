@@ -23,7 +23,7 @@ public interface SPA {
 	 * 
 	 * @return new {@code Project} with generated id
 	 */
-	Project createPersistentProjectWithGeneratedId(String label);
+	Project createProject(String label);
 
 	/**
 	 * Finds all projects.
@@ -73,7 +73,7 @@ public interface SPA {
 	void deleteProject(Project project);
 	
 
-	Schema importFileAsSchema(File input, String format, String label);
+	Schema importSchema(File input, String format, String label);
 
 	/**
 	 * Unlinks given schema from all affected projects and deletes the content.
@@ -108,7 +108,7 @@ public interface SPA {
 	 * @param schema which data should be returned
 	 * @return the data if present otherwise empty
 	 */
-	OutputStream exportDataOfSchema(Schema schema, String format);
+	OutputStream exportSchema(Schema schema, String format);
 
 	/**
 	 * Creates a {@link DataPool} with generated Id and adds it to the given
@@ -124,7 +124,7 @@ public interface SPA {
 	 *            of the new pool
 	 * @return new {@link DataPool}
 	 */
-	DataPool createPeristentDataPoolForProjectWithGeneratedId(Project project, String label);
+	DataPool createDataPool(Project project, String label);
 
 	/**
 	 * Saves given {@code DataPool}.
@@ -190,27 +190,7 @@ public interface SPA {
 	 * @throws IllegalStateException
 	 *             if the data could not be stored
 	 */
-	DataBucket importFileAsDataBucketIntoDataPool(File input, String format, String label, DataPool dataPool);
-	
-	/**
-	 * Imports XML file as new {@code DataBucket} into given {@code DataPool}
-	 * while file content must adhere to given schema.
-	 * 
-	 * <p>
-	 * <b>Note:</b> Changes made to given {@code DataPool} are persisted.
-	 * Further, the created {@code DataBucket} is also persisted.
-	 * 
-	 * @param xmlFile
-	 *            containing XML
-	 * @param label
-	 *            of the new {@code DataBucket}
-	 * @param dataPool
-	 *            of the new {@code DataBucket}
-	 * @return created {@code DataBucket}
-	 * @throws IllegalStateException
-	 *             if the data could not be stored
-	 */
-	DataBucket importXmlAsDataBucket(File xmlFile, String label, DataPool dataPool, Schema schema);
+	DataBucket importData(File input, String format, String label, DataPool dataPool);
 
 	/**
 	 * Removes given {@code DataBucket}.
@@ -218,7 +198,7 @@ public interface SPA {
 	 * @param dataBucket
 	 *            which should be removed
 	 */
-	void removeDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket);
+	void removeDataBucket(DataPool dataPool, DataBucket dataBucket);
 
 	/**
 	 * Exports data stored for given {@code DataBucket}.
@@ -227,12 +207,13 @@ public interface SPA {
 	 *            which data should be returned
 	 * @return the data if present; empty otherwise
 	 */
-	OutputStream findDataOfDataBucket(DataBucket bucket);
+	OutputStream exportData(DataBucket bucket);
 	
 	/**
 	 * Lists all supported import formats.
 	 *  
 	 * @return list of supported import formats
 	 */
-	List<String> listSupportedImportFormats();
+	List<String> getSupportedImportFormats();
+	
 }

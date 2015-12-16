@@ -26,7 +26,7 @@ public class AnyImporterSupport implements ImporterSupport {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T, R extends Model> Optional<Importer<T,R>> findImporterById(Key key) {
+	public <T, R extends Model> Optional<Importer<T,R>> findImporterByKey(Key key) {
 		return Optional.ofNullable((Importer<T,R>) importers.get(key));
 	}
 
