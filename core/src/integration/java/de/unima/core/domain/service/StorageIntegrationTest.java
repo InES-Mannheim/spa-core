@@ -53,7 +53,7 @@ import de.unima.core.io.impl.BPMN20ImporterImpl;
 import de.unima.core.io.impl.XMLFileImpl;
 import de.unima.core.io.impl.XMLToOntModelImporter;
 import de.unima.core.io.impl.XSDToOntModelImporter;
-import de.unima.core.io.impl.XESExporter.OntModelToXESExporter;
+import de.unima.core.io.impl.xes.OntModelToXESExporter;
 
 public class StorageIntegrationTest {
 

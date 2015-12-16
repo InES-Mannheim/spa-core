@@ -1,4 +1,4 @@
-package de.unima.core.io.impl.XESExporter;
+package de.unima.core.io.impl.xes;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
