@@ -10,7 +10,7 @@ import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
 
-public class TracesRetriever extends SetRetriever<XTrace> {
+class TracesRetriever extends SetRetriever<XTrace> {
 	
 	private final RDFNode logNode;
 	

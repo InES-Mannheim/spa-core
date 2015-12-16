@@ -15,7 +15,7 @@ import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 
-public class LogsRetriever extends SetRetriever<XLog> {
+class LogsRetriever extends SetRetriever<XLog> {
 
 	public LogsRetriever(Model model) {
 		super(model);

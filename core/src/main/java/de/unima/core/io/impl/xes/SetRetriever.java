@@ -15,7 +15,7 @@ import org.deckfour.xes.model.XAttributeMap;
 
 import com.google.common.base.Throwables;
 
-public abstract class SetRetriever<T> extends Retriever<Set<T>> {
+abstract class SetRetriever<T> extends Retriever<Set<T>> {
 	
 	public SetRetriever(Model model) {
 		super(model);

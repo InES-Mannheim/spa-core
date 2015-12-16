@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
 
-public class LogEventClassifiersRetriever extends SetRetriever<XEventClassifier> {
+class LogEventClassifiersRetriever extends SetRetriever<XEventClassifier> {
 
 	private final RDFNode logNode;
 	

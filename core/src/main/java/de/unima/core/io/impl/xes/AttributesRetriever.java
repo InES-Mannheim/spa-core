@@ -18,7 +18,7 @@ import org.deckfour.xes.model.XAttributeMap;
 
 import com.google.common.base.Throwables;
 
-public class AttributesRetriever extends Retriever<XAttributeMap> {
+class AttributesRetriever extends Retriever<XAttributeMap> {
 
 	private final static SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 	

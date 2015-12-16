@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 
-public class EventsRetriever extends SetRetriever<XEvent> {
+class EventsRetriever extends SetRetriever<XEvent> {
 
 	
 	private final RDFNode traceNode;

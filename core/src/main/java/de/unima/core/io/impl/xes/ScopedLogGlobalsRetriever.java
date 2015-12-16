@@ -8,7 +8,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.deckfour.xes.model.XAttribute;
 
-public class ScopedLogGlobalsRetriever extends SetRetriever<Collection<XAttribute>> {
+class ScopedLogGlobalsRetriever extends SetRetriever<Collection<XAttribute>> {
 
 	private final RDFNode logNode;
 	private final String scope;

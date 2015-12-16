@@ -6,7 +6,7 @@ import org.apache.jena.rdf.model.Model;
 import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryNaiveImpl;
 
-public abstract class Retriever<T> {
+abstract class Retriever<T> {
 	
 	protected final static String NS_XES = "http://code.deckfour.org/xes#";
 	protected final static String NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";

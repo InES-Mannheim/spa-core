@@ -12,7 +12,7 @@ import org.deckfour.xes.extension.XExtensionManager;
 
 import com.google.common.base.Throwables;
 
-public class LogExtensionsRetriever extends SetRetriever<XExtension> {
+class LogExtensionsRetriever extends SetRetriever<XExtension> {
 
 	private final RDFNode logNode;
 	
