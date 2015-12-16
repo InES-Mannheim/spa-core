@@ -17,20 +17,16 @@ import com.google.common.base.Throwables;
 
 public abstract class SetRetriever<T> extends Retriever<Set<T>> {
 	
-	protected abstract T createElement(QuerySolution querySolution);
-	
 	public SetRetriever(Model model) {
 		super(model);
 	}
 	
+	protected abstract T createElement(QuerySolution querySolution);
+	
 	public Set<T> retrieve() {
-		final SelectBuilder queryBuilder = getQueryBuilder();
-		final Query query;
-		synchronized(SetRetriever.class){
-			setQueryParameters();
-			query = queryBuilder.build();	
-		}
-		return executeQuery(query);
+		final SelectBuilder queryBuilder = createAndConfigureQueryBuilder(); 
+		setQueryParameters(queryBuilder);
+		return executeQuery(queryBuilder.build());
 	}
 	
 	protected Set<T> executeQuery(Query query) {

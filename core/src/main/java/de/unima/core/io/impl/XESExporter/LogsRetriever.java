@@ -17,29 +17,10 @@ import org.deckfour.xes.model.XTrace;
 
 public class LogsRetriever extends SetRetriever<XLog> {
 
-	private static final SelectBuilder queryBuilder;
-	/**
-	 * Initialize query builder for retrieving all logs
-	 */
-	static {
-		queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addPrefix("rdf:", NS_RDF);
-		queryBuilder.addVar("?log");
-		queryBuilder.addVar("?attributeKey");
-		queryBuilder.addVar("?attributeValue");
-		queryBuilder.addWhere("?log", "rdf:type", "xes:log");
-	}
-	
 	public LogsRetriever(Model model) {
 		super(model);
 	}
 	
-	@Override
-	protected SelectBuilder getQueryBuilder() {
-		return queryBuilder;
-	}
-
 	@Override
 	protected XLog createElement(QuerySolution querySolution) {
 		final RDFNode logNode = querySolution.get("?log");
@@ -57,10 +38,6 @@ public class LogsRetriever extends SetRetriever<XLog> {
 		final Set<XEventClassifier> classifiers = getLogEventClassifiers(logNode);
 		log.getClassifiers().addAll(classifiers);
 		return log;
-	}
-	
-	@Override
-	protected void setQueryParameters() {		
 	}
 	
 	private Set<XTrace> getTraces(RDFNode logNode) {
@@ -86,4 +63,17 @@ public class LogsRetriever extends SetRetriever<XLog> {
 		LogEventClassifiersRetriever retriever = new LogEventClassifiersRetriever(logNode, model);
 		return retriever.retrieve();
 	}
+
+	@Override
+	protected SelectBuilder createAndConfigureQueryBuilder() {
+		final SelectBuilder queryBuilder = new SelectBuilder();
+		queryBuilder.addPrefix("xes:", NS_XES);
+		queryBuilder.addPrefix("rdf:", NS_RDF);
+		queryBuilder.addVar("?log");
+		queryBuilder.addVar("?attributeKey");
+		queryBuilder.addVar("?attributeValue");
+		queryBuilder.addWhere("?log", "rdf:type", "xes:log");
+		return queryBuilder;
+	}
 }
+

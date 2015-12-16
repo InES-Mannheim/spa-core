@@ -14,28 +14,11 @@ import com.google.common.base.Throwables;
 
 public class LogExtensionsRetriever extends SetRetriever<XExtension> {
 
-	private static final SelectBuilder queryBuilder;
-	/**
-	 * Initialize query builder for retrieving all extensions of a specific log
-	 */
-	static {
-		queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addVar("?uri");
-		queryBuilder.addWhere("?log", "xes:extension", "?extension");
-		queryBuilder.addWhere("?extension", "xes:uri", "?uri");
-	}
-	
 	private final RDFNode logNode;
 	
 	public LogExtensionsRetriever(RDFNode logNode, Model model) {
 		super(model);
 		this.logNode = logNode;
-	}
-	
-	@Override
-	protected SelectBuilder getQueryBuilder() {
-		return queryBuilder;
 	}
 
 	@Override
@@ -50,8 +33,18 @@ public class LogExtensionsRetriever extends SetRetriever<XExtension> {
 	}
 
 	@Override
-	protected void setQueryParameters() {
+	protected void setQueryParameters(SelectBuilder queryBuilder) {
 		queryBuilder.setVar("?log", logNode);
+	}
+
+	@Override
+	protected SelectBuilder createAndConfigureQueryBuilder() {
+		final SelectBuilder queryBuilder = new SelectBuilder();
+		queryBuilder.addPrefix("xes:", NS_XES);
+		queryBuilder.addVar("?uri");
+		queryBuilder.addWhere("?log", "xes:extension", "?extension");
+		queryBuilder.addWhere("?extension", "xes:uri", "?uri");
+		return queryBuilder;
 	}
 
 }

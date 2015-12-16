@@ -21,12 +21,17 @@ import com.google.common.base.Throwables;
 public class AttributesRetriever extends Retriever<XAttributeMap> {
 
 	private final static SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-	private static final SelectBuilder queryBuilder;
-	/**
-	 * Initialize query builder for retrieving all attributes of a specific log element (log, trace, event)
-	 */
-	static {
-		queryBuilder = new SelectBuilder();
+	
+	private final RDFNode node;
+	
+	public AttributesRetriever(RDFNode node, Model model) {
+		super(model);
+		this.node = node;
+	}
+	
+	@Override
+	protected SelectBuilder createAndConfigureQueryBuilder() {
+		final SelectBuilder queryBuilder = new SelectBuilder();
 		queryBuilder.addPrefix("xes:", NS_XES);
 		queryBuilder.addPrefix("rdfs:", NS_RDFS);
 		queryBuilder.addPrefix("owl:", NS_OWL);
@@ -39,29 +44,19 @@ public class AttributesRetriever extends Retriever<XAttributeMap> {
 		queryBuilder.addWhere("?attributeType", "rdfs:subClassOf", "xes:AttributeType");
 		queryBuilder.addWhere("?attributeTypeAnon", "owl:allValuesFrom", "?attributeType");
 		queryBuilder.addWhere("?attributeTypeAnon", "owl:onProperty", "?attribute");
-	}
-	
-	private final RDFNode node;
-	
-	public AttributesRetriever(RDFNode node, Model model) {
-		super(model);
-		this.node = node;
-	}
-	
-	@Override
-	protected SelectBuilder getQueryBuilder() {
 		return queryBuilder;
 	}
 	
 	@Override
 	public XAttributeMap retrieve() {
-		final SelectBuilder queryBuilder = getQueryBuilder();
-		final Query query;
-		synchronized(AttributesRetriever.class){
-			setQueryParameters();
-			query = queryBuilder.build();	
-		}
-		return executeQuery(query);
+		final SelectBuilder builder = createAndConfigureQueryBuilder();
+		setQueryParameters(builder);
+		return executeQuery(builder.build());
+	}
+	
+	@Override
+	protected void setQueryParameters(SelectBuilder queryBuilder) {
+		queryBuilder.setVar("?node", node);
 	}
 	
 	@Override
@@ -88,10 +83,6 @@ public class AttributesRetriever extends Retriever<XAttributeMap> {
 		return attribute;
 	}
 
-	@Override
-	protected void setQueryParameters() {
-		queryBuilder.setVar("?node", node);
-	}
 	
 	private XAttribute createAttribute(String attributeType, String key, String value) {
 		switch(attributeType) {

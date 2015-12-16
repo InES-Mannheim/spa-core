@@ -15,15 +15,19 @@ public abstract class Retriever<T> {
 	protected final static String NS_XSD = "http://www.w3.org/2001/XMLSchema#";
 	protected final static XFactory factory = new XFactoryNaiveImpl();
 	
-	protected final Model model;
 	
-	protected abstract SelectBuilder getQueryBuilder();
-	protected abstract void setQueryParameters();
-	public abstract T retrieve();
-	protected abstract T executeQuery(Query query);
+	protected final Model model;
 	
 	public Retriever(Model model) {
 		this.model = model;
 	}
+	
+	protected abstract SelectBuilder createAndConfigureQueryBuilder();
+	
+	protected void setQueryParameters(SelectBuilder queryBuilder){}
+	
+	public abstract T retrieve();
+	
+	protected abstract T executeQuery(Query query);
 	
 }

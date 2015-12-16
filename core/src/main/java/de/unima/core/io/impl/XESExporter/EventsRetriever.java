@@ -9,18 +9,6 @@ import org.deckfour.xes.model.XEvent;
 
 public class EventsRetriever extends SetRetriever<XEvent> {
 
-	private static final SelectBuilder queryBuilder;
-	/**
-	 * Initialize query builder for retrieving all events of a specific trace
-	 */
-	static {
-		queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addPrefix("rdf:", NS_RDF);
-		queryBuilder.addVar("?event");
-		queryBuilder.addWhere("?event", "rdf:type", "xes:EventType");
-		queryBuilder.addWhere("?trace", "xes:event", "?event");
-	}
 	
 	private final RDFNode traceNode;
 	
@@ -30,8 +18,18 @@ public class EventsRetriever extends SetRetriever<XEvent> {
 	}
 	
 	@Override
-	protected SelectBuilder getQueryBuilder() {
+	protected SelectBuilder createAndConfigureQueryBuilder() {
+		final SelectBuilder queryBuilder = new SelectBuilder();
+		queryBuilder.addPrefix("xes:", NS_XES);
+		queryBuilder.addPrefix("rdf:", NS_RDF);
+		queryBuilder.addVar("?event");
+		queryBuilder.addWhere("?event", "rdf:type", "xes:EventType");
 		return queryBuilder;
+	}
+	
+	@Override
+	protected void setQueryParameters(SelectBuilder queryBuilder) {
+		queryBuilder.setVar("?trace", traceNode);
 	}
 
 	@Override
@@ -42,10 +40,4 @@ public class EventsRetriever extends SetRetriever<XEvent> {
 		event.getAttributes().putAll(attributes);
 		return event;
 	}
-
-	@Override
-	protected void setQueryParameters() {
-		queryBuilder.setVar("?trace", traceNode);
-	}
-
 }

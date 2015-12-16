@@ -9,30 +9,11 @@ import org.deckfour.xes.classification.XEventClassifier;
 
 public class LogEventClassifiersRetriever extends SetRetriever<XEventClassifier> {
 
-	private static final SelectBuilder queryBuilder;
-	/**
-	 * Initialize query builder for retrieving all extensions of a specific log
-	 */
-	static {
-		queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addVar("?name");
-		queryBuilder.addVar("?keys");
-		queryBuilder.addWhere("?log", "xes:classifier", "?classifier");
-		queryBuilder.addWhere("?classifier", "xes:name", "?name");
-		queryBuilder.addWhere("?classifier", "xes:keys", "?keys");
-	}
-	
 	private final RDFNode logNode;
 	
 	public LogEventClassifiersRetriever(RDFNode logNode, Model model) {
 		super(model);
 		this.logNode = logNode;
-	}
-	
-	@Override
-	protected SelectBuilder getQueryBuilder() {
-		return queryBuilder;
 	}
 
 	@Override
@@ -43,8 +24,20 @@ public class LogEventClassifiersRetriever extends SetRetriever<XEventClassifier>
 	}
 
 	@Override
-	protected void setQueryParameters() {
+	protected void setQueryParameters(SelectBuilder queryBuilder) {
 		queryBuilder.setVar("?log", logNode);
+	}
+
+	@Override
+	protected SelectBuilder createAndConfigureQueryBuilder() {
+		final SelectBuilder queryBuilder = new SelectBuilder();
+		queryBuilder.addPrefix("xes:", NS_XES);
+		queryBuilder.addVar("?name");
+		queryBuilder.addVar("?keys");
+		queryBuilder.addWhere("?log", "xes:classifier", "?classifier");
+		queryBuilder.addWhere("?classifier", "xes:name", "?name");
+		queryBuilder.addWhere("?classifier", "xes:keys", "?keys");
+		return queryBuilder;
 	}
 
 }

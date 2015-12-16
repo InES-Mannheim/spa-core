@@ -11,19 +11,6 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XTrace;
 
 public class TracesRetriever extends SetRetriever<XTrace> {
-
-	private static final SelectBuilder queryBuilder;
-	/**
-	 * Initialize query builder for retrieving all traces of a specific log
-	 */
-	static {
-		queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addPrefix("rdf:", NS_RDF);
-		queryBuilder.addVar("?trace");
-		queryBuilder.addWhere("?trace", "rdf:type", "xes:TraceType");
-		queryBuilder.addWhere("?log", "xes:trace", "?trace");
-	}
 	
 	private final RDFNode logNode;
 	
@@ -32,11 +19,6 @@ public class TracesRetriever extends SetRetriever<XTrace> {
 		this.logNode = logNode;
 	}
 	
-	@Override
-	protected SelectBuilder getQueryBuilder() {
-		return queryBuilder;
-	}
-
 	@Override
 	protected XTrace createElement(QuerySolution querySolution) {
 		final RDFNode traceNode = querySolution.get("?trace");
@@ -49,13 +31,24 @@ public class TracesRetriever extends SetRetriever<XTrace> {
 	}
 
 	@Override
-	protected void setQueryParameters() {
+	protected void setQueryParameters(SelectBuilder queryBuilder) {
 		queryBuilder.setVar("?log", logNode);
 	}
 	
 	private Set<XEvent> getEvents(RDFNode traceNode) {
 		EventsRetriever retriever = new EventsRetriever(traceNode, model);
 		return retriever.retrieve();
+	}
+
+	@Override
+	protected SelectBuilder createAndConfigureQueryBuilder() {
+		final SelectBuilder queryBuilder;
+		queryBuilder = new SelectBuilder();
+		queryBuilder.addPrefix("xes:", NS_XES);
+		queryBuilder.addPrefix("rdf:", NS_RDF);
+		queryBuilder.addVar("?trace");
+		queryBuilder.addWhere("?trace", "rdf:type", "xes:TraceType");
+		return queryBuilder;
 	}
 
 }

@@ -10,19 +10,6 @@ import org.deckfour.xes.model.XAttribute;
 
 public class ScopedLogGlobalsRetriever extends SetRetriever<Collection<XAttribute>> {
 
-	private static final SelectBuilder queryBuilder;
-	/**
-	 * Initialize query builder for retrieving all scoped global variables of a specific log
-	 */
-	static {
-		queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xsd:", NS_XSD);
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addVar("?global");
-		queryBuilder.addWhere("?log", "xes:global", "?global");
-		queryBuilder.addWhere("?global", "xes:scope", "?scope");
-	}
-	
 	private final RDFNode logNode;
 	private final String scope;
 	
@@ -30,11 +17,6 @@ public class ScopedLogGlobalsRetriever extends SetRetriever<Collection<XAttribut
 		super(model);
 		this.logNode = logNode;
 		this.scope = scope;
-	}
-	
-	@Override
-	protected SelectBuilder getQueryBuilder() {
-		return queryBuilder;
 	}
 
 	@Override
@@ -44,9 +26,20 @@ public class ScopedLogGlobalsRetriever extends SetRetriever<Collection<XAttribut
 	}
 
 	@Override
-	protected void setQueryParameters() {
+	protected void setQueryParameters(SelectBuilder queryBuilder) {
 		queryBuilder.setVar("?scope", "\""+scope+"\"^^xsd:NCName");
 		queryBuilder.setVar("?log", logNode);
+	}
+
+	@Override
+	protected SelectBuilder createAndConfigureQueryBuilder() {
+		final SelectBuilder queryBuilder = new SelectBuilder();
+		queryBuilder.addPrefix("xsd:", NS_XSD);
+		queryBuilder.addPrefix("xes:", NS_XES);
+		queryBuilder.addVar("?global");
+		queryBuilder.addWhere("?log", "xes:global", "?global");
+		queryBuilder.addWhere("?global", "xes:scope", "?scope");
+		return queryBuilder;
 	}
 
 }
