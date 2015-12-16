@@ -7,27 +7,41 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.deckfour.xes.in.XParser;
+import org.deckfour.xes.in.XParserRegistry;
+import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.out.XesXmlSerializer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 import de.unima.core.domain.DataBucket;
 import de.unima.core.domain.DataPool;
@@ -37,8 +51,9 @@ import de.unima.core.domain.Schema;
 import de.unima.core.io.impl.BPMN20FileImpl;
 import de.unima.core.io.impl.BPMN20ImporterImpl;
 import de.unima.core.io.impl.XMLFileImpl;
-import de.unima.core.io.impl.XMLImporterImpl;
-import de.unima.core.io.impl.XSDImporterImpl;
+import de.unima.core.io.impl.XMLToOntModelImporter;
+import de.unima.core.io.impl.XSDToOntModelImporter;
+import de.unima.core.io.impl.xes.OntModelToXESExporter;
 
 public class StorageIntegrationTest {
 
@@ -166,11 +181,11 @@ public class StorageIntegrationTest {
 		LOGGER.info("XES import test.");
 		
 		// Create owl file from xsd
-		final XSDImporterImpl importer = new XSDImporterImpl();
-		final OntModel model = importer.importData(new XMLFileImpl(getFilePath("xes.xsd").toString()));
+		final XSDToOntModelImporter schemaimporter = new XSDToOntModelImporter();
+		final OntModel schemaModel = schemaimporter.importData(new XMLFileImpl(getFilePath("xes.xsd").toString()));
 	
 		// Add owl file as new schema
-		final Schema schema = persistentService.addDataAsNewSchema("XES2.0", model);
+		final Schema schema = persistentService.addDataAsNewSchema("XES2.0", schemaModel);
 		
 		// Create new project and link schema
 		final Project project = persistentService.createPersistentProjectWithGeneratedId("Test Project");
@@ -181,15 +196,59 @@ public class StorageIntegrationTest {
 		final DataPool dataPool = persistentService.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
 
 		// Import xes data as xml
-		final XMLImporterImpl xesImporter = new XMLImporterImpl(model);
-		final Model importedXesData = xesImporter.importData(new XMLFileImpl(getFilePath("running-example.xes").toString()));
+		final XMLToOntModelImporter instanceImporter = new XMLToOntModelImporter(schemaModel);
+		final Model instanceModel = instanceImporter.importData(new XMLFileImpl(getFilePath("running-example.xes").toString()));
 		
 		// Add data as new data bucket
-		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Running example", importedXesData);
+		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Running example", instanceModel);
 		final Optional<Model> foundDataForBucket = persistentService.findDataOfDataBucket(bucket);
 		
 		// assert that the statements are loaded
 		assertThat(foundDataForBucket.isPresent(), is(true));
+	}
+	
+	@Test
+	public void xesExportIntegrationTest() throws Exception {
+		LOGGER.info("XES export test.");
+		
+		final OntModel schemaModel = ModelFactory.createOntologyModel();
+		schemaModel.read("xes.owl");
+		
+		final OntModel instanceModel = ModelFactory.createOntologyModel();
+		instanceModel.read("running-example.owl");
+		
+		final OntModel combinedSchemaAndInstanceModel = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+		combinedSchemaAndInstanceModel.add(schemaModel);
+		combinedSchemaAndInstanceModel.add(instanceModel);
+	    
+		final OntModelToXESExporter xesExporter = new OntModelToXESExporter();
+		final Set<XLog> logs = xesExporter.export(combinedSchemaAndInstanceModel);
+		
+		Set<File> savedFiles = saveXESLogsToFiles(logs);
+		assertThat(savedFiles.isEmpty(), is(not(true)));
+		
+		for(File savedFile:savedFiles) {
+			for(XParser parser : XParserRegistry.instance().getAvailable()) {
+				if(parser.canParse(savedFile)) {
+					List<XLog> importedLogs = parser.parse(savedFile);
+					assertThat(importedLogs.isEmpty(), is(not(true)));
+				}
+			}
+		}
+	}
+	
+	private Set<File> saveXESLogsToFiles(Set<XLog> logs) throws IOException {
+		final Set<File> savedXESFiles = new HashSet<File>();
+		for(XLog log:logs) {
+			File xesFile = temporaryFolder.newFile();
+			final OutputStream outputStream = new FileOutputStream(xesFile);
+			final XesXmlSerializer serializer = new XesXmlSerializer();
+			serializer.serialize(log, outputStream);
+			outputStream.flush();
+			outputStream.close();
+			savedXESFiles.add(xesFile);
+		}
+		return savedXESFiles;
 	}
 
 	private Model createProcessData() throws IOException {
@@ -206,7 +265,11 @@ public class StorageIntegrationTest {
 		return ModelFactory.createDefaultModel().read(inputStreamForFile, null);
 	}
 
-	private Path getFilePath(final String fileName) {
-		return Paths.get(this.getClass().getResource("/"+fileName).getFile());
+	private static Path getFilePath(final String fileName) {
+		try {
+			return Paths.get(Resources.getResource(fileName).toURI());
+		} catch (URISyntaxException e) {
+			throw Throwables.propagate(e);
+		}
 	}
 }

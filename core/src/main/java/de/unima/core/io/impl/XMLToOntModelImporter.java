@@ -3,17 +3,19 @@ package de.unima.core.io.impl;
 import java.io.File;
 
 import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.ModelFactory;
 
 import de.unima.core.io.Importer;
 import de.unima.core.io.XMLFile;
 import de.unima.ontmalizer.XML2OWLMapper;
 
-public class XMLImporterImpl implements Importer<XMLFile> {
+public class XMLToOntModelImporter implements Importer<XMLFile> {
 	
 	private String id;
 	private OntModel schemeOntologyModel;
 	
-	public XMLImporterImpl(OntModel schemeOntologyModel) {
+	public XMLToOntModelImporter(OntModel schemeOntologyModel) {
 		this.schemeOntologyModel = schemeOntologyModel;
 	}
 
@@ -21,8 +23,9 @@ public class XMLImporterImpl implements Importer<XMLFile> {
 	public OntModel importData(XMLFile xmlSource) {
 		XML2OWLMapper mapping = new XML2OWLMapper(new File(xmlSource.getPath()), schemeOntologyModel);
 	    mapping.convertXML2OWL();
-	    schemeOntologyModel.add(mapping.getModel());
-		return schemeOntologyModel;
+	    OntModel ontModelInstance = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+	    ontModelInstance.add(mapping.getModel());
+		return ontModelInstance;
 	}
 
 	@Override
