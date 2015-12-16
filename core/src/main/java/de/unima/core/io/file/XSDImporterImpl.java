@@ -8,8 +8,6 @@ import de.unima.ontmalizer.XSD2OWLMapper;
 
 public class XSDImporterImpl implements FileBasedImporter<OntModel> {
 	
-	private String id;
-
 	@Override
 	public OntModel importData(File xmlSource) {
 		XSD2OWLMapper mapping = new XSD2OWLMapper(xmlSource);
@@ -17,12 +15,6 @@ public class XSDImporterImpl implements FileBasedImporter<OntModel> {
 	    mapping.setDataTypePropPrefix("");
 	    mapping.convertXSD2OWL();
 		return mapping.getOntology();
-	}
-
-	@Override
-	public String getID() {
-
-		return this.id;
 	}
 
 }

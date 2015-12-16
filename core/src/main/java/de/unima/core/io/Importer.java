@@ -9,5 +9,4 @@ import org.apache.jena.rdf.model.Model;
  */
 public interface Importer<T,R extends Model> {
 	public R importData(T dataSource);
-	public String getID();
 }

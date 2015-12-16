@@ -10,7 +10,6 @@ import de.unima.ontmalizer.XML2OWLMapper;
 
 public class XMLImporterImpl implements FileBasedImporter<Model> {
 	
-	private String id;
 	private OntModel ontology;
 	
 	public XMLImporterImpl(OntModel ontology) {
@@ -22,12 +21,6 @@ public class XMLImporterImpl implements FileBasedImporter<Model> {
 		XML2OWLMapper mapper = new XML2OWLMapper(xml, ontology);
 	    mapper.convertXML2OWL();
 	    return ModelFactory.createDefaultModel().add(mapper.getModel());
-	}
-
-	@Override
-	public String getID() {
-
-		return this.id;
 	}
 
 }

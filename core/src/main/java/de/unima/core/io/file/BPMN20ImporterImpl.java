@@ -31,7 +31,6 @@ import org.camunda.bpm.model.bpmn.instance.StartEvent;
 
 public class BPMN20ImporterImpl implements FileBasedImporter<Model> {
 	
-	private String id;
 	private final String individualNameSpace;
 	
 	private static final String SCHEMAPATH = "ontologies/BPMN_2.0_ontology.owl";
@@ -243,9 +242,4 @@ public class BPMN20ImporterImpl implements FileBasedImporter<Model> {
 	    return ontModelInstance;
 	}
 
-	@Override
-	public String getID() {
-
-		return this.id;
-	}
 }

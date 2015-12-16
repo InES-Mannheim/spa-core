@@ -15,10 +15,4 @@ public class RDFImporterImpl implements FileBasedImporter<OntModel> {
 	    return m;
 	}
 
-	@Override
-	public String getID() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
