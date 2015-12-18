@@ -11,8 +11,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.unima.core.io.ImporterSupport.Key;
-
 public class AnyImporterSupportTest {
 
 	private AnyImporterSupport importerSupport;
