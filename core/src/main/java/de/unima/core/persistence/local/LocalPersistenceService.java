@@ -23,7 +23,7 @@ import de.unima.core.storage.jena.JenaTDBStore;
  * Implementation of the {@code PersistenceService} which stores entities
  * locally on disk or in memory.
  */
-public class LocalPeristenceService implements PersistenceService {
+public class LocalPersistenceService implements PersistenceService {
 
 	private final static String REPOSITORY_URI = "http://www.uni-mannheim.de/spa/Repository/single";
 	
@@ -34,7 +34,7 @@ public class LocalPeristenceService implements PersistenceService {
 	private final DataPoolRepository dataPoolRepository;
 	private final DataBucketRepository dataBucketRepository;
 	
-	private LocalPeristenceService(Store store) {
+	private LocalPersistenceService(Store store) {
 		this.repositoryRepository = new RepositoryRepository(store);
 		this.schemaRepository = new SchemaRepository(store);
 		this.projectRepository = new ProjectRepository(store);
@@ -43,16 +43,16 @@ public class LocalPeristenceService implements PersistenceService {
 		this.rand = new Random();
 	}
 	
-	public static LocalPeristenceService withDataInSharedMemory(){
-		return new LocalPeristenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
+	public static LocalPersistenceService withDataInSharedMemory(){
+		return new LocalPersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
 	}
 	
-	public static LocalPeristenceService withDataInUniqueMemory(){
-		return new LocalPeristenceService(JenaTDBStore.withUniqueMemoryLocation());
+	public static LocalPersistenceService withDataInUniqueMemory(){
+		return new LocalPersistenceService(JenaTDBStore.withUniqueMemoryLocation());
 	}
 	
-	public static LocalPeristenceService withDataInFolder(Path pathToFolder){
-		return new LocalPeristenceService(JenaTDBStore.withFolder(pathToFolder));
+	public static LocalPersistenceService withDataInFolder(Path pathToFolder){
+		return new LocalPersistenceService(JenaTDBStore.withFolder(pathToFolder));
 	}
 
 	/* (non-Javadoc)

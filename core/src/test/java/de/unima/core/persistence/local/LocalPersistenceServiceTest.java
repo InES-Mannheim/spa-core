@@ -21,18 +21,18 @@ import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.local.LocalPeristenceService;
+import de.unima.core.persistence.local.LocalPersistenceService;
 
-public class LocalPeristenceServiceTest {
+public class LocalPersistenceServiceTest {
 
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
 	
-	private LocalPeristenceService service;
+	private LocalPersistenceService service;
 
 	@Before
 	public void setUp(){
-		this.service = LocalPeristenceService.withDataInUniqueMemory();
+		this.service = LocalPersistenceService.withDataInUniqueMemory();
 	}
 	
 	@Test

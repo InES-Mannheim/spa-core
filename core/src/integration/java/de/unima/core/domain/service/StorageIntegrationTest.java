@@ -52,7 +52,7 @@ import de.unima.core.io.file.BPMN20ImporterImpl;
 import de.unima.core.io.file.XMLImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.io.impl.xes.OntModelToXESExporter;
-import de.unima.core.persistence.local.LocalPeristenceService;
+import de.unima.core.persistence.local.LocalPersistenceService;
 
 public class StorageIntegrationTest {
 
@@ -61,11 +61,11 @@ public class StorageIntegrationTest {
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 	
-	private LocalPeristenceService persistentService;
+	private LocalPersistenceService persistentService;
 	
 	@Before
 	public void setUp() throws IOException{
-		this.persistentService = LocalPeristenceService.withDataInFolder(temporaryFolder.newFolder().toPath());
+		this.persistentService = LocalPersistenceService.withDataInFolder(temporaryFolder.newFolder().toPath());
 	}
 	
 	@Test

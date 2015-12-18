@@ -24,7 +24,7 @@ import de.unima.core.io.file.BPMN20ImporterImpl;
 import de.unima.core.io.file.RDFImporterImpl;
 import de.unima.core.io.file.XESImporter;
 import de.unima.core.io.file.XSDImporter;
-import de.unima.core.persistence.local.LocalPeristenceService;
+import de.unima.core.persistence.local.LocalPersistenceService;
 
 public class LocalSPA implements SPA {
 	
@@ -39,15 +39,15 @@ public class LocalSPA implements SPA {
 	}
 	
 	public static SPA withDataInUniqueMemory(){
-		return createWithDefaultImporters(LocalPeristenceService.withDataInUniqueMemory());
+		return createWithDefaultImporters(LocalPersistenceService.withDataInUniqueMemory());
 	}
 	
 	public static SPA withDataInSharedMemory(){
-		return createWithDefaultImporters(LocalPeristenceService.withDataInSharedMemory());
+		return createWithDefaultImporters(LocalPersistenceService.withDataInSharedMemory());
 	}
 	
 	public static SPA withDataInFolder(String fullPathToFolder){
-		return createWithDefaultImporters(LocalPeristenceService.withDataInFolder(Paths.get(fullPathToFolder)));
+		return createWithDefaultImporters(LocalPersistenceService.withDataInFolder(Paths.get(fullPathToFolder)));
 	}
 	
 	private static SPA createWithDefaultImporters(PersistenceService persistenceService){

@@ -30,7 +30,7 @@ import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
 import de.unima.core.domain.service.PersistenceService;
-import de.unima.core.persistence.local.LocalPeristenceService;
+import de.unima.core.persistence.local.LocalPersistenceService;
 
 public class LocalSPATest {
 
@@ -43,7 +43,7 @@ public class LocalSPATest {
 	@Before
 	public void setUp(){
 		this.spa = LocalSPA.withDataInSharedMemory();
-		this.service = LocalPeristenceService.withDataInSharedMemory();
+		this.service = LocalPersistenceService.withDataInSharedMemory();
 	}
 	
 	@Test
