@@ -161,7 +161,7 @@ public class BPMN20ImporterImpl implements FileBasedImporter<Model> {
 	                
 	                if(flowElement instanceof StartEvent){
 	                  
-	                  flowElementInd.addLiteral(ontModelInstance.getProperty(individualNameSpace + "isInterrupting"), ((StartEvent) flowElement).isInterrupting());
+	                  flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "isInterrupting"), ((StartEvent) flowElement).isInterrupting());
 	                } 
 	              }      
 	            }
