@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
 
+import de.unima.core.BaseIntegrationTest;
 import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
@@ -55,7 +56,7 @@ import de.unima.core.io.file.xes.OntModelToXLogExporter;
 import de.unima.core.persistence.local.LocalPersistenceService;
 
 
-public class StorageIntegrationTest {
+public class StorageIntegrationTest extends BaseIntegrationTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StorageIntegrationTest.class);
 	
@@ -260,19 +261,5 @@ public class StorageIntegrationTest {
 	
 	private Model loadBpmn2Schema() throws IOException {
 		return loadFileAsModel("BPMN_2.0_ontology.owl");
-	}
-
-	private Model loadFileAsModel(final String fileName) throws IOException {
-		final Path path = getFilePath(fileName);
-		final InputStream inputStreamForFile = Files.newInputStream(path, StandardOpenOption.READ);
-		return ModelFactory.createDefaultModel().read(inputStreamForFile, null);
-	}
-
-	private static Path getFilePath(final String fileName) {
-		try {
-			return Paths.get(Resources.getResource(fileName).toURI());
-		} catch (URISyntaxException e) {
-			throw Throwables.propagate(e);
-		}
 	}
 }
