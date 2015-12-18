@@ -11,7 +11,7 @@ public class RDFImporter implements FileBasedImporter<OntModel> {
 	@Override
 	public OntModel importData(File rdfSource) {
 		OntModel m = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
-	    m.read(rdfSource.getPath());
+	    m.read(rdfSource.toURI().toString());
 	    return m;
 	}
 
