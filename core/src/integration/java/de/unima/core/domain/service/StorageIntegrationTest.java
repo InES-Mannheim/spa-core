@@ -48,7 +48,7 @@ import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Repository;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.io.file.BPMN20ImporterImpl;
+import de.unima.core.io.file.BPMN20Importer;
 import de.unima.core.io.file.XMLImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.io.file.xes.OntModelToXLogExporter;
@@ -159,7 +159,7 @@ public class StorageIntegrationTest {
 		// Create data pool in project
 		final DataPool dataPool = persistentService.createPeristentDataPoolForProjectWithGeneratedId(project, "Sample Data Pool");
 		// Import data as new data bucket
-		final BPMN20ImporterImpl importer = new BPMN20ImporterImpl("http://spa.org/TestProject/SampleDataPool#");
+		final BPMN20Importer importer = new BPMN20Importer("http://spa.org/TestProject/SampleDataPool#");
 		final Model importedData = importer.importData(getFilePath("example-spa.bpmn").toFile());
 		final DataBucket bucket = persistentService.addDataAsNewDataBucketToDataPool(dataPool, "Example SPA process", importedData);
 		// Load data according to data schema; not consistent with data model

@@ -29,14 +29,14 @@ import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
 
-public class BPMN20ImporterImpl implements FileBasedImporter<Model> {
+public class BPMN20Importer implements FileBasedImporter<Model> {
 	
 	private final String individualNameSpace;
 	
 	private static final String SCHEMAPATH = "ontologies/BPMN_2.0_ontology.owl";
 	private static final String SCHEMA_NAMESPACE = "http://dkm.fbk.eu/index.php/BPMN2_Ontology#";
 	
-	public BPMN20ImporterImpl(String individualNameSpace) {
+	public BPMN20Importer(String individualNameSpace) {
 	  this.individualNameSpace = individualNameSpace;
     }
 

@@ -6,7 +6,7 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 
-public class RDFImporterImpl implements FileBasedImporter<OntModel> {
+public class RDFImporter implements FileBasedImporter<OntModel> {
 
 	@Override
 	public OntModel importData(File rdfSource) {

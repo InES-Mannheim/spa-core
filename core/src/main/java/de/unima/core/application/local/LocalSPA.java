@@ -20,9 +20,9 @@ import de.unima.core.io.AnyImporterSupport;
 import de.unima.core.io.Importer;
 import de.unima.core.io.ImporterSupport;
 import de.unima.core.io.Key;
-import de.unima.core.io.file.BPMN20ImporterImpl;
+import de.unima.core.io.file.BPMN20Importer;
 import de.unima.core.io.file.FileBasedExporterSupport;
-import de.unima.core.io.file.RDFImporterImpl;
+import de.unima.core.io.file.RDFImporter;
 import de.unima.core.io.file.XESExporter;
 import de.unima.core.io.file.RDFExporter;
 import de.unima.core.io.file.XESImporter;
@@ -63,10 +63,10 @@ public class LocalSPA implements SPA {
 	
 	private static ImporterSupport createDefaultImporters(){
 		final ImporterSupport importerSupport = new AnyImporterSupport();
-		importerSupport.addImporter(new BPMN20ImporterImpl(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
+		importerSupport.addImporter(new BPMN20Importer(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
 		importerSupport.addImporter(new XSDImporter(), "XSD");
 		importerSupport.addImporter(new XESImporter(), "XES");
-		importerSupport.addImporter(new RDFImporterImpl(), "RDF");
+		importerSupport.addImporter(new RDFImporter(), "RDF");
 		return importerSupport;
 	}
 	
