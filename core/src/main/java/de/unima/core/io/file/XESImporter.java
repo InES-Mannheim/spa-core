@@ -2,10 +2,9 @@ package de.unima.core.io.file;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
@@ -20,18 +19,23 @@ public class XESImporter implements FileBasedImporter<Model> {
 	private final XMLImporter dataImporter;
     
 	public XESImporter() {
-		xesOntology = new XSDImporter().importData(getFilePath("xml/xes.xsd").toFile());
+		try(InputStream stream = openStream("xml/xes.xsd")){
+			xesOntology = new XSDImporter().importData(stream);
+		} catch (IOException e) {
+			throw Throwables.propagate(e);
+		}
 		dataImporter = new XMLImporter(xesOntology);
 	}
 	
-	private static Path getFilePath(final String fileName) {
+	private static InputStream openStream(final String resourceName) {
+		final URL fileUrl = Resources.getResource(resourceName);
 		try {
-			return Paths.get(Resources.getResource(fileName).toURI());
-		} catch (URISyntaxException e) {
+			return Resources.asByteSource(fileUrl).openStream();
+		} catch (IOException e) {
 			throw Throwables.propagate(e);
 		}
 	}
-	
+
 	@Override
 	public Model importData(File dataSource) {
 		if(isEmpty(dataSource)){
