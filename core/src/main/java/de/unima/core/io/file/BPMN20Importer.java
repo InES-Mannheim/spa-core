@@ -1,6 +1,8 @@
 package de.unima.core.io.file;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 import org.apache.jena.ontology.Individual;
@@ -29,6 +31,9 @@ import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
 
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
+
 public class BPMN20Importer implements FileBasedImporter<Model> {
 	
 	private final String individualNameSpace;
@@ -44,7 +49,11 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
 	public Model importData(File bpmnSource) {
 	    //Preparing jena models
 	    OntModel schemaModel = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
-	    schemaModel.read(SCHEMAPATH);
+		try (InputStream schemaInputStream = Resources.asByteSource(Resources.getResource(SCHEMAPATH)).openBufferedStream()){
+			schemaModel.read(schemaInputStream, null);
+		} catch (IOException e) {
+			throw Throwables.propagate(e);
+		}
 	    
 	    OntModel ontModelInstance = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
 	    schemaModel.addSubModel(ontModelInstance);
