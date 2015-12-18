@@ -1,5 +1,12 @@
-apply from:'../gradle/gradle/application.java.jena.gradle'
+plugins {
+  id 'com.github.johnrengelman.shadow' version '1.2.2'
+}
 
+apply from:'../gradle/gradle/application.java.jena.gradle'
+apply from:'../gradle/gradle/gradle.distribution.gradle'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+mainClassName = "de.unima.core.application.local.LocalSPA"
 
 dependencies {
     compile  project(':ontmalizer')

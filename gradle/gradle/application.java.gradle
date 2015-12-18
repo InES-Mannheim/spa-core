@@ -27,6 +27,8 @@ subprojects {
 	}
 
         task intTest(type: Test) {
+            group 'Verification'
+            description 'Runs the integration tests.'
             testClassesDir = sourceSets.integration.output.classesDir
             classpath = sourceSets.integration.runtimeClasspath
         }
