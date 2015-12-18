@@ -9,7 +9,6 @@ import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.local.LocalPeristenceService;
 
 /**
  * Provides persistence functionality over the domain.
@@ -33,7 +32,7 @@ public interface PersistenceService {
 	 * 
 	 * <p>{@code DataPool}s and linked {@code Schema}s of each project are not
 	 * loaded. To fully load a project use
-	 * {@link LocalPeristenceService#findProjectById(String)};
+	 * {@link PersistenceService#findProjectById(String)};
 	 * 
 	 * @return list of persisted projects
 	 */
@@ -184,7 +183,7 @@ public interface PersistenceService {
 	 * <b>Note:</b> Each found data pool refers to the project it belongs to.
 	 * Thus, {@code DataPool#getProject()} is not null. However, the project is
 	 * not fully loaded and should not be saved. To load the project, see
-	 * {@link LocalPeristenceService#findProjectById(String)}.
+	 * {@link PersistenceService#findProjectById(String)}.
 	 * 
 	 * @param id
 	 *            of the pool
