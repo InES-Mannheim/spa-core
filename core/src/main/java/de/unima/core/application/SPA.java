@@ -1,7 +1,6 @@
 package de.unima.core.application;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -223,9 +222,11 @@ public interface SPA {
 	 * 
 	 * @param bucket
 	 *            which data should be returned
+	 * @param format TODO
+	 * @param target TODO
 	 * @return the data if present; empty otherwise
 	 */
-	OutputStream exportData(DataBucket bucket);
+	File exportData(DataBucket bucket, String format, File target);
 	
 	/**
 	 * Lists all supported import formats.

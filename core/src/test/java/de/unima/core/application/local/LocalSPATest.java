@@ -1,5 +1,6 @@
 package de.unima.core.application.local;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
@@ -22,11 +23,19 @@ import java.util.stream.Collectors;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.deckfour.xes.id.XID;
+import org.deckfour.xes.in.XParser;
+import org.deckfour.xes.in.XParserRegistry;
+import org.deckfour.xes.model.XEvent;
+import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+
+import com.google.common.base.Throwables;
 
 import de.unima.core.application.SPA;
 import de.unima.core.domain.model.DataBucket;
@@ -114,6 +123,36 @@ public class LocalSPATest {
 		
 		exportedModel.listStatements().toList().stream().map(Object::toString).forEach(statement -> assertThat(expectedStringStatements, hasItem(statement.toString())));
 	}
+	
+	@Test
+	public void xesWhichHasBeenExportedMustMatchExportedXes() throws IOException {
+		final Project project = spa.createProject("Test Project");
+		spa.saveProject(project);
+		final DataPool dataPool = spa.createDataPool(project, "Sample Data Pool");
+		final DataBucket bucket = spa.importData(getFilePath("running-example.xes").toFile(), "XES", "running example", dataPool);
+		
+		final File exportLoaction = folder.newFile("example.xes");
+		spa.exportData(bucket, "XES", exportLoaction);
+		
+		final List<XTrace> createdEvents = readLogFromFile(exportLoaction);
+		final List<XTrace> expectedEvents = readLogFromFile(getFilePath("running-example.xes").toFile());
+		
+		assertThat(createdEvents.size(), is(expectedEvents.size()));
+	}
+	
+	private XLog readLogFromFile(File xesFile){
+		for (XParser parser : XParserRegistry.instance().getAvailable()) {
+			if (parser.canParse(xesFile)) {
+				try {
+					return parser.parse(xesFile).get(0);
+				} catch (Exception e) {
+					throw Throwables.propagate(e);
+				}
+			}
+		}
+		return null;
+	}
+	
 	
 	protected Model loadFileAsModel(final String fileName) throws IOException {
 		final Path path = getFilePath(fileName);

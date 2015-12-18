@@ -1,11 +1,11 @@
 package de.unima.core.application.local;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apache.jena.rdf.model.Model;
 
@@ -23,7 +23,8 @@ import de.unima.core.io.Key;
 import de.unima.core.io.file.BPMN20ImporterImpl;
 import de.unima.core.io.file.FileBasedExporterSupport;
 import de.unima.core.io.file.RDFImporterImpl;
-import de.unima.core.io.file.RdfExporter;
+import de.unima.core.io.file.XESExporter;
+import de.unima.core.io.file.RDFExporter;
 import de.unima.core.io.file.XESImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.persistence.local.LocalPersistenceService;
@@ -71,7 +72,8 @@ public class LocalSPA implements SPA {
 	
 	private static FileBasedExporterSupport createDefaultExporters(){
 		final FileBasedExporterSupport exporters = new FileBasedExporterSupport();
-		exporters.addExporter(new RdfExporter(), "RDF");
+		exporters.addExporter(new RDFExporter(), "RDF");
+		exporters.addExporter(new XESExporter(), "XES");
 		return exporters;
 	}
 
@@ -133,19 +135,6 @@ public class LocalSPA implements SPA {
 	}
 
 	@Override
-	public File exportSchema(Schema schema, String format, File target) {
-		return exporterSupport.findExporterByKey(Key.of(format))
-			.map(exporter -> exporter.exportToFile(retrieveData(schema), target))
-			.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find exporter for format '%s'", format)));	
-	}
-
-	private Model retrieveData(Schema schema) {
-		final Model data = persistenceService.findDataOfSchema(schema)
-				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find data for schema '%s'", schema)));
-		return data;
-	}
-
-	@Override
 	public DataBucket importData(File input, String format, String label, DataPool dataPool) {
 		return importFile(input, format, data -> persistenceService.addDataAsNewDataBucketToDataPool(dataPool, label, data));
 	}
@@ -161,10 +150,31 @@ public class LocalSPA implements SPA {
 	public void removeDataBucket(DataPool dataPool, DataBucket dataBucket) {
 		persistenceService.removeDataBucketFromDataPool(dataPool, dataBucket);
 	}
-
+	
 	@Override
-	public OutputStream exportData(DataBucket bucket) {
-		throw new UnsupportedOperationException();
+	public File exportSchema(Schema schema, String format, File target) {
+		return exportFile(() -> retrieveData(schema), format, target);	
+	}
+
+	private Model retrieveData(Schema schema) {
+		return persistenceService.findDataOfSchema(schema)
+				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find data for schema '%s'", schema)));
+	}
+	
+	@Override
+	public File exportData(DataBucket bucket, String format, File target) {
+		return exportFile(() -> retrieveData(bucket), format, target);
+	}
+	
+	private Model retrieveData(DataBucket bucket) {
+		return persistenceService.findDataOfDataBucket(bucket)
+				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find data for bucket '%s'", bucket)));
+	}
+
+	private File exportFile(Supplier<Model> modelSupplier, String format, File target) {
+		return exporterSupport.findExporterByKey(Key.of(format))
+				.map(exporter -> exporter.exportToFile(modelSupplier.get(), target))
+				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find exporter for format '%s'", format)));
 	}
 
 	@Override
