@@ -1,4 +1,4 @@
-package de.unima.core.io.impl.xes;
+package de.unima.core.io.file.xes;
 
 import org.apache.jena.arq.querybuilder.SelectBuilder;
 import org.apache.jena.query.QuerySolution;

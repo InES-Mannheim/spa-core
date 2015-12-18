@@ -1,4 +1,4 @@
-package de.unima.core.io.impl.xes;
+package de.unima.core.io.file.xes;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
