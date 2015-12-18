@@ -19,9 +19,11 @@ import de.unima.core.domain.service.PersistenceService;
 import de.unima.core.io.AnyImporterSupport;
 import de.unima.core.io.Importer;
 import de.unima.core.io.ImporterSupport;
-import de.unima.core.io.ImporterSupport.Key;
+import de.unima.core.io.Key;
 import de.unima.core.io.file.BPMN20ImporterImpl;
+import de.unima.core.io.file.FileBasedExporterSupport;
 import de.unima.core.io.file.RDFImporterImpl;
+import de.unima.core.io.file.RdfExporter;
 import de.unima.core.io.file.XESImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.persistence.local.LocalPersistenceService;
@@ -32,31 +34,45 @@ public class LocalSPA implements SPA {
 
 	private final PersistenceService persistenceService;
 	private final ImporterSupport importerSupport;
-
-	private LocalSPA(PersistenceService persistenceService, ImporterSupport importerSupport) {
+	private final FileBasedExporterSupport exporterSupport;
+	
+	private LocalSPA(PersistenceService persistenceService, ImporterSupport importerSupport, FileBasedExporterSupport exporterSupport) {
 		this.persistenceService = persistenceService;
 		this.importerSupport = importerSupport;
+		this.exporterSupport = exporterSupport;
 	}
 	
 	public static SPA withDataInUniqueMemory(){
-		return createWithDefaultImporters(LocalPersistenceService.withDataInUniqueMemory());
+		return createSpa(LocalPersistenceService.withDataInUniqueMemory());
 	}
 	
 	public static SPA withDataInSharedMemory(){
-		return createWithDefaultImporters(LocalPersistenceService.withDataInSharedMemory());
+		return createSpa(LocalPersistenceService.withDataInSharedMemory());
 	}
 	
 	public static SPA withDataInFolder(String fullPathToFolder){
-		return createWithDefaultImporters(LocalPersistenceService.withDataInFolder(Paths.get(fullPathToFolder)));
+		return createSpa(LocalPersistenceService.withDataInFolder(Paths.get(fullPathToFolder)));
 	}
 	
-	private static SPA createWithDefaultImporters(PersistenceService persistenceService){
+	private static SPA createSpa(final LocalPersistenceService persistenceService) {
+		final ImporterSupport importers = createDefaultImporters();
+		final FileBasedExporterSupport exporters = createDefaultExporters();
+		return new LocalSPA(persistenceService, importers, exporters);
+	}
+	
+	private static ImporterSupport createDefaultImporters(){
 		final ImporterSupport importerSupport = new AnyImporterSupport();
 		importerSupport.addImporter(new BPMN20ImporterImpl(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
 		importerSupport.addImporter(new XSDImporter(), "XSD");
 		importerSupport.addImporter(new XESImporter(), "XES");
 		importerSupport.addImporter(new RDFImporterImpl(), "RDF");
-		return new LocalSPA(persistenceService, importerSupport);
+		return importerSupport;
+	}
+	
+	private static FileBasedExporterSupport createDefaultExporters(){
+		final FileBasedExporterSupport exporters = new FileBasedExporterSupport();
+		exporters.addExporter(new RdfExporter(), "RDF");
+		return exporters;
 	}
 
 	public Project createProject(String label) {
@@ -117,8 +133,16 @@ public class LocalSPA implements SPA {
 	}
 
 	@Override
-	public OutputStream exportSchema(Schema schema, String format) {
-		throw new UnsupportedOperationException();
+	public File exportSchema(Schema schema, String format, File target) {
+		return exporterSupport.findExporterByKey(Key.of(format))
+			.map(exporter -> exporter.exportToFile(retrieveData(schema), target))
+			.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find exporter for format '%s'", format)));	
+	}
+
+	private Model retrieveData(Schema schema) {
+		final Model data = persistenceService.findDataOfSchema(schema)
+				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find data for schema '%s'", schema)));
+		return data;
 	}
 
 	@Override
@@ -146,5 +170,10 @@ public class LocalSPA implements SPA {
 	@Override
 	public List<String> getSupportedImportFormats() {
 		return importerSupport.listKeysAsString();
+	}
+	
+	@Override
+	public List<String> getSupportedExportFormats(){
+		return exporterSupport.listKeysAsString();
 	}
 }

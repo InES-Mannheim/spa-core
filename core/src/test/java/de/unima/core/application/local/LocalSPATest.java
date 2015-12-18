@@ -1,12 +1,14 @@
 package de.unima.core.application.local;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -15,6 +17,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.rdf.model.Model;
@@ -23,6 +26,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
 import de.unima.core.application.SPA;
 import de.unima.core.domain.model.DataBucket;
@@ -36,6 +40,9 @@ public class LocalSPATest {
 
 	@Rule
 	public ExpectedException expected = ExpectedException.none();
+	
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 	
 	private SPA spa;
 	private PersistenceService service;
@@ -92,7 +99,20 @@ public class LocalSPATest {
 				,"[http://www.uni-mannheim/spa/local/bpmn/StartEvent_1, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://dkm.fbk.eu/index.php/BPMN2_Ontology#startEvent]"
 				,"[http://www.uni-mannheim/spa/local/bpmn/StartEvent_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#id, \"StartEvent_1\"]"
 				,"[http://www.uni-mannheim/spa/local/bpmn/StartEvent_1, http://dkm.fbk.eu/index.php/BPMN2_Ontology#isInterrupting, \"true\"^^http://www.w3.org/2001/XMLSchema#boolean]");
-		foundData.listStatements().toList().stream().map(Object::toString).forEach(statement -> assertThat(expectedStringStatements.contains(statement.toString()), is(true)));
+		foundData.listStatements().toList().stream().map(Object::toString).forEach(statement -> assertThat(expectedStringStatements, hasItem(statement)));
+	}
+	
+	@Test
+	public void rdfWhichHasBeenImportedMustMatchExportedRdf() throws IOException{
+		final File exportLoaction = folder.newFile("tree.rdf");
+		
+		final Schema schema = spa.importSchema(getFilePath("tree.rdf").toFile(), "RDF", "Beckett");
+		spa.exportSchema(schema, "RDF", exportLoaction);
+		
+		final Model exportedModel = ModelFactory.createDefaultModel().read(new FileInputStream(exportLoaction), null);
+		final List<String> expectedStringStatements = service.findDataOfSchema(schema).get().listStatements().toList().stream().map(Object::toString).collect(Collectors.toList());
+		
+		exportedModel.listStatements().toList().stream().map(Object::toString).forEach(statement -> assertThat(expectedStringStatements, hasItem(statement.toString())));
 	}
 	
 	protected Model loadFileAsModel(final String fileName) throws IOException {
@@ -102,7 +122,6 @@ public class LocalSPATest {
 	}
 
 	protected Path getFilePath(final String fileName) {
-		System.out.println(this.getClass().getResource("/"+fileName));
 		return Paths.get(this.getClass().getResource("/"+fileName).getFile());
 	}
 }

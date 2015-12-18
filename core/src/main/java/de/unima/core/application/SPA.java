@@ -119,10 +119,14 @@ public interface SPA {
 	/**
 	 * Exports data stored for given {@link Schema}.
 	 * 
-	 * @param schema which data should be returned
+	 * @param schema
+	 *            which data should be returned
+	 * @param target
+	 *            where to write the result. For some exporters this might also
+	 *            be a directory where multiple files are exported to.
 	 * @return the data if present otherwise empty
 	 */
-	OutputStream exportSchema(Schema schema, String format);
+	File exportSchema(Schema schema, String format, File target);
 
 	/**
 	 * Creates a {@link DataPool} with generated Id and adds it to the given
@@ -229,5 +233,12 @@ public interface SPA {
 	 * @return list of supported import formats
 	 */
 	List<String> getSupportedImportFormats();
+
+	/**
+	 * Lists all supported export formats.
+	 *  
+	 * @return list of supported export formats
+	 */
+	List<String> getSupportedExportFormats();
 	
 }
