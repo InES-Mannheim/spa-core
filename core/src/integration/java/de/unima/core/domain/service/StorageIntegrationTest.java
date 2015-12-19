@@ -10,13 +10,7 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -39,9 +33,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
 
 import de.unima.core.BaseIntegrationTest;
 import de.unima.core.domain.model.DataBucket;

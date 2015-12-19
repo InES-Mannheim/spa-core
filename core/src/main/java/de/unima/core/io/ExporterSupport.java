@@ -17,7 +17,6 @@ public interface ExporterSupport<R, T extends Model, S extends Exporter<T,R>> {
 	 * 
 	 * @param exporter which should be added
 	 * @param key for the exporter 
-	 * @param T source type
 	 * @return key of the new exporter
 	 */
 	Key addExporter(S exporter, String key);
@@ -26,7 +25,6 @@ public interface ExporterSupport<R, T extends Model, S extends Exporter<T,R>> {
 	 * Removes exporter.
 	 * 
 	 * @param key of the exporter
-	 * @param T source type
 	 * @return removed exporter or empty if not found
 	 */
 	Optional<S> removeExporter(Key key);
@@ -35,7 +33,6 @@ public interface ExporterSupport<R, T extends Model, S extends Exporter<T,R>> {
 	 * Finds exporter.
 	 * 
 	 * @param key of the exporter
-	 * @param T source type
 	 * @return found exporter or empty otherwise
 	 */
 	Optional<S> findExporterByKey(Key key);

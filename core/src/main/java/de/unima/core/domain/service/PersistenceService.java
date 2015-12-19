@@ -204,14 +204,18 @@ public interface PersistenceService {
 	 * Adds given data as new {@code DataBucket} to the given {@code DataPool}
 	 * and returns a generated Id.
 	 * 
-	 * <p><b>Note:</b> Changes made to given {@code DataPool} are persisted. Further,
-	 * the created {@code DataBucket} is also persisted.
+	 * <p>
+	 * <b>Note:</b> Changes made to given {@code DataPool} are persisted.
+	 * Further, the created {@code DataBucket} is also persisted.
+	 * 
+	 * @param dataPool
+	 *            of the new {@code DataBucket}
 	 * 
 	 * @param label
-	 *            of the new  {@code DataBucket}
+	 *            of the new {@code DataBucket}
 	 * @param data
 	 *            containing RDF
-	 * @return created  {@code DataBucket}
+	 * @return created {@code DataBucket}
 	 * @throws IllegalStateException
 	 *             if the data could not be stored
 	 */
@@ -231,7 +235,9 @@ public interface PersistenceService {
 	DataBucket replaceDataBucketWithData(DataBucket bucket, Model data);
 
 	/**
-	 * Removes given {@code DataBucket}.
+	 * Removes given {@link DataBucket}.
+	 * 
+	 * @param dataPool of the {@code DataBucket} 
 	 * 
 	 * @param dataBucket
 	 *            which should be removed

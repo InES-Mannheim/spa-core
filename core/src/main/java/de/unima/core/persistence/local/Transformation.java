@@ -28,6 +28,8 @@ import com.google.common.base.Throwables;
 
 /**
  * Transformation DSL to translate Java instances into RDF.
+ * 
+ * @param <T> instance type
  */
 public class Transformation<T> {
 
@@ -46,6 +48,7 @@ public class Transformation<T> {
 	 * Creates a new {@code SubjectMapping} to the given RDF class
 	 * 
 	 * @param rdfClass as stringified URI (e.g. "http://www.namespace.com/Test").
+	 * @return subject mapping DSL 
 	 */
 	public SubjectMapping to(String rdfClass) {
 		return new SubjectMapping(rdfClass);
@@ -139,6 +142,7 @@ public class Transformation<T> {
 		 * 
 		 * @param fieldName which contains the value
 		 * @param fieldType of the field
+		 * @param <S> type of the field
 		 * @return {@code PredicateAndObjectMapping} for building the graph
 		 */
 		public <S> PredicateAndObjectMapping<S> with(String fieldName, Class<S> fieldType) {

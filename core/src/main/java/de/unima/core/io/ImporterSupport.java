@@ -16,7 +16,6 @@ public interface ImporterSupport {
 	 * 
 	 * @param importer which should be added
 	 * @param key for the importer 
-	 * @param T source type
 	 * @return key of the new importer
 	 */
 	Key addImporter(Importer<?, ?> importer, String key);
@@ -25,7 +24,8 @@ public interface ImporterSupport {
 	 * Removes importer.
 	 * 
 	 * @param key of the importer
-	 * @param T source type
+	 * @param <T> input format
+	 * @param <R> output format
 	 * @return removed importer or empty if not found
 	 */
 	<T,R extends Model> Optional<Importer<T,R>> removeImporter(Key key);
@@ -34,7 +34,8 @@ public interface ImporterSupport {
 	 * Finds importer.
 	 * 
 	 * @param key of the importer
-	 * @param T source type
+	 * @param <T> input format
+	 * @param <R> output format
 	 * @return found importer or empty otherwise
 	 */
 	<T,R extends Model> Optional<Importer<T,R>> findImporterByKey(Key key);

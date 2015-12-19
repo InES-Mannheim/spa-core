@@ -126,6 +126,7 @@ public class Project extends AbstractEntity<String>{
 	 * Is given schema with given id linked?
 	 * 
 	 * @param id of the schema
+	 * @return true if schema is linked, false otherwise 
 	 */
 	public boolean isSchemaLinked(String id){
 		return findLinkedSchemaById(id).isPresent();
