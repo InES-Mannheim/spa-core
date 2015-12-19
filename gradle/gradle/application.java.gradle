@@ -2,6 +2,10 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 
+        javadoc {
+            failOnError = false
+        }
+
         tasks.withType(JavaCompile){
             options.encoding = 'UTF-8'
         }
@@ -31,5 +35,9 @@ subprojects {
             description 'Runs the integration tests.'
             testClassesDir = sourceSets.integration.output.classesDir
             classpath = sourceSets.integration.runtimeClasspath
+        }
+      
+        check {
+            dependsOn intTest
         }
 }
