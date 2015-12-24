@@ -2065,6 +2065,13 @@
      -->
 
 
+	<!-- http://dkm.fbk.eu/index.php/BPMN2_Ontology#eventBasedGatewayType -->
+ 
+ 	<owl:DatatypeProperty rdf:about="http://dkm.fbk.eu/index.php/BPMN2_Ontology#eventBasedGatewayType">
+ 		<rdfs:domain rdf:resource="http://dkm.fbk.eu/index.php/BPMN2_Ontology#gateway"/>
+ 		<rdfs:range rdf:resource="http://dkm.fbk.eu/index.php/BPMN2_Ontology#DTtEventBasedGatewayType"/>
+ 	</owl:DatatypeProperty> 
+
     <!-- http://dkm.fbk.eu/index.php/BPMN2_Ontology#gatewayDirection -->
 
     <owl:DatatypeProperty rdf:about="http://dkm.fbk.eu/index.php/BPMN2_Ontology#gatewayDirection">
