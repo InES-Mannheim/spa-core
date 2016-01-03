@@ -32,10 +32,11 @@ public class BPMN20ExporterTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 	
 	private BPMN20Exporter exporter;
+	private String namespace = "http://test.de/ps#";
 
 	@Before
 	public void setUp(){
-		this.exporter = new BPMN20Exporter();
+		this.exporter = new BPMN20Exporter(namespace);
 	}
 	
 	@Test
@@ -53,7 +54,7 @@ public class BPMN20ExporterTest {
 	@Ignore("Throws NullPointerException and should be fixed")
 	@Test
 	public void whenSimpleModelWasExportedToBpmnCorrespondingFileMustBeBpmn() throws IOException{
-		final Model importedBpmn = new BPMN20Importer("http://test,de/").importData(getFilePath("example-spa.bpmn").toFile());
+		final Model importedBpmn = new BPMN20Importer(namespace).importData(getFilePath("example-spa.bpmn").toFile());
 		final File target = folder.newFile();
 		
 		exporter.exportToFile(importedBpmn, target);

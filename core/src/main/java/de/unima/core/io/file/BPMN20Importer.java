@@ -61,8 +61,6 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
       
       Definitions defs = modelInstance.getDefinitions();
       
-//    System.out.println(System.currentTimeMillis());
-      
       Collection<Process> modelProcesses = modelInstance.getModelElementsByType(Process.class);
 
       for(Process process : modelProcesses){
@@ -73,13 +71,13 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
         Individual processInd = ontModelInstance.createIndividual(individualNameSpace + processId, processClass);
         
         //setting attributes
-        processInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "id"), processId);
-        processInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "isExecutable"), process.isExecutable());
-        processInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "isClosed"), process.isClosed());
-        processInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "processType"), process.getProcessType().name());
+        processInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), processId);
+        processInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "isExecutable"), process.isExecutable());
+        processInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "isClosed"), process.isClosed());
+        processInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "processType"), process.getProcessType().name());
         String processName = process.getName();
         if(processName != null){
-          processInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "name"), processName);
+          processInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "name"), processName);
         }
         
         
@@ -108,8 +106,9 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
           
           String laneSetId = laneSet.getId();
           Individual laneSetInd = ontModelInstance.createIndividual(individualNameSpace + laneSetId, laneSetClass);
+          processInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "laneSet"), laneSetInd);
           
-          laneSetInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "id"), laneSetId);
+          laneSetInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), laneSetId);
           
           for(Lane lane : laneSet.getLanes()){
             String laneNodeType = lane.getElementType().getTypeName();
@@ -118,15 +117,17 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
             String laneId = lane.getId();
             Individual laneInd = ontModelInstance.createIndividual(individualNameSpace + laneId, laneClass);
             
-            laneInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "id"), laneId);
+            laneSetInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "lane"), laneInd);
+            
+            laneInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), laneId);
             String laneName = lane.getName();
             if(laneName != null){
-              laneInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "name"), laneName);
+              laneInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "name"), laneName);
             }
             
             
             for(FlowNode flowNodeRef : lane.getFlowNodeRefs()){
-              laneInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "flowNode"), ResourceFactory.createResource(individualNameSpace + flowNodeRef.getId()));
+              laneInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "flowNode"), ResourceFactory.createResource(individualNameSpace + flowNodeRef.getId()));
             }
             
           }
@@ -142,32 +143,36 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
             Individual flowElementInd = ontModelInstance.createIndividual(individualNameSpace + flowElementId, flowElementClass);
             
             //set the subnode for the process
-            processInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + flowElementNodeType), flowElementInd);
+            
             
             //set attribute for flowElement
-            flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "id"), flowElementId);
+            flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), flowElementId);
             String flowElementName = flowElement.getName();
             if(flowElementName != null){
-              flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "name"), flowElementName);
+              flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "name"), flowElementName);
             }
             
             //add type specific attributes e.g. incoming or outgoing properties for flownodes.
             
             if(flowElement instanceof FlowNode){
+              processInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "flowNode"), flowElementInd);
+              
               for(SequenceFlow seqFlowIncoming : ((FlowNode) flowElement).getIncoming()){
-                flowElementInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "incoming"), ResourceFactory.createResource(individualNameSpace + seqFlowIncoming.getId()));
+                flowElementInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "incoming"), ResourceFactory.createResource(individualNameSpace + seqFlowIncoming.getId()));
               }
               
               for(SequenceFlow seqFlowOutgoing : ((FlowNode) flowElement).getOutgoing()){
-                flowElementInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "outgoing"), ResourceFactory.createResource(individualNameSpace + seqFlowOutgoing.getId()));
+                flowElementInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "outgoing"), ResourceFactory.createResource(individualNameSpace + seqFlowOutgoing.getId()));
               }
               
               if(flowElement instanceof Event){
                 
                 if(flowElement instanceof CatchEvent){
                   for(EventDefinition eventDefinition:((CatchEvent) flowElement).getEventDefinitions()){
+                    
                     if(eventDefinition instanceof MessageEventDefinition){
-                      ontModelInstance.createIndividual(individualNameSpace + eventDefinition.getId(), schemaModel.getOntClass(SCHEMA_NAMESPACE + "messageEventDefinition"));
+                      Individual messageEventInd = ontModelInstance.createIndividual(individualNameSpace + eventDefinition.getId(), schemaModel.getOntClass(SCHEMA_NAMESPACE + "messageEventDefinition"));
+                      messageEventInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), eventDefinition.getId());
                       flowElementInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "eventDefinition"), ResourceFactory.createResource(individualNameSpace + eventDefinition.getId()));
                       
                     }
@@ -175,23 +180,23 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
                   
                   if(flowElement instanceof StartEvent){
                     
-                    flowElementInd.addLiteral(ontModelInstance.getProperty(individualNameSpace + "isInterrupting"), ((StartEvent) flowElement).isInterrupting());
+                    flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "isInterrupting"), ((StartEvent) flowElement).isInterrupting());
                   } 
                 }      
               }
               
               if(flowElement instanceof Activity){
-                flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "completionQuantity"), ((Activity) flowElement).getCompletionQuantity());
-                flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "startQuantity"), ((Activity) flowElement).getStartQuantity());
-                flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "isForCompensation"), ((Activity) flowElement).isForCompensation());
+                flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "completionQuantity"), ((Activity) flowElement).getCompletionQuantity());
+                flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "startQuantity"), ((Activity) flowElement).getStartQuantity());
+                flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "isForCompensation"), ((Activity) flowElement).isForCompensation());
               }
               
               if(flowElement instanceof Gateway) {
-                flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "gatewayDirection"), ((Gateway) flowElement).getGatewayDirection().name());
+                flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "gatewayDirection"), ((Gateway) flowElement).getGatewayDirection().name());
                 
                 if(flowElement instanceof EventBasedGateway){
-                  flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "instantiate"), ((EventBasedGateway) flowElement).isInstantiate());
-                  flowElementInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "eventBasedGatewayType"), ((EventBasedGateway) flowElement).getEventGatewayType().toString());
+                  flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "instantiate"), ((EventBasedGateway) flowElement).isInstantiate());
+                  flowElementInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "eventBasedGatewayType"), ((EventBasedGateway) flowElement).getEventGatewayType().toString());
 
                 }
               }
@@ -199,10 +204,11 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
             }
             
             if(flowElement instanceof SequenceFlow){
+              processInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "sequenceFlow"), flowElementInd);
               String sourceId = ((SequenceFlow) flowElement).getSource().getId();
-              flowElementInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "sourceRef"), ResourceFactory.createResource(individualNameSpace + sourceId));
+              flowElementInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "sourceRef"), ResourceFactory.createResource(individualNameSpace + sourceId));
               String targetId = ((SequenceFlow) flowElement).getTarget().getId();
-              flowElementInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "targetRef"), ResourceFactory.createResource(individualNameSpace + targetId));
+              flowElementInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "targetRef"), ResourceFactory.createResource(individualNameSpace + targetId));
             }  
             
           }
@@ -220,7 +226,7 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
         String collaborationId   = collaboration.getId();     
         Individual collaborationInd = ontModelInstance.createIndividual(individualNameSpace + collaborationId, collaborationClass);
         
-        collaborationInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "id"), collaborationId);
+        collaborationInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), collaborationId);
         
         Collection<Participant> participants = collaboration.getParticipants();
         for(Participant participant : participants){
@@ -230,16 +236,16 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
           String participantId = participant.getId();
           Individual participantInd = ontModelInstance.createIndividual(individualNameSpace + participantId, participantClass);
           
-          collaborationInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "participant"), ResourceFactory.createResource(participantId));
+          collaborationInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "participant"), ResourceFactory.createResource(individualNameSpace + participantId));
                
-          participantInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "id"), participantId);
+          participantInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), participantId);
           
           String participantName = participant.getName();
           if(participantName != null){
-            participantInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "name"), participantName);
+            participantInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "name"), participantName);
           }
           
-          participantInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "processRef"), ResourceFactory.createResource(individualNameSpace + participant.getProcess().getId()));
+          participantInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "processRef"), ResourceFactory.createResource(individualNameSpace + participant.getProcess().getId()));
           
           
         }
@@ -251,27 +257,23 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
           String messageFlowId = messageFlow.getId();
           Individual messageFlowInd = ontModelInstance.createIndividual(individualNameSpace + messageFlowId, messageFlowClass);
           
-          collaborationInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "messageFlow"), ResourceFactory.createResource(messageFlowId));
+          collaborationInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "messageFlow"), ResourceFactory.createResource(individualNameSpace + messageFlowId));
           
-          messageFlowInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "id"), messageFlowId);
+          messageFlowInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), messageFlowId);
           
           String messageFlowName = messageFlow.getName();
           if(messageFlowName != null){
-            messageFlowInd.addLiteral(ontModelInstance.getProperty(SCHEMA_NAMESPACE + "name"), messageFlowName);
+            messageFlowInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "name"), messageFlowName);
           }
           
           String messageFlowSourceRef = messageFlow.getSource().getId();
-          messageFlowInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "sourceRef"), ResourceFactory.createResource(individualNameSpace + messageFlowSourceRef));
+          messageFlowInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "sourceRef"), ResourceFactory.createResource(individualNameSpace + messageFlowSourceRef));
           String messageFlowTargetRef = messageFlow.getTarget().getId();
-          messageFlowInd.addProperty(ontModelInstance.getProperty(blankSubnodeProperty + "targetRef"), ResourceFactory.createResource(individualNameSpace + messageFlowTargetRef));
-          
-          
-          
+          messageFlowInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "targetRef"), ResourceFactory.createResource(individualNameSpace + messageFlowTargetRef));
+              
         }
         
-        
       }
-      
       
       return ontModelInstance;
   }
