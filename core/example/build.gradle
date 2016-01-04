@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 project.ext {
-  coreVersion = '0.0.1'
+  coreVersion = '0.0.2-SNAPSHOT'
   coreName = 'core' 
 }
 
