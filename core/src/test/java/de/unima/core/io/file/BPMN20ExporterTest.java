@@ -51,7 +51,6 @@ public class BPMN20ExporterTest {
 		assertThat(expectedInstance, is(notNullValue()));
 	}
 	
-	@Ignore("Throws NullPointerException and should be fixed")
 	@Test
 	public void whenSimpleModelWasExportedToBpmnCorrespondingFileMustBeBpmn() throws IOException{
 		final Model importedBpmn = new BPMN20Importer(namespace).importData(getFilePath("example-spa.bpmn").toFile());
