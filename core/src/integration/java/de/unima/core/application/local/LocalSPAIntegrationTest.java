@@ -17,11 +17,14 @@ import java.util.stream.Collectors;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.camunda.bpm.model.bpmn.Bpmn;
+import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.deckfour.xes.in.XParser;
 import org.deckfour.xes.in.XParserRegistry;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -132,7 +135,7 @@ public class LocalSPAIntegrationTest extends BaseIntegrationTest {
 
 		assertThat(createdEvents.size(), is(expectedEvents.size()));
 	}
-
+	
 	private XLog readLogFromFile(File xesFile) {
 		for (XParser parser : XParserRegistry.instance().getAvailable()) {
 			if (parser.canParse(xesFile)) {
@@ -144,5 +147,28 @@ public class LocalSPAIntegrationTest extends BaseIntegrationTest {
 			}
 		}
 		return null;
+	}
+	
+	@Ignore("Fails as exported bpmn does not contain all information of the orignal bpmn")
+	@Test
+	public void bpmnWhichHasBeenImportedMustMatchExportedBPMN() throws IOException {
+		final Schema schema = spa.importSchema(getFilePath("BPMN_2.0_ontology.owl").toFile(), "RDF", "BPMN2 ontology");
+		final Project project = spa.createProject("Test Project");
+		project.linkSchema(schema);
+		spa.saveProject(project);
+		final DataPool dataPool = spa.createDataPool(project, "Sample Data Pool");
+		final DataBucket bucket = spa.importData(getFilePath("example-spa.bpmn").toFile(), "BPMN2", "Bucket 1", dataPool);
+		
+		final File exportLocation = folder.newFile("example-spa.bpmn");
+		spa.exportData(bucket, "BPMN2", exportLocation);
+		
+		final BpmnModelInstance exportedModel = readBpmnFromFile(exportLocation);
+		final BpmnModelInstance originalModel = readBpmnFromFile(getFilePath("example-spa.bpmn").toFile());
+		
+		assertThat(exportedModel.getDocument(), is(equalTo(originalModel.getDocument())));
+	}
+	
+	private BpmnModelInstance readBpmnFromFile(File bpmn){
+		return Bpmn.readModelFromFile(bpmn);
 	}
 }
