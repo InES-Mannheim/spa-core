@@ -20,6 +20,7 @@ import de.unima.core.io.AnyImporterSupport;
 import de.unima.core.io.Importer;
 import de.unima.core.io.ImporterSupport;
 import de.unima.core.io.Key;
+import de.unima.core.io.file.BPMN20Exporter;
 import de.unima.core.io.file.BPMN20Importer;
 import de.unima.core.io.file.FileBasedExporterSupport;
 import de.unima.core.io.file.RDFImporter;
@@ -72,6 +73,7 @@ public class LocalSPA implements SPA {
 	
 	private static FileBasedExporterSupport createDefaultExporters(){
 		final FileBasedExporterSupport exporters = new FileBasedExporterSupport();
+		exporters.addExporter(new BPMN20Exporter(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
 		exporters.addExporter(new RDFExporter(), "RDF");
 		exporters.addExporter(new XESExporter(), "XES");
 		return exporters;
