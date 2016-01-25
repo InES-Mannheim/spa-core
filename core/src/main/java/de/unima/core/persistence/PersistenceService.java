@@ -15,7 +15,6 @@
  *******************************************************************************/
 package de.unima.core.persistence;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -30,8 +29,6 @@ import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Repository;
 import de.unima.core.domain.model.Schema;
 import de.unima.core.storage.Store;
-import de.unima.core.storage.StoreSupport;
-import de.unima.core.storage.jena.JenaTDBStore;
 
 /**
  * Implementation of the {@code PersistenceService} which stores entities
@@ -57,8 +54,16 @@ public class PersistenceService {
 		this.rand = new Random();
 	}
 
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#createPersistentProjectWithGeneratedId(java.lang.String)
+	/**
+	 * Creates a new {@link Project} with generated URI.
+	 * 
+	 * <p>
+	 * The project and changes to the repository are persisted.
+	 * 
+	 * @param label
+	 *            of the new project
+	 * 
+	 * @return new {@code Project} with generated id
 	 */
 	public Project createPersistentProjectWithGeneratedId(String label) {
 		final Repository repository = findOrCreateSingleRepository();
@@ -69,17 +74,32 @@ public class PersistenceService {
 		return project;
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findAllProjects()
+	/**
+	 * Finds all projects.
+	 * 
+	 * <p>
+	 * {@code DataPool}s and linked {@code Schema}s of each project are not
+	 * loaded. To fully load a project use
+	 * {@link PersistenceService#findProjectById(String)};
+	 * 
+	 * @return list of persisted projects
 	 */
-	public List<Project> findAllProjects(){
+	public List<Project> findAllProjects() {
 		return projectRepository.findAll();
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findProjectById(java.lang.String)
+	/**
+	 * Finds project with given id.
+	 * 
+	 * <p>
+	 * All {@code DataPool}s and linked {@code Schema}s of the project are
+	 * loaded.
+	 * 
+	 * @param id
+	 *            as URI; for example: http://www.test.com/1
+	 * @return project if found; empty otherwise
 	 */
-	public Optional<Project> findProjectById(String id){
+	public Optional<Project> findProjectById(String id) {
 		final Optional<Project> foundProject = projectRepository.findById(id);
 		loadAndAddDataPoolsIfPresent(foundProject);
 		loadAndAddSchemassIfPresent(foundProject);
@@ -116,21 +136,37 @@ public class PersistenceService {
 		foundProject.get().replaceLinkedSchemas(loadedSchemas);
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#saveProject(de.unima.core.domain.model.Project)
+	/**
+	 * Saves given project.
+	 * 
+	 * <p>
+	 * This action also saves all contained {@code DataPool}s.
+	 * 
+	 * @param project
+	 *            which should be saved
+	 * @return id of the project
+	 * @throws IllegalStateException
+	 *             if project could not be saved
 	 */
-		public String saveProject(Project project){
+	public String saveProject(Project project) {
 		project.getDataPools().forEach(this::saveDataPool);
 		return projectRepository.save(project).orElseThrow(() -> new IllegalStateException("Could not save project."));
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#deleteProject(de.unima.core.domain.model.Project)
+	/**
+	 * Deletes given project.
+	 * 
+	 * <p>
+	 * All schemas linked to this project are unlinked. Further, all contained
+	 * data pools and buckets are removed.
+	 * 
+	 * @param project
+	 *            which should be deleted
+	 * @return number of deleted statements
 	 */
-		public long deleteProject(Project project){
-		final long totalNumberOfDeletedStatements = deleteDataBuckets(project) +
-		deleteDataPools(project) +
-		deleteProjectAndSchemaLinks(project);
+	public long deleteProject(Project project) {
+		final long totalNumberOfDeletedStatements = deleteDataBuckets(project) + deleteDataPools(project)
+				+ deleteProjectAndSchemaLinks(project);
 		removeDataPoolsAndSchemasFromProjectEntity(project);
 		removeProjectFromRepository(project);
 		return totalNumberOfDeletedStatements;
@@ -161,10 +197,22 @@ public class PersistenceService {
 		repositoryRepository.save(repository);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#addDataAsNewSchema(java.lang.String, org.apache.jena.rdf.model.Model)
+	/**
+	 * Adds given schema data as new schema to the given repository and returns
+	 * a generated schema Id.
+	 * 
+	 * <p>
+	 * Changes made to the repository and the created schema are persisted.
+	 * 
+	 * @param label
+	 *            of the new schema
+	 * @param data
+	 *            containing RDF
+	 * @return created schema
+	 * @throws IllegalStateException
+	 *             if schema data could not be stored
 	 */
-		public Schema addDataAsNewSchema(String label, Model data){
+	public Schema addDataAsNewSchema(String label, Model data) {
 		final Schema schema = new Schema(createId(Vocabulary.Schema), label);
 		final Repository repository = findOrCreateSingleRepository();
 		schemaRepository.save(schema);
@@ -178,24 +226,39 @@ public class PersistenceService {
 		return repositoryRepository.findById(REPOSITORY_URI).orElseGet(() -> new Repository(REPOSITORY_URI));
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#replaceDataOfSchema(de.unima.core.domain.model.Schema, org.apache.jena.rdf.model.Model)
+	/**
+	 * Replaces data of given schema with given data.
+	 * 
+	 * @param schema
+	 *            which data should be replaced
+	 * @param data
+	 *            containing RDF
+	 * @return saved schema
+	 * @throws IllegalStateException
+	 *             if the schema data could not be stored
 	 */
-		public Schema replaceDataOfSchema(Schema schema, Model data){
+	public Schema replaceDataOfSchema(Schema schema, Model data) {
 		final Repository repository = findOrCreateSingleRepository();
 		schemaRepository.save(schema);
 		schemaRepository.addDataToEntity(schema, data).orElseThrow(() -> new IllegalStateException("Could not replace schema data."));
-		if(!repository.findSchemaById(schema.getId()).isPresent()){
+		if (!repository.findSchemaById(schema.getId()).isPresent()) {
 			repository.addSchema(schema);
 			repositoryRepository.save(repository);
 		}
 		return schema;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#deleteSchema(de.unima.core.domain.model.Schema)
+	/**
+	 * Unlinks given schema from all affected projects and deletes the content.
+	 * 
+	 * <p>
+	 * <b>Note:</b> Affected projects need to be reloaded.
+	 * 
+	 * @param schema
+	 *            which should be removed
+	 * @return number of statements which have been deleted
 	 */
-		public long deleteSchema(Schema schema){
+	public long deleteSchema(Schema schema) {
 		final Repository repository = findOrCreateSingleRepository();
 		projectRepository.saveAll(findAndUnlinkSchemaFromProjects(repository, schema));
 		repository.removeSchema(schema.getId());
@@ -211,31 +274,54 @@ public class PersistenceService {
 				}).collect(Collectors.toList());
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findAllSchemas()
+	/**
+	 * Finds all {@code Schema}s.
+	 * 
+	 * @return list of persisted {@code Schema}s
 	 */
-		public List<Schema> findAllSchemas(){
+	public List<Schema> findAllSchemas() {
 		return schemaRepository.findAll();
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findSchemaById(java.lang.String)
+	/**
+	 * Finds {@code Schema} by id.
+	 * 
+	 * The id must be an URI (e.g. http://www.test.com/1)
+	 * 
+	 * @param id
+	 *            of the Schema as URI
+	 * @return found {@code Schema}; empty otherwise
 	 */
-		public Optional<Schema> findSchemaById(String id){
+	public Optional<Schema> findSchemaById(String id) {
 		return schemaRepository.findById(id);
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findDataOfSchema(de.unima.core.domain.model.Schema)
+	/**
+	 * Finds data stored for given {@code Schema}.
+	 * 
+	 * @param schema
+	 *            which data should be returned
+	 * @return the data if present; empty otherwise
 	 */
-		public Optional<Model> findDataOfSchema(Schema schema){
+	public Optional<Model> findDataOfSchema(Schema schema) {
 		return schemaRepository.findDataOfEntity(schema);
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#createPeristentDataPoolForProjectWithGeneratedId(de.unima.core.domain.model.Project, java.lang.String)
+	/**
+	 * Creates a {@link DataPool} with generated Id and adds it to the given
+	 * project.
+	 * 
+	 * <p>
+	 * <b>Note:</b> The changes to the project and the new {@code DataPool} are
+	 * persisted.
+	 * 
+	 * @param project
+	 *            to add the created pool
+	 * @param label
+	 *            of the new pool
+	 * @return new {@link DataPool}
 	 */
-		public DataPool createPeristentDataPoolForProjectWithGeneratedId(Project project, String label){
+	public DataPool createPeristentDataPoolForProjectWithGeneratedId(Project project, String label) {
 		final DataPool datapool = new DataPool(createId(Vocabulary.DataPool), label, project);
 		project.addDataPool(datapool);
 		dataPoolRepository.save(datapool);
@@ -243,24 +329,44 @@ public class PersistenceService {
 		return datapool;
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#saveDataPool(de.unima.core.domain.model.DataPool)
+	/**
+	 * Saves given {@code DataPool}.
+	 * 
+	 * @param dataPool
+	 *            which should be saved
+	 * @return id of the pool
 	 */
-		public String saveDataPool(DataPool dataPool){
+	public String saveDataPool(DataPool dataPool) {
 		return dataPoolRepository.save(dataPool).orElseThrow(() -> new IllegalStateException("Could not save data pool."));
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findAllDataPools()
+	/**
+	 * Finds all {@code DataPool}s.
+	 * 
+	 * <p>
+	 * <b>Note:</b> The labels of the contained {@code DataBucket}s are not
+	 * loaded.
+	 * 
+	 * @return list of persistent {@code DataPool}s
 	 */
-		public List<DataPool> findAllDataPools(){
+	public List<DataPool> findAllDataPools() {
 		return dataPoolRepository.findAll();
 	}
 
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findDataPoolById(java.lang.String)
+	/**
+	 * Finds {@code DataPool} by id and all contained data buckets.
+	 *
+	 * <p>
+	 * <b>Note:</b> Each found data pool refers to the project it belongs to.
+	 * Thus, {@code DataPool#getProject()} is not null. However, the project is
+	 * not fully loaded and should not be saved. To load the project, see
+	 * {@link PersistenceService#findProjectById(String)}.
+	 * 
+	 * @param id
+	 *            of the pool
+	 * @return found {@code DataPool}; empty otherwise
 	 */
-		public Optional<DataPool> findDataPoolById(String id){
+	public Optional<DataPool> findDataPoolById(String id) {
 		final Optional<DataPool> foundDataPool = dataPoolRepository.findById(id);
 		loadAndAddDataBucketsIfPresent(foundDataPool);
 		return foundDataPool;
@@ -279,10 +385,14 @@ public class PersistenceService {
 		foundDataPool.get().replaceDataBuckets(loadedDataBuckets);
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#deleteDataPool(de.unima.core.domain.model.DataPool)
+	/**
+	 * Deletes given {@code DataPool}. This includes, the deletion of all
+	 * contained {@code DataBucket}s.
+	 * 
+	 * @param dataPool
+	 *            which should be deleted
 	 */
-		public void deleteDataPool(DataPool dataPool){
+	public void deleteDataPool(DataPool dataPool) {
 		final Project project = dataPool.getProject();
 		project.removeDataPoolById(dataPool.getId());
 		projectRepository.save(project);
@@ -300,10 +410,26 @@ public class PersistenceService {
 		return hasSlashOrHash ? uri : uri + "/";
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#addDataAsNewDataBucketToDataPool(de.unima.core.domain.model.DataPool, java.lang.String, org.apache.jena.rdf.model.Model)
+	/**
+	 * Adds given data as new {@code DataBucket} to the given {@code DataPool}
+	 * and returns a generated Id.
+	 * 
+	 * <p>
+	 * <b>Note:</b> Changes made to given {@code DataPool} are persisted.
+	 * Further, the created {@code DataBucket} is also persisted.
+	 * 
+	 * @param dataPool
+	 *            of the new {@code DataBucket}
+	 * 
+	 * @param label
+	 *            of the new {@code DataBucket}
+	 * @param data
+	 *            containing RDF
+	 * @return created {@code DataBucket}
+	 * @throws IllegalStateException
+	 *             if the data could not be stored
 	 */
-		public DataBucket addDataAsNewDataBucketToDataPool(DataPool dataPool, String label, Model data){
+	public DataBucket addDataAsNewDataBucketToDataPool(DataPool dataPool, String label, Model data) {
 		final DataBucket bucket = new DataBucket(createId(Vocabulary.DataBucket), label);
 		dataBucketRepository.save(bucket);
 		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not add data as new data bucket."));
@@ -312,28 +438,47 @@ public class PersistenceService {
 		return bucket;
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#replaceDataBucketWithData(de.unima.core.domain.model.DataBucket, org.apache.jena.rdf.model.Model)
+	/**
+	 * Replaces data of given {@code DataBucket}t with given data.
+	 * 
+	 * @param bucket
+	 *            which data should be replaced
+	 * @param data
+	 *            containing RDF
+	 * @return saved bucket
+	 * @throws IllegalStateException
+	 *             if the bucket data could not be stored
 	 */
-		public DataBucket replaceDataBucketWithData(DataBucket bucket, Model data){
+	public DataBucket replaceDataBucketWithData(DataBucket bucket, Model data) {
 		dataBucketRepository.save(bucket);
 		dataBucketRepository.addDataToEntity(bucket, data).orElseThrow(() -> new IllegalStateException("Could not replace data bucket."));
 		return bucket;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#removeDataBucketFromDataPool(de.unima.core.domain.model.DataPool, de.unima.core.domain.model.DataBucket)
+	/**
+	 * Removes given {@link DataBucket}.
+	 * 
+	 * @param dataPool
+	 *            of the {@code DataBucket}
+	 * 
+	 * @param dataBucket
+	 *            which should be removed
+	 * @return number of statements which have been deleted
 	 */
-		public long removeDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket){
+	public long removeDataBucketFromDataPool(DataPool dataPool, DataBucket dataBucket) {
 		dataPool.removeDataBucketById(dataBucket.getId());
 		dataPoolRepository.save(dataPool);
 		return dataBucketRepository.delete(dataBucket);
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.unima.core.persistence.local.RepoService#findDataOfDataBucket(de.unima.core.domain.model.DataBucket)
+	/**
+	 * Finds data stored for given {@code DataBucket}.
+	 * 
+	 * @param bucket
+	 *            which data should be returned
+	 * @return the data if present; empty otherwise
 	 */
-		public Optional<Model> findDataOfDataBucket(DataBucket bucket){
+	public Optional<Model> findDataOfDataBucket(DataBucket bucket) {
 		return dataBucketRepository.findDataOfEntity(bucket);
 	}
 }
