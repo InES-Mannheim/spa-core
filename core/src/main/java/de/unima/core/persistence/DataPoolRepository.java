@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.persistence.local;
+package de.unima.core.persistence;
 
 import java.util.List;
 import java.util.Optional;

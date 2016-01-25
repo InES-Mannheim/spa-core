@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.persistence.local;
+package de.unima.core.persistence;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,8 +36,8 @@ import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Repository;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.local.ProjectRepository;
-import de.unima.core.persistence.local.Vocabulary;
+import de.unima.core.persistence.ProjectRepository;
+import de.unima.core.persistence.Vocabulary;
 import de.unima.core.storage.jena.JenaTDBStore;
 
 public class ProjectRepositoryTest {

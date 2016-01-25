@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.persistence.local;
+package de.unima.core.persistence;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,7 +37,7 @@ import org.junit.rules.ExpectedException;
 import com.google.common.collect.Lists;
 
 import de.unima.core.domain.model.AbstractEntity;
-import de.unima.core.persistence.local.Transformation;
+import de.unima.core.persistence.Transformation;
 
 public class TransformationTest {
 

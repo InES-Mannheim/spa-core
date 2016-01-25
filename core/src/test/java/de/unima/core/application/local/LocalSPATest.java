@@ -24,6 +24,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import de.unima.core.application.SPA;
+import de.unima.core.application.SPABuilder;
 
 public class LocalSPATest {
 

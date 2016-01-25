@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.persistence.local;
+package de.unima.core.persistence;
 
 import de.unima.core.domain.model.Schema;
 import de.unima.core.storage.Store;

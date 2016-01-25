@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.persistence.local;
+package de.unima.core.persistence;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -42,7 +42,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import de.unima.core.domain.model.AbstractEntity;
-import de.unima.core.persistence.local.AbstractEntityRepository;
+import de.unima.core.persistence.AbstractEntityRepository;
 import de.unima.core.storage.Store;
 import de.unima.core.storage.jena.JenaTDBStore;
 

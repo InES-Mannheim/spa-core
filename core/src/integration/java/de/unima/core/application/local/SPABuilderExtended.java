@@ -2,7 +2,8 @@ package de.unima.core.application.local;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import de.unima.core.persistence.local.LocalPersistenceService;
+import de.unima.core.application.SPABuilder;
+import de.unima.core.persistence.PersistenceService;
 
 public class SPABuilderExtended extends SPABuilder {
 	
@@ -20,7 +21,7 @@ public class SPABuilderExtended extends SPABuilder {
 		class FusekiBuilder extends VirtuosoBuilder {
 			
 			@Override
-			protected LocalPersistenceService getPersistenceService() {
+			protected PersistenceService getPersistenceService() {
 				throw new NotImplementedException("Fuseki Builder is not implemented yet.");
 			}
 		}

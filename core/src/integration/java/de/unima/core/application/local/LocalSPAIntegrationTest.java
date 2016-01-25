@@ -49,12 +49,12 @@ import com.google.common.base.Throwables;
 
 import de.unima.core.BaseIntegrationTest;
 import de.unima.core.application.SPA;
+import de.unima.core.application.SPABuilder;
 import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.domain.service.PersistenceService;
-import de.unima.core.persistence.local.LocalPersistenceService;
+import de.unima.core.persistence.PersistenceService;
 import de.unima.core.storage.StoreSupport;
 import de.unima.core.storage.jena.JenaTDBStore;
 
@@ -72,7 +72,7 @@ public class LocalSPAIntegrationTest extends BaseIntegrationTest {
 	@Before
 	public void setUp() {
 		this.spa = new SPABuilder().local().sharedMemory().build();
-		this.service = new LocalPersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
+		this.service = new PersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
 	}
 	
 	@Test

@@ -13,9 +13,9 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.persistence.local;
+package de.unima.core.persistence;
 
-import static de.unima.core.persistence.local.Transformation.TransformationSupport.readFieldAsType;
+import static de.unima.core.persistence.Transformation.TransformationSupport.readFieldAsType;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
