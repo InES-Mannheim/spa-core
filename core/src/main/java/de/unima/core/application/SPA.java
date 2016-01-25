@@ -37,7 +37,7 @@ public interface SPA {
 	 * @return new {@code Project} with generated id
 	 */
 	Project createProject(String label);
-
+	
 	/**
 	 * Finds all {@link Project}s.
 	 * 

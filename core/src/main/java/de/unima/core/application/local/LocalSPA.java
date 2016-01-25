@@ -46,52 +46,15 @@ import de.unima.core.io.file.XSDImporter;
 import de.unima.core.persistence.local.LocalPersistenceService;
 
 public class LocalSPA implements SPA {
-	
-	private static final String LOCAL_INDIVIDUAL_NAMESPACE = "http://www.uni-mannheim/spa/local/bpmn/";
 
 	private final PersistenceService persistenceService;
 	private final ImporterSupport importerSupport;
 	private final FileBasedExporterSupport exporterSupport;
 	
-	private LocalSPA(PersistenceService persistenceService, ImporterSupport importerSupport, FileBasedExporterSupport exporterSupport) {
+	LocalSPA(PersistenceService persistenceService, ImporterSupport importerSupport, FileBasedExporterSupport exporterSupport) {
 		this.persistenceService = persistenceService;
 		this.importerSupport = importerSupport;
 		this.exporterSupport = exporterSupport;
-	}
-	
-	public static SPA withDataInUniqueMemory(){
-		return createSpa(LocalPersistenceService.withDataInUniqueMemory());
-	}
-	
-	public static SPA withDataInSharedMemory(){
-		return createSpa(LocalPersistenceService.withDataInSharedMemory());
-	}
-	
-	public static SPA withDataInFolder(String fullPathToFolder){
-		return createSpa(LocalPersistenceService.withDataInFolder(Paths.get(fullPathToFolder)));
-	}
-	
-	private static SPA createSpa(final LocalPersistenceService persistenceService) {
-		final ImporterSupport importers = createDefaultImporters();
-		final FileBasedExporterSupport exporters = createDefaultExporters();
-		return new LocalSPA(persistenceService, importers, exporters);
-	}
-	
-	private static ImporterSupport createDefaultImporters(){
-		final ImporterSupport importerSupport = new AnyImporterSupport();
-		importerSupport.addImporter(new BPMN20Importer(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
-		importerSupport.addImporter(new XSDImporter(), "XSD");
-		importerSupport.addImporter(new XESImporter(), "XES");
-		importerSupport.addImporter(new RDFImporter(), "RDF");
-		return importerSupport;
-	}
-	
-	private static FileBasedExporterSupport createDefaultExporters(){
-		final FileBasedExporterSupport exporters = new FileBasedExporterSupport();
-		exporters.addExporter(new BPMN20Exporter(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
-		exporters.addExporter(new RDFExporter(), "RDF");
-		exporters.addExporter(new XESExporter(), "XES");
-		return exporters;
 	}
 
 	public Project createProject(String label) {
@@ -203,4 +166,5 @@ public class LocalSPA implements SPA {
 	public List<String> getSupportedExportFormats(){
 		return exporterSupport.listKeysAsString();
 	}
+	
 }

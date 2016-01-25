@@ -55,6 +55,8 @@ import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
 import de.unima.core.domain.service.PersistenceService;
 import de.unima.core.persistence.local.LocalPersistenceService;
+import de.unima.core.storage.StoreSupport;
+import de.unima.core.storage.jena.JenaTDBStore;
 
 public class LocalSPAIntegrationTest extends BaseIntegrationTest {
 
@@ -69,8 +71,8 @@ public class LocalSPAIntegrationTest extends BaseIntegrationTest {
 
 	@Before
 	public void setUp() {
-		this.spa = LocalSPA.withDataInSharedMemory();
-		this.service = LocalPersistenceService.withDataInSharedMemory();
+		this.spa = new SPABuilder().local().sharedMemory().build();
+		this.service = new LocalPersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
 	}
 	
 	@Test

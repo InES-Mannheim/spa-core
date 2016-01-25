@@ -49,25 +49,13 @@ public class LocalPersistenceService implements PersistenceService {
 	private final DataPoolRepository dataPoolRepository;
 	private final DataBucketRepository dataBucketRepository;
 	
-	private LocalPersistenceService(Store store) {
+	public LocalPersistenceService(Store store) {
 		this.repositoryRepository = new RepositoryRepository(store);
 		this.schemaRepository = new SchemaRepository(store);
 		this.projectRepository = new ProjectRepository(store);
 		this.dataPoolRepository = new DataPoolRepository(store);
 		this.dataBucketRepository = new DataBucketRepository(store);
 		this.rand = new Random();
-	}
-	
-	public static LocalPersistenceService withDataInSharedMemory(){
-		return new LocalPersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
-	}
-	
-	public static LocalPersistenceService withDataInUniqueMemory(){
-		return new LocalPersistenceService(JenaTDBStore.withUniqueMemoryLocation());
-	}
-	
-	public static LocalPersistenceService withDataInFolder(Path pathToFolder){
-		return new LocalPersistenceService(JenaTDBStore.withFolder(pathToFolder));
 	}
 
 	/* (non-Javadoc)

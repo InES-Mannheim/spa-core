@@ -37,7 +37,7 @@ public class LocalSPATest {
 
 	@Before
 	public void setUp(){
-		this.spa = LocalSPA.withDataInSharedMemory();
+		this.spa = new SPABuilder().local().sharedMemory().build();
 	}
 	
 	@Test
