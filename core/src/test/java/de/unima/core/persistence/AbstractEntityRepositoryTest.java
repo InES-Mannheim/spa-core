@@ -42,7 +42,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import de.unima.core.domain.model.AbstractEntity;
-import de.unima.core.persistence.AbstractEntityRepository;
 import de.unima.core.storage.Store;
 import de.unima.core.storage.jena.JenaTDBStore;
 

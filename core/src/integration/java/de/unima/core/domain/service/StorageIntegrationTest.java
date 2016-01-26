@@ -60,7 +60,6 @@ import de.unima.core.io.file.XMLImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.io.file.xes.OntModelToXLogExporter;
 import de.unima.core.persistence.PersistenceService;
-import de.unima.core.storage.StoreSupport;
 import de.unima.core.storage.jena.JenaTDBStore;
 
 

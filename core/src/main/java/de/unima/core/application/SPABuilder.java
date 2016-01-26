@@ -33,7 +33,6 @@ import de.unima.core.io.file.XESExporter;
 import de.unima.core.io.file.XESImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.persistence.PersistenceService;
-import de.unima.core.persistence.LocalPersistenceServiceTest;
 import de.unima.core.storage.StoreSupport;
 import de.unima.core.storage.jena.JenaTDBStore;
 
@@ -179,5 +178,3 @@ public class SPABuilder {
 	}
 	
 }
-
-

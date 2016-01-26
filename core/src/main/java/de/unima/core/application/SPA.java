@@ -16,13 +16,11 @@
 package de.unima.core.application;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.jena.rdf.model.Model;
 
 import de.unima.core.domain.model.DataBucket;
@@ -30,18 +28,10 @@ import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Entity;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.io.AnyImporterSupport;
 import de.unima.core.io.Importer;
 import de.unima.core.io.ImporterSupport;
 import de.unima.core.io.Key;
-import de.unima.core.io.file.BPMN20Exporter;
-import de.unima.core.io.file.BPMN20Importer;
 import de.unima.core.io.file.FileBasedExporterSupport;
-import de.unima.core.io.file.RDFImporter;
-import de.unima.core.io.file.XESExporter;
-import de.unima.core.io.file.RDFExporter;
-import de.unima.core.io.file.XESImporter;
-import de.unima.core.io.file.XSDImporter;
 import de.unima.core.persistence.PersistenceService;
 
 public class SPA {

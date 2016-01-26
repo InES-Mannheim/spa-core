@@ -21,10 +21,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import de.unima.core.domain.model.Project;
-import de.unima.core.domain.model.Repository;
-import de.unima.core.domain.model.Schema;
-
 public class ProjectTest {
 
 	@Test

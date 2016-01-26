@@ -30,7 +30,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.SchemaRepository;
 import de.unima.core.storage.jena.JenaTDBStore;
 
 public class SchemaRepositoryTest {

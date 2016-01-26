@@ -37,7 +37,6 @@ import org.junit.rules.ExpectedException;
 import com.google.common.collect.Lists;
 
 import de.unima.core.domain.model.AbstractEntity;
-import de.unima.core.persistence.Transformation;
 
 public class TransformationTest {
 

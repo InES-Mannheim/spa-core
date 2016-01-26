@@ -36,8 +36,6 @@ import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Repository;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.ProjectRepository;
-import de.unima.core.persistence.Vocabulary;
 import de.unima.core.storage.jena.JenaTDBStore;
 
 public class ProjectRepositoryTest {

@@ -30,7 +30,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.unima.core.domain.model.AbstractEntity;
-import de.unima.core.persistence.PartialDataStore;
 import de.unima.core.storage.Store;
 import de.unima.core.storage.jena.JenaTDBStore;
 

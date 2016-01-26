@@ -36,8 +36,6 @@ import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.PersistenceService;
-import de.unima.core.storage.StoreSupport;
 import de.unima.core.storage.jena.JenaTDBStore;
 
 public class LocalPersistenceServiceTest {

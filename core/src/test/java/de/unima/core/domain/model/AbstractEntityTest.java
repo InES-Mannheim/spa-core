@@ -22,9 +22,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import de.unima.core.domain.model.AbstractEntity;
-import de.unima.core.domain.model.Entity;
-
 public class AbstractEntityTest {
 	
 	@Test

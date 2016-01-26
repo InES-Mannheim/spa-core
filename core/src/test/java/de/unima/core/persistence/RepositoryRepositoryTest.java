@@ -26,7 +26,6 @@ import org.junit.Test;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Repository;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.persistence.RepositoryRepository;
 import de.unima.core.storage.jena.JenaTDBStore;
 
 public class RepositoryRepositoryTest {
