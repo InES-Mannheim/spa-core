@@ -1,4 +1,4 @@
-package de.unima.ontmalizer;
+package tr.com.srdc.ontmalizer;
 
 import java.io.File;
 import java.io.InputStream;
@@ -38,10 +38,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import de.unima.ontmalizer.data.TypedResource;
-import de.unima.ontmalizer.helper.Constants;
-import de.unima.ontmalizer.helper.NamingUtil;
-import de.unima.ontmalizer.helper.XSDUtil;
+import tr.com.srdc.ontmalizer.data.TypedResource;
+import tr.com.srdc.ontmalizer.helper.Constants;
+import tr.com.srdc.ontmalizer.helper.NamingUtil;
+import tr.com.srdc.ontmalizer.helper.XSDUtil;
 
 
 /**
@@ -52,6 +52,18 @@ import de.unima.ontmalizer.helper.XSDUtil;
  * @author Atakan Kaya, Mustafa Yuksel
  *
  */
+
+/**
+ * @author de.unima.*
+ * Updated imports to Jena 3.x Version
+ * Added methods:
+ * 		- public XML2OWLMapper(File xmlFile, OntModel ontology)
+ * Changed methods:
+ * 		- private void initializeEnvironment(XSD2OWLMapper mapping)
+ * 		- private void traverseChildren(Node node, Resource subject, Resource subjectType)
+ * 		- private TypedResource findObjectType(Resource root, String prop)
+ */
+
 public class XML2OWLMapper {
 	
 	// Variables for parsing XML instance

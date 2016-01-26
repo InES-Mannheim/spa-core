@@ -13,8 +13,8 @@ import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.RDFNode;
 import org.junit.Test;
 
-import de.unima.ontmalizer.XML2OWLMapper;
-import de.unima.ontmalizer.XSD2OWLMapper;
+import tr.com.srdc.ontmalizer.XML2OWLMapper;
+import tr.com.srdc.ontmalizer.XSD2OWLMapper;
 
 
 public class XESImport {

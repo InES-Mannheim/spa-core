@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unima.ontmalizer.helper;
+package tr.com.srdc.ontmalizer.helper;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Resource;
@@ -11,6 +11,12 @@ import org.apache.jena.vocabulary.XSD;
  * @author Mustafa
  *
  */
+
+/**
+ * @author de.unima.*
+ * Updated imports to Jena 3.x Version
+ */
+
 public class XSDUtil {
 	
 	public static Resource getXSDResource(String type) {

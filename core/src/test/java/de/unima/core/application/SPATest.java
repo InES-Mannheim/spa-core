@@ -13,34 +13,37 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.io.file;
+package de.unima.core.application;
 
 import java.io.File;
-import java.io.InputStream;
 
-import org.apache.jena.ontology.OntModel;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
-import tr.com.srdc.ontmalizer.XSD2OWLMapper;
+import de.unima.core.application.SPA;
+import de.unima.core.application.SPABuilder;
 
-public class XSDImporter implements FileBasedImporter<OntModel> {
+public class SPATest {
+
+	@Rule
+	public ExpectedException expected = ExpectedException.none();
 	
-	@Override
-	public OntModel importData(File xmlSource) {
-		XSD2OWLMapper mapping = new XSD2OWLMapper(xmlSource);
-	    return convertXsdToOntology(mapping);
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+	
+	private SPA spa;
+
+	@Before
+	public void setUp(){
+		this.spa = new SPABuilder().local().sharedMemory().build();
 	}
 	
-	public OntModel importData(InputStream xmlSource){
-		final XSD2OWLMapper mapping = new XSD2OWLMapper(xmlSource);
-		return convertXsdToOntology(mapping);
+	@Test
+	public void whenFileFormatIsNotSupportedThenAnIllegalArgumentExceptionShouldBeThrown(){
+		expected.expect(IllegalArgumentException.class);
+		spa.importSchema(new File(""), "Nope", "na");
 	}
-
-	private OntModel convertXsdToOntology(XSD2OWLMapper mapping) {
-		mapping.setObjectPropPrefix("");
-	    mapping.setDataTypePropPrefix("");
-	    mapping.convertXSD2OWL();
-		return mapping.getOntology();
-	}
-	
-
 }

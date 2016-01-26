@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unima.ontmalizer.data;
+package tr.com.srdc.ontmalizer.data;
 
 import org.apache.jena.rdf.model.Resource;
 
@@ -9,6 +9,12 @@ import org.apache.jena.rdf.model.Resource;
  * @author Mustafa
  *
  */
+
+/**
+ * @author de.unima.*
+ * Updated imports to Jena 3.x Version
+ */
+
 public class TypedResource {
 	
 	private boolean isDatatype;

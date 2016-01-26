@@ -1,4 +1,4 @@
-package de.unima.ontmalizer;
+package tr.com.srdc.ontmalizer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,12 +45,12 @@ import com.sun.xml.xsom.XSTerm;
 import com.sun.xml.xsom.XSType;
 import com.sun.xml.xsom.parser.XSOMParser;
 
-import de.unima.ontmalizer.helper.AnnotationFactory;
-import de.unima.ontmalizer.helper.Constants;
-import de.unima.ontmalizer.helper.NamingUtil;
-import de.unima.ontmalizer.helper.SimpleTypeRestriction;
-import de.unima.ontmalizer.helper.URLResolver;
-import de.unima.ontmalizer.helper.XSDUtil;
+import tr.com.srdc.ontmalizer.helper.AnnotationFactory;
+import tr.com.srdc.ontmalizer.helper.Constants;
+import tr.com.srdc.ontmalizer.helper.NamingUtil;
+import tr.com.srdc.ontmalizer.helper.SimpleTypeRestriction;
+import tr.com.srdc.ontmalizer.helper.URLResolver;
+import tr.com.srdc.ontmalizer.helper.XSDUtil;
 
 
 /**
@@ -59,6 +59,19 @@ import de.unima.ontmalizer.helper.XSDUtil;
  * XSD2OWLMapper Class converts XML schemas to ontologies.
  *
  */
+
+/**
+ * @author de.unima.*
+ * Updated imports to Jena 3.x Version
+ * Added methods:
+ * 		- public XSD2OWLMapper(OntModel model)
+ * Changed methods:
+ * 		- public void convertXSD2OWL()
+ * 		- private OntClass convertComplexType(XSComplexType complex, String parentURI)
+ * 		- private void convertGroup(XSModelGroup group, OntClass parent)
+ * 		- private void convertAttributeGroup(XSAttGroupDecl attGroup)
+ */
+
 public class XSD2OWLMapper {
 	
 	// Variables to parse XSD schema

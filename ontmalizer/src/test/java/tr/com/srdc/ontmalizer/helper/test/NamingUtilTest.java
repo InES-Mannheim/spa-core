@@ -1,4 +1,4 @@
-package de.unima.ontmalizer.helper.test;
+package tr.com.srdc.ontmalizer.helper.test;
 
 import static org.junit.Assert.*;
 
@@ -9,11 +9,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import de.unima.ontmalizer.helper.NamingUtil;
+import tr.com.srdc.ontmalizer.helper.NamingUtil;
 
 /**
  * @author rahmivolkan
  */
+
+/**
+ * @author de.unima.*
+ * Updated imports for JUnit 4.x
+ * Changed methods:
+ * 		- public void testCreatePropertyNameForDifferentLocales()
+ */
+
 @RunWith(JUnit4.class)
 public class NamingUtilTest {
     private static Locale defaultLocale = Locale.getDefault();

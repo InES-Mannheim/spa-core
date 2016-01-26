@@ -1,4 +1,4 @@
-package de.unima.ontmalizer.helper;
+package tr.com.srdc.ontmalizer.helper;
 
 import java.util.Iterator;
 import java.util.Vector;

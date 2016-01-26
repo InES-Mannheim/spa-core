@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unima.ontmalizer.helper;
+package tr.com.srdc.ontmalizer.helper;
 
 import java.io.IOException;
 import java.net.URL;

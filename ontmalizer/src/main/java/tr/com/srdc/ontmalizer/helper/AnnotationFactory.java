@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unima.ontmalizer.helper;
+package tr.com.srdc.ontmalizer.helper;
 
 import com.sun.xml.xsom.parser.AnnotationParser;
 import com.sun.xml.xsom.parser.AnnotationParserFactory;

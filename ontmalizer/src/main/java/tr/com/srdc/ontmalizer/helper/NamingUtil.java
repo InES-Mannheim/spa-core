@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.unima.ontmalizer.helper;
+package tr.com.srdc.ontmalizer.helper;
 
 /**
  * @author Mustafa
