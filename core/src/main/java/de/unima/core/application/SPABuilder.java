@@ -15,12 +15,16 @@
  *******************************************************************************/
 package de.unima.core.application;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 
 import org.apache.commons.lang3.NotImplementedException;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.sun.javafx.fxml.builder.URLBuilder;
+import com.sun.org.apache.xerces.internal.util.URI.MalformedURIException;
 
 import de.unima.core.io.AnyImporterSupport;
 import de.unima.core.io.ImporterSupport;
@@ -113,7 +117,12 @@ public class SPABuilder {
 	        
 	        
 	        protected void validateConfigurationParameters() {
-	    		Preconditions.checkNotNull(url);
+	        	Preconditions.checkArgument(!Strings.isNullOrEmpty(url), "URL is not set or empty.");
+	        	try {
+	        		new URL(url);
+	        	} catch(MalformedURLException e) {
+	        		throw new IllegalArgumentException("URL is not valid.");
+	        	}
 	    		Preconditions.checkArgument(!Strings.isNullOrEmpty(user), "User is not set or empty.");
 	    		Preconditions.checkNotNull(password);
 	    	}
