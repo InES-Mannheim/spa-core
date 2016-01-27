@@ -23,8 +23,6 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.sun.javafx.fxml.builder.URLBuilder;
-import com.sun.org.apache.xerces.internal.util.URI.MalformedURIException;
 
 import de.unima.core.io.AnyImporterSupport;
 import de.unima.core.io.ImporterSupport;
@@ -40,17 +38,34 @@ import de.unima.core.persistence.PersistenceService;
 import de.unima.core.storage.StoreSupport;
 import de.unima.core.storage.jena.JenaTDBStore;
 
+/**
+ * The SPABuilder is used to create a new instance of SPA.
+ * The builder provides a set of basic configurations but
+ * can be easily extended with custom implementations e.g.
+ * for support of another JenaTDBStore.
+ */
 public class SPABuilder {
  
+	/**
+	 * Provide access to all configurations that
+	 * use local memory or disks.
+	 * @return An instance of a local builder
+	 */
 	public LocalBuilder local() {
 		return this.new LocalBuilder();
 	}
 	
+	/**
+	 * Provide access to all configurations that
+	 * use remote connections to get and save triples.
+	 * @return An instance of a remote builder
+	 */
 	public RemoteBuilder remote(){
         return this.new RemoteBuilder();
     }
 	
 	public class LocalBuilder {
+		
 	    public UniqueMemoryBuilder uniqueMemory() {
 	    	return new UniqueMemoryBuilder();
 	    }
@@ -63,6 +78,11 @@ public class SPABuilder {
 	    	return new FolderBuilder(pathToFolder);
 	    }
 	    
+	    /**
+	     * The UniqueMemoryBuilder is used to configure 
+	     * a SPA instance that uses Random Access Memory
+	     * to save triples, thus it is non persistent.
+	     */
 	    public class UniqueMemoryBuilder extends Builder {
 	    	
 	    	protected void validateConfigurationParameters() {
@@ -74,6 +94,9 @@ public class SPABuilder {
 	    	
 	    }
 	    
+	    /**
+	     * @TODO Provide description.
+	     */
 	    public class SharedMemoryBuilder extends Builder {
 
 	    	protected void validateConfigurationParameters() {
@@ -85,6 +108,11 @@ public class SPABuilder {
 	    	
 	    }
 	    
+	    /**
+	     * The FolderBuilder is used to configure 
+	     * a SPA instance that uses the local file
+	     * system in order to persist triples.
+	     */
 	    public class FolderBuilder extends Builder {
 	    	
 	    	private String pathToFolder;
@@ -105,10 +133,16 @@ public class SPABuilder {
 	}
 	
 	public class RemoteBuilder {
+		
 	    public VirtuosoBuilder virtuoso(){
 	    	return new VirtuosoBuilder();
 	    }
 
+	    /**
+	     * The VirtuosoBuilder is used to configure 
+	     * a SPA instance that uses a remote connection
+	     * to a Virtuoso instance in order to persist triples.
+	     */
 	    public class VirtuosoBuilder extends Builder {
 	    	
 	    	private String url;
@@ -131,16 +165,32 @@ public class SPABuilder {
 	    		throw new NotImplementedException("Virtuoso Builder is not supported yet.");
 	    	}
 	        
+	    	/**
+	    	 * Set the url of the Virtuoso instance to which SPA should connect
+	    	 * The url must be a valid url using the HTTP-Protocol.
+	    	 * @param url
+	    	 * @return
+	    	 */
 	        public VirtuosoBuilder url(String url){
 	            this.url = url;
 	            return this;
 	        }
 	        
+	        /**
+	    	 * Set the user which is used to login to the Virtuoso instance
+	         * @param user The user must not be empty or null.
+	         * @return
+	         */
 	        public VirtuosoBuilder user(String user){
 	            this.user = user;
 	            return this;
 	        }
 
+	        /**
+	    	 * Set the password which is used to login to the Virtuoso instance
+	         * @param user The password must not be null.
+	         * @return
+	         */
 	        public VirtuosoBuilder password(String pasword){
 	            this.password = pasword;
 	            return this;
@@ -153,6 +203,14 @@ public class SPABuilder {
 		
 		private static final String LOCAL_INDIVIDUAL_NAMESPACE = "http://www.uni-mannheim/spa/local/bpmn/";
 		
+		/**
+		 * Create the SPA instance based on the set configuration
+		 * parameters. If any configuration is not valid an
+		 * IllegalArgumentException is thrown.
+		 * In case of a remote connection also an IOException can occur
+		 * if the connection could not be set up.
+		 * @return
+		 */
 		public SPA build() {
 			validateConfigurationParameters();
 			return createSpa(getPersistenceService());
