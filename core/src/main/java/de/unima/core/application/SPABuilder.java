@@ -15,14 +15,9 @@
  *******************************************************************************/
 package de.unima.core.application;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Paths;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 
 import de.unima.core.io.AnyImporterSupport;
 import de.unima.core.io.ImporterSupport;
@@ -133,70 +128,6 @@ public class SPABuilder {
 	}
 	
 	public class RemoteBuilder {
-		
-	    public VirtuosoBuilder virtuoso(){
-	    	return new VirtuosoBuilder();
-	    }
-
-	    /**
-	     * The VirtuosoBuilder is used to configure 
-	     * a SPA instance that uses a remote connection
-	     * to a Virtuoso instance in order to persist triples.
-	     */
-	    public class VirtuosoBuilder extends Builder {
-	    	
-	    	private String url;
-	    	private String user;
-	        private String password;
-	        
-	        
-	        protected void validateConfigurationParameters() {
-	        	Preconditions.checkArgument(!Strings.isNullOrEmpty(url), "URL is not set or empty.");
-	        	try {
-	        		new URL(url);
-	        	} catch(MalformedURLException e) {
-	        		throw new IllegalArgumentException("URL is not valid.");
-	        	}
-	    		Preconditions.checkArgument(!Strings.isNullOrEmpty(user), "User is not set or empty.");
-	    		Preconditions.checkNotNull(password);
-	    	}
-	    	
-	    	protected PersistenceService getPersistenceService() {
-	    		throw new NotImplementedException("Virtuoso Builder is not supported yet.");
-	    	}
-	        
-	    	/**
-	    	 * Set the url of the Virtuoso instance to which SPA should connect
-	    	 * The url must be a valid url using the HTTP-Protocol.
-	    	 * @param url
-	    	 * @return
-	    	 */
-	        public VirtuosoBuilder url(String url){
-	            this.url = url;
-	            return this;
-	        }
-	        
-	        /**
-	    	 * Set the user which is used to login to the Virtuoso instance
-	         * @param user The user must not be empty or null.
-	         * @return
-	         */
-	        public VirtuosoBuilder user(String user){
-	            this.user = user;
-	            return this;
-	        }
-
-	        /**
-	    	 * Set the password which is used to login to the Virtuoso instance
-	         * @param user The password must not be null.
-	         * @return
-	         */
-	        public VirtuosoBuilder password(String pasword){
-	            this.password = pasword;
-	            return this;
-	        }      
-	    
-	    }
 	}
  
 	abstract class Builder {
