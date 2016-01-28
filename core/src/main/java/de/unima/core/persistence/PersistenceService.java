@@ -31,8 +31,7 @@ import de.unima.core.domain.model.Schema;
 import de.unima.core.storage.Store;
 
 /**
- * Implementation of the {@code PersistenceService} which stores entities
- * locally on disk or in memory.
+ * PersistenceService which stores entities locally on disk or in memory.
  */
 public class PersistenceService {
 

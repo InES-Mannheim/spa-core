@@ -77,8 +77,8 @@ public class SPABuilder {
 	    
 	    /**
 	     * The UniqueMemoryBuilder is used to configure 
-	     * a SPA instance that uses Random Access Memory
-	     * to save triples, thus it is non persistent.
+	     * a SPA instance that uses a unique location in
+	     * memory in order to temporarily save triples.
 	     */
 	    public class UniqueMemoryBuilder extends Builder<UniqueMemoryBuilder> {
 	    	
@@ -92,7 +92,9 @@ public class SPABuilder {
 	    }
 	    
 	    /**
-	     * @TODO Provide description.
+	     * The SharedMemoryBuilder is used to configure 
+	     * a SPA instance that uses a shared location in
+	     * memory in order to temporarily save triples.
 	     */
 	    public class SharedMemoryBuilder extends Builder<SharedMemoryBuilder> {
 
@@ -107,8 +109,8 @@ public class SPABuilder {
 	    
 	    /**
 	     * The FolderBuilder is used to configure 
-	     * a SPA instance that uses the local file
-	     * system in order to persist triples.
+	     * a SPA instance that uses the a specific folder
+	     * in the files system in order to persist triples.
 	     */
 	    public class FolderBuilder extends Builder<FolderBuilder> {
 	    	
@@ -138,6 +140,11 @@ public class SPABuilder {
 		private static final String DEFAULT_NAMESPACE = "http://www.uni-mannheim/spa/local/bpmn/";
 		private String namespace;
 		
+		/**
+		 * Set the namespace for importers/exporters with dynamic namespace support.
+		 * @param customNamespace The namespace which should be used
+		 * @return A instance of the extending class in order to chain further methods
+		 */
 		@SuppressWarnings("unchecked")
 		public T namespace(String customNamespace) {
 			this.namespace = customNamespace;
@@ -145,12 +152,11 @@ public class SPABuilder {
 		}
 		
 		/**
-		 * Create the SPA instance based on the set configuration
-		 * parameters. If any configuration is not valid an
-		 * IllegalArgumentException is thrown.
-		 * In case of a remote connection also an IOException can occur
-		 * if the connection could not be set up.
-		 * @return
+		 * Creates the SPA instance based on the set configuration
+		 * parameters.
+		 * @throws IllegalArgumentException if any configuration parameter is not valid
+		 * @throws NullPointerException if a mandatory configuration parameter is not set
+		 * @return A SPA instance based on the configurations
 		 */
 		public SPA build() throws IllegalArgumentException {
 			setNamespaceToDefaultIfNotConfigured();
