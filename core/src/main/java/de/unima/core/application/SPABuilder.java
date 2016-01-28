@@ -15,6 +15,8 @@
  *******************************************************************************/
 package de.unima.core.application;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 
 import com.google.common.base.Preconditions;
@@ -40,14 +42,14 @@ import de.unima.core.storage.jena.JenaTDBStore;
  * for support of another JenaTDBStore.
  */
 public class SPABuilder {
- 
+ 	
 	/**
 	 * Provide access to all configurations that
 	 * use local memory or disks.
 	 * @return An instance of a local builder
 	 */
 	public static LocalBuilder local() {
-		return new LocalBuilder();
+		return new SPABuilder().new LocalBuilder();
 	}
 	
 	/**
@@ -56,10 +58,10 @@ public class SPABuilder {
 	 * @return An instance of a remote builder
 	 */
 	public static RemoteBuilder remote(){
-        return new RemoteBuilder();
+        return new SPABuilder().new RemoteBuilder();
     }
 	
-	public static class LocalBuilder {
+	public class LocalBuilder {
 		
 	    public UniqueMemoryBuilder uniqueMemory() {
 	    	return new UniqueMemoryBuilder();
@@ -78,7 +80,7 @@ public class SPABuilder {
 	     * a SPA instance that uses Random Access Memory
 	     * to save triples, thus it is non persistent.
 	     */
-	    public class UniqueMemoryBuilder extends Builder {
+	    public class UniqueMemoryBuilder extends Builder<UniqueMemoryBuilder> {
 	    	
 	    	protected void validateConfigurationParameters() {
 	    	}
@@ -92,7 +94,7 @@ public class SPABuilder {
 	    /**
 	     * @TODO Provide description.
 	     */
-	    public class SharedMemoryBuilder extends Builder {
+	    public class SharedMemoryBuilder extends Builder<SharedMemoryBuilder> {
 
 	    	protected void validateConfigurationParameters() {
 	    	}
@@ -108,7 +110,7 @@ public class SPABuilder {
 	     * a SPA instance that uses the local file
 	     * system in order to persist triples.
 	     */
-	    public class FolderBuilder extends Builder {
+	    public class FolderBuilder extends Builder<FolderBuilder> {
 	    	
 	    	private String pathToFolder;
 	    	
@@ -125,14 +127,22 @@ public class SPABuilder {
 	    	}
 	    	
 	    }
+	    
 	}
 	
-	public static class RemoteBuilder {
+	public class RemoteBuilder {
 	}
  
-	abstract static class Builder {
+	public abstract class Builder<T extends Builder<T>> {
 		
-		private static final String LOCAL_INDIVIDUAL_NAMESPACE = "http://www.uni-mannheim/spa/local/bpmn/";
+		private static final String DEFAULT_NAMESPACE = "http://www.uni-mannheim/spa/local/bpmn/";
+		private String namespace;
+		
+		@SuppressWarnings("unchecked")
+		public T namespace(String customNamespace) {
+			this.namespace = customNamespace;
+			return (T)this;
+		}
 		
 		/**
 		 * Create the SPA instance based on the set configuration
@@ -142,7 +152,9 @@ public class SPABuilder {
 		 * if the connection could not be set up.
 		 * @return
 		 */
-		public SPA build() {
+		public SPA build() throws IllegalArgumentException {
+			setNamespaceToDefaultIfNotConfigured();
+			validateNamespace();
 			validateConfigurationParameters();
 			return createSpa(getPersistenceService());
 	    }
@@ -150,6 +162,24 @@ public class SPABuilder {
 		protected abstract void validateConfigurationParameters();
 		
 		protected abstract PersistenceService getPersistenceService();
+		
+		String getNamespace() {
+			return namespace;
+		}
+		
+		private void setNamespaceToDefaultIfNotConfigured() {
+			if(namespace == null || namespace.isEmpty()) {
+				namespace = DEFAULT_NAMESPACE;
+			}
+		}
+		
+		private void validateNamespace() throws IllegalArgumentException {
+			try {
+				new URL(namespace);
+	    	} catch(MalformedURLException e) {
+	    		throw new IllegalArgumentException("Namespace is not valid.");
+	    	}
+    	}
 		
 	    private SPA createSpa(final PersistenceService persistenceService) {
 			final ImporterSupport importers = createDefaultImporters();
@@ -159,7 +189,7 @@ public class SPABuilder {
 		
 	    private ImporterSupport createDefaultImporters(){
 			final ImporterSupport importerSupport = new AnyImporterSupport();
-			importerSupport.addImporter(new BPMN20Importer(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
+			importerSupport.addImporter(new BPMN20Importer(namespace), "BPMN2");
 			importerSupport.addImporter(new XSDImporter(), "XSD");
 			importerSupport.addImporter(new XESImporter(), "XES");
 			importerSupport.addImporter(new RDFImporter(), "RDF");
@@ -168,7 +198,7 @@ public class SPABuilder {
 		
 	    private FileBasedExporterSupport createDefaultExporters(){
 			final FileBasedExporterSupport exporters = new FileBasedExporterSupport();
-			exporters.addExporter(new BPMN20Exporter(LOCAL_INDIVIDUAL_NAMESPACE), "BPMN2");
+			exporters.addExporter(new BPMN20Exporter(namespace), "BPMN2");
 			exporters.addExporter(new RDFExporter(), "RDF");
 			exporters.addExporter(new XESExporter(), "XES");
 			return exporters;

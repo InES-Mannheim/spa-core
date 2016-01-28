@@ -17,6 +17,21 @@ public class SPABuilderTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 	
 	@Test
+	public void whenNoNamespaceIsSetThenDefaultNamespaceIsUsed() {
+		UniqueMemoryBuilder umBuilder = SPABuilder.local().uniqueMemory();
+		umBuilder.build();
+		assertThat(umBuilder.getNamespace(), equalTo("http://www.uni-mannheim/spa/local/bpmn/"));
+	}
+	
+	@Test
+	public void whenNamespaceIsSetThenNamespaceIsUsed() {
+		String customNamespace = "http://some.namespace:8080/test/";
+		UniqueMemoryBuilder umBuilder = SPABuilder.local().uniqueMemory().namespace(customNamespace);
+		umBuilder.build();
+		assertThat(umBuilder.getNamespace(), equalTo(customNamespace));
+	}
+	
+	@Test
 	public void whenLocalUniqueMemoryIsUsedBuilderShouldAlwaysSucceed() {
 		SPA spa = SPABuilder.local().uniqueMemory().build();
 		assertThat(spa, is(notNullValue()));
