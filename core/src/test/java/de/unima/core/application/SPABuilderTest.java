@@ -54,7 +54,7 @@ public class SPABuilderTest {
 	
 	@Test(expected = InvalidPathException.class)
 	public void whenInvalidLocalFolderIsUsedBuilderShouldThrowException() throws IOException {
-		SPABuilder.local().folder(folder.newFolder().toPath().toString().toString() + "\"").build();
+		SPABuilder.local().folder(folder.newFolder().toPath().toString().toString() + "\0").build();
 	}
 	
 }
