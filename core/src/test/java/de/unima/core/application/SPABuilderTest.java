@@ -18,25 +18,25 @@ public class SPABuilderTest {
 	
 	@Test
 	public void whenLocalUniqueMemoryIsUsedBuilderShouldAlwaysSucceed() {
-		SPA spa = new SPABuilder().local().uniqueMemory().build();
+		SPA spa = SPABuilder.local().uniqueMemory().build();
 		assertThat(spa, is(notNullValue()));
 	}
 
 	@Test
 	public void whenLocalSharedMemoryIsUsedBuilderShouldAlwaysSucceed() {
-		SPA spa = new SPABuilder().local().sharedMemory().build();
+		SPA spa = SPABuilder.local().sharedMemory().build();
 		assertThat(spa, is(notNullValue()));
 	}
 	
 	@Test
 	public void whenValidLocalFolderIsUsedBuilderShouldSucceed() throws IOException {
-		SPA spa = new SPABuilder().local().folder(folder.newFolder().toPath().toString()).build();
+		SPA spa = SPABuilder.local().folder(folder.newFolder().toPath().toString()).build();
 		assertThat(spa, is(notNullValue()));
 	}
 	
 	@Test(expected = InvalidPathException.class)
 	public void whenInvalidLocalFolderIsUsedBuilderShouldThrowException() throws IOException {
-		new SPABuilder().local().folder(folder.newFolder().toPath().toString().toString() + "\"").build();
+		SPABuilder.local().folder(folder.newFolder().toPath().toString().toString() + "\"").build();
 	}
 	
 }

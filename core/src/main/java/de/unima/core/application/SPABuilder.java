@@ -46,8 +46,8 @@ public class SPABuilder {
 	 * use local memory or disks.
 	 * @return An instance of a local builder
 	 */
-	public LocalBuilder local() {
-		return this.new LocalBuilder();
+	public static LocalBuilder local() {
+		return new LocalBuilder();
 	}
 	
 	/**
@@ -55,11 +55,11 @@ public class SPABuilder {
 	 * use remote connections to get and save triples.
 	 * @return An instance of a remote builder
 	 */
-	public RemoteBuilder remote(){
-        return this.new RemoteBuilder();
+	public static RemoteBuilder remote(){
+        return new RemoteBuilder();
     }
 	
-	public class LocalBuilder {
+	public static class LocalBuilder {
 		
 	    public UniqueMemoryBuilder uniqueMemory() {
 	    	return new UniqueMemoryBuilder();
@@ -127,10 +127,10 @@ public class SPABuilder {
 	    }
 	}
 	
-	public class RemoteBuilder {
+	public static class RemoteBuilder {
 	}
  
-	abstract class Builder {
+	abstract static class Builder {
 		
 		private static final String LOCAL_INDIVIDUAL_NAMESPACE = "http://www.uni-mannheim/spa/local/bpmn/";
 		
