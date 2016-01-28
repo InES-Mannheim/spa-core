@@ -80,7 +80,7 @@ public class SPABuilder {
 	     * a SPA instance that uses a unique location in
 	     * memory in order to temporarily save triples.
 	     */
-	    public class UniqueMemoryBuilder extends Builder<UniqueMemoryBuilder> {
+	    public class UniqueMemoryBuilder extends Builder {
 	    	
 	    	protected void validateConfigurationParameters() {
 	    	}
@@ -96,7 +96,7 @@ public class SPABuilder {
 	     * a SPA instance that uses a shared location in
 	     * memory in order to temporarily save triples.
 	     */
-	    public class SharedMemoryBuilder extends Builder<SharedMemoryBuilder> {
+	    public class SharedMemoryBuilder extends Builder {
 
 	    	protected void validateConfigurationParameters() {
 	    	}
@@ -112,7 +112,7 @@ public class SPABuilder {
 	     * a SPA instance that uses the a specific folder
 	     * in the files system in order to persist triples.
 	     */
-	    public class FolderBuilder extends Builder<FolderBuilder> {
+	    public class FolderBuilder extends Builder {
 	    	
 	    	private String pathToFolder;
 	    	
@@ -135,10 +135,10 @@ public class SPABuilder {
 	public class RemoteBuilder {
 	}
  
-	public abstract class Builder<T extends Builder<T>> {
+	public abstract class Builder {
 		
 		private static final String DEFAULT_NAMESPACE = "http://www.uni-mannheim/spa/local/bpmn/";
-		private String namespace;
+		private String namespace = DEFAULT_NAMESPACE;
 		
 		/**
 		 * Set the namespace for importers/exporters with dynamic namespace support.
@@ -146,10 +146,10 @@ public class SPABuilder {
 		 * @return A instance of the extending class in order to chain further methods
 		 */
 		@SuppressWarnings("unchecked")
-		public T namespace(String customNamespace) {
-			this.namespace = customNamespace;
-			return (T)this;
-		}
+		public <T extends Builder> T namespace(String customNamespace) {
+            this.namespace = customNamespace;
+            return (T)this;
+        }
 		
 		/**
 		 * Creates the SPA instance based on the set configuration
@@ -159,7 +159,6 @@ public class SPABuilder {
 		 * @return A SPA instance based on the configurations
 		 */
 		public SPA build() throws IllegalArgumentException {
-			setNamespaceToDefaultIfNotConfigured();
 			validateNamespace();
 			validateConfigurationParameters();
 			return createSpa(getPersistenceService());
@@ -171,12 +170,6 @@ public class SPABuilder {
 		
 		String getNamespace() {
 			return namespace;
-		}
-		
-		private void setNamespaceToDefaultIfNotConfigured() {
-			if(namespace == null || namespace.isEmpty()) {
-				namespace = DEFAULT_NAMESPACE;
-			}
 		}
 		
 		private void validateNamespace() throws IllegalArgumentException {
