@@ -59,7 +59,8 @@ import de.unima.core.io.file.BPMN20Importer;
 import de.unima.core.io.file.XMLImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.io.file.xes.OntModelToXLogExporter;
-import de.unima.core.persistence.local.LocalPersistenceService;
+import de.unima.core.persistence.PersistenceService;
+import de.unima.core.storage.jena.JenaTDBStore;
 
 
 public class StorageIntegrationTest extends BaseIntegrationTest {
@@ -69,11 +70,11 @@ public class StorageIntegrationTest extends BaseIntegrationTest {
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 	
-	private LocalPersistenceService persistentService;
+	private PersistenceService persistentService;
 	
 	@Before
 	public void setUp() throws IOException{
-		this.persistentService = LocalPersistenceService.withDataInFolder(temporaryFolder.newFolder().toPath());
+		this.persistentService = new PersistenceService(JenaTDBStore.withFolder(temporaryFolder.newFolder().toPath()));
 	}
 	
 	@Test

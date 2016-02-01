@@ -21,7 +21,7 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
-import de.unima.ontmalizer.XML2OWLMapper;
+import tr.com.srdc.ontmalizer.XML2OWLMapper;
 
 public class XMLImporter implements FileBasedImporter<Model> {
 	

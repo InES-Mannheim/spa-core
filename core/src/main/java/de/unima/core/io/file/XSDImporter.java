@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 import org.apache.jena.ontology.OntModel;
 
-import de.unima.ontmalizer.XSD2OWLMapper;
+import tr.com.srdc.ontmalizer.XSD2OWLMapper;
 
 public class XSDImporter implements FileBasedImporter<OntModel> {
 	

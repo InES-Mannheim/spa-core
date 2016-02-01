@@ -26,8 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.deckfour.xes.util.XsDateTimeConversion;
-
 /**
  * Provides a faster conversion of DateTime for XES serialization using the new
  * parse patterns of Java 7

@@ -1,0 +1,13 @@
+All documented changes are based on commit
+210a8305dee48465143595a7bc41a7a97e905d99
+from https://github.com/srdc/ontmalizer
+
+Furthermore the following files were deleted:
+- pom.xml
+- README.md
+- src/test/resources/*
+- src/test/java/tr/com/srdc/ontmalizer/test/*
+
+The following files were added:
++ src/test/resources/*
++ src/test/java/de/unima/ontmalizer/test/XESImport.java

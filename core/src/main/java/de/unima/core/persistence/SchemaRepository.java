@@ -13,23 +13,24 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.domain.model;
+package de.unima.core.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import de.unima.core.domain.model.Schema;
+import de.unima.core.storage.Store;
 
-import org.junit.Test;
+public class SchemaRepository extends PartialDataStore<Schema, String> {
 
-public class ProjectTest {
+	public SchemaRepository(Store store) {
+		super(store);
+	}
 
-	@Test
-	public void whenAllSchemasAreUnlinkedThenThereShouldBeNoLinkedSchemas(){
-		final Project project = new Project("http://test.de/Project/1", "Test", new Repository("http://www.test.de/Repository/1"));
-		final Schema linkedSchema = new Schema("http://test.de/Schema/1");
-		project.linkSchema(linkedSchema);
-		assertThat(project.isSchemaLinked(linkedSchema.getId()), is(true));
-		project.unlinkAllSchemas();
-		assertThat(project.isSchemaLinked(linkedSchema.getId()), is(not(true)));
+	@Override
+	protected Class<Schema> getEntityType() {
+		return Schema.class;
+	}
+
+	@Override
+	protected String getRdfClass() {
+		return Vocabulary.Schema;
 	}
 }

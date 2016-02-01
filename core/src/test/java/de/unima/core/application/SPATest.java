@@ -13,34 +13,37 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.domain.model;
+package de.unima.core.application;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import java.io.File;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
-public class AbstractEntityTest {
+import de.unima.core.application.SPA;
+import de.unima.core.application.SPABuilder;
+
+public class SPATest {
+
+	@Rule
+	public ExpectedException expected = ExpectedException.none();
 	
-	@Test
-	public void enititiesWithSameIdsShouldBeEqual(){
-		final Entity<String> first = new StringEntity("test");
-		final Entity<String> second = new StringEntity("test");
-		assertThat(first, is(equalTo(second)));
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
+	
+	private SPA spa;
+
+	@Before
+	public void setUp(){
+		this.spa = new SPABuilder().local().sharedMemory().build();
 	}
 	
 	@Test
-	public void enititiesWithDifferentIdsShouldBeNonEqual(){
-		final Entity<String> first = new StringEntity("test2");
-		final Entity<String> second = new StringEntity("test");
-		assertThat(first, is(not(equalTo(second))));
-	}
-	
-	private class StringEntity extends AbstractEntity<String>{
-		public StringEntity(String id) {
-			super(id);
-		}
+	public void whenFileFormatIsNotSupportedThenAnIllegalArgumentExceptionShouldBeThrown(){
+		expected.expect(IllegalArgumentException.class);
+		spa.importSchema(new File(""), "Nope", "na");
 	}
 }

@@ -13,23 +13,25 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  *******************************************************************************/
-package de.unima.core.domain.model;
+package de.unima.core.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import de.unima.core.domain.model.DataBucket;
+import de.unima.core.storage.Store;
 
-import org.junit.Test;
+public class DataBucketRepository extends PartialDataStore<DataBucket, String> {
 
-public class ProjectTest {
-
-	@Test
-	public void whenAllSchemasAreUnlinkedThenThereShouldBeNoLinkedSchemas(){
-		final Project project = new Project("http://test.de/Project/1", "Test", new Repository("http://www.test.de/Repository/1"));
-		final Schema linkedSchema = new Schema("http://test.de/Schema/1");
-		project.linkSchema(linkedSchema);
-		assertThat(project.isSchemaLinked(linkedSchema.getId()), is(true));
-		project.unlinkAllSchemas();
-		assertThat(project.isSchemaLinked(linkedSchema.getId()), is(not(true)));
+	public DataBucketRepository(Store store) {
+		super(store);
 	}
+
+	@Override
+	protected Class<DataBucket> getEntityType() {
+		return DataBucket.class;
+	}
+
+	@Override
+	protected String getRdfClass() {
+		return Vocabulary.DataBucket;
+	}
+
 }
