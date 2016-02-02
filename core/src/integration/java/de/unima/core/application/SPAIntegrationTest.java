@@ -48,8 +48,6 @@ import org.junit.rules.TemporaryFolder;
 import com.google.common.base.Throwables;
 
 import de.unima.core.BaseIntegrationTest;
-import de.unima.core.application.SPA;
-import de.unima.core.application.SPABuilder;
 import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
@@ -71,7 +69,7 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 
 	@Before
 	public void setUp() {
-		this.spa = new SPABuilder().local().sharedMemory().build();
+		this.spa = SPABuilder.local().sharedMemory().build();
 		this.service = new PersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
 	}
 	
