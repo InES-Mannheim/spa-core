@@ -17,7 +17,6 @@ package de.unima.core.application;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
 
 import com.google.common.base.Preconditions;
 
@@ -32,8 +31,7 @@ import de.unima.core.io.file.XESExporter;
 import de.unima.core.io.file.XESImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.persistence.PersistenceService;
-import de.unima.core.storage.StoreSupport;
-import de.unima.core.storage.jena.JenaTDBStore;
+import de.unima.core.persistence.PersistenceServiceFactory;
 
 /**
  * The SPABuilder is used to create a new instance of SPA.
@@ -86,7 +84,7 @@ public class SPABuilder {
 	    	}
 	    	
 	    	protected PersistenceService getPersistenceService() {
-	    		return new PersistenceService(JenaTDBStore.withUniqueMemoryLocation());
+	    		return PersistenceServiceFactory.withDataInUniqueMemory();
 	    	}
 	    	
 	    }
@@ -102,7 +100,7 @@ public class SPABuilder {
 	    	}
 	    	
 	    	protected PersistenceService getPersistenceService() {
-	    		return new PersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
+	    		return PersistenceServiceFactory.withDataInSharedMemory();
 	    	}
 	    	
 	    }
@@ -125,7 +123,7 @@ public class SPABuilder {
 	    	}
 	    	
 	    	protected PersistenceService getPersistenceService() {
-	    		return new PersistenceService(JenaTDBStore.withFolder(Paths.get(pathToFolder)));
+	    		return PersistenceServiceFactory.withDataInFolder(pathToFolder);
 	    	}
 	    	
 	    }

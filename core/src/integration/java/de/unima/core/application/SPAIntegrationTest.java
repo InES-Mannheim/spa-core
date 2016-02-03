@@ -53,8 +53,7 @@ import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
 import de.unima.core.persistence.PersistenceService;
-import de.unima.core.storage.StoreSupport;
-import de.unima.core.storage.jena.JenaTDBStore;
+import de.unima.core.persistence.PersistenceServiceFactory;
 
 public class SPAIntegrationTest extends BaseIntegrationTest {
 
@@ -70,7 +69,7 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 	@Before
 	public void setUp() {
 		this.spa = SPABuilder.local().sharedMemory().build();
-		this.service = new PersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
+		this.service = PersistenceServiceFactory.withDataInSharedMemory();
 	}
 	
 	@Test
