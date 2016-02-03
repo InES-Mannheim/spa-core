@@ -23,9 +23,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
-import de.unima.core.application.SPA;
-import de.unima.core.application.SPABuilder;
-
 public class SPATest {
 
 	@Rule
@@ -38,7 +35,7 @@ public class SPATest {
 
 	@Before
 	public void setUp(){
-		this.spa = new SPABuilder().local().sharedMemory().build();
+		this.spa = SPABuilder.local().sharedMemory().build();
 	}
 	
 	@Test

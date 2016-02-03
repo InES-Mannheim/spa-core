@@ -11,8 +11,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.xml.sax.InputSource;
-
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ontology.EnumeratedClass;
 import org.apache.jena.ontology.Individual;
@@ -27,6 +25,8 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
+import org.xml.sax.InputSource;
+
 import com.sun.xml.xsom.XSAttGroupDecl;
 import com.sun.xml.xsom.XSAttributeDecl;
 import com.sun.xml.xsom.XSAttributeUse;
