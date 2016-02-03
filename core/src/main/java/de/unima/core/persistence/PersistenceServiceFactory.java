@@ -24,4 +24,8 @@ public class PersistenceServiceFactory {
         return new PersistenceService(JenaTDBStore.withFolder(pathToFolder));
     }
     
+    public static PersistenceService withDataAtVirtuoso(String url, String username, String password) {
+    	return new PersistenceService(JenaTDBStore.withVirtuoso(url, username, password));
+    }
+    
 }

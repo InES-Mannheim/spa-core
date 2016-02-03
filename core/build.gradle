@@ -37,7 +37,10 @@ dependencies {
     if(!libFolder.exists()){
         libFolder.mkdirs()   
     }
-    ['https://svn.win.tue.nl/trac/prom/export/latest/Releases/OpenXES/OpenXES.jar', 'https://svn.win.tue.nl/trac/prom/export/26781/OpenXES/tags/2.0.57/lib/Spex.jar'].each {
+    ['https://svn.win.tue.nl/trac/prom/export/latest/Releases/OpenXES/OpenXES.jar', 
+     'https://svn.win.tue.nl/trac/prom/export/26781/OpenXES/tags/2.0.57/lib/Spex.jar',
+     'http://opldownload.s3.amazonaws.com/uda/virtuoso/7.2/rdfproviders/jena/30/virt_jena3.jar',
+     'http://opldownload.s3.amazonaws.com/uda/virtuoso/7.2/jdbc/virtjdbc4.jar'].each {
       url -> 
       def fileName = url.substring(url.lastIndexOf("/")+1, url.length())
       if(!file("lib/$fileName").exists()){
@@ -47,5 +50,5 @@ dependencies {
         }
       }
     }
-    compile files('lib/OpenXES.jar', 'lib/Spex.jar')
+    compile files('lib/OpenXES.jar', 'lib/Spex.jar', 'lib/virt_jena3.jar', 'lib/virtjdbc4.jar')
 }

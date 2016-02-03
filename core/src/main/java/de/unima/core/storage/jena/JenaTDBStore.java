@@ -25,6 +25,7 @@ import org.apache.jena.tdb.base.file.Location;
 import de.unima.core.storage.Lock;
 import de.unima.core.storage.Store;
 import de.unima.core.storage.StoreConnection;
+import virtuoso.jena.driver.VirtDataset;
 
 public class JenaTDBStore implements Store {
 
@@ -32,6 +33,10 @@ public class JenaTDBStore implements Store {
 
 	private JenaTDBStore(Location location){
 		this.dataset = TDBFactory.createDataset(location);
+	}
+	
+	private JenaTDBStore(String url, String username, String password){
+		this.dataset = new VirtDataset(url.toString(), username, password);
 	}
 	
 	public static JenaTDBStore withCommonMemoryLocation(String locationId){
@@ -44,6 +49,10 @@ public class JenaTDBStore implements Store {
 	
 	public static JenaTDBStore withFolder(Path pathToFolder){
 		return new JenaTDBStore(Location.create(pathToFolder.toString()));
+	}
+	
+	public static JenaTDBStore withVirtuoso(String url, String username, String password){
+		return new JenaTDBStore(url, username, password);
 	}
 	
 	@Override

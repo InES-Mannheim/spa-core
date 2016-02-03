@@ -131,6 +131,49 @@ public class SPABuilder {
 	}
 	
 	public class RemoteBuilder {
+		
+		public VirtuosoBuilder virtuoso() {
+			return new VirtuosoBuilder();
+		}
+		
+		public class VirtuosoBuilder extends Builder {
+			
+			private String url;
+			private String username;
+			private String password;
+			
+			public VirtuosoBuilder url(String url) {
+				this.url = url;
+				return this;
+			}
+			
+			public VirtuosoBuilder username(String username) {
+				this.username = username;
+				return this;
+			}
+			
+			public VirtuosoBuilder password(String password) {
+				this.password = password;
+				return this;
+			}
+
+			@Override
+			protected void validateConfigurationParameters() {
+				Preconditions.checkNotNull(url);
+				Preconditions.checkNotNull(username);
+				Preconditions.checkArgument(!username.isEmpty());
+				Preconditions.checkNotNull(password);
+				
+			}
+
+			@Override
+			protected PersistenceService getPersistenceService() {
+				return PersistenceServiceFactory.withDataAtVirtuoso(url, username, password);
+			}
+			
+			
+			
+		}
 	}
  
 	public abstract class Builder {
