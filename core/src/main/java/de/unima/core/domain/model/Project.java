@@ -110,7 +110,9 @@ public class Project extends AbstractEntity<String>{
 	 * @return removed {@code DataPool}s
 	 */
 	public List<DataPool> removeAllDataPools(){
-		return datapools.keySet().stream().map(datapools::remove).collect(Collectors.toList());
+		final List<DataPool> removedPools = datapools.entrySet().stream().map(Entry::getValue).collect(Collectors.toList());
+		datapools.clear();
+		return removedPools;
 	}
 	
 	/**
