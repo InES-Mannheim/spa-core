@@ -20,13 +20,14 @@ import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 
 import de.unima.core.application.SPA;
-import de.unima.core.application.local.LocalSPA;
+import de.unima.core.application.SPABuilder;
 import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
-import de.unima.core.domain.service.PersistenceService;
-import de.unima.core.persistence.local.LocalPersistenceService;
+import de.unima.core.persistence.PersistenceService;
+import de.unima.core.storage.StoreSupport;
+import de.unima.core.storage.jena.JenaTDBStore;
 
 public class BpmnExamples extends BaseExample {
 	public static void main(String[] args) {
@@ -36,7 +37,7 @@ public class BpmnExamples extends BaseExample {
 
 	private static DataBucket loadBpmnDataIntoDataBucket() {
 		// Shared memory is accessible over the complete runtime
-		final SPA spa = LocalSPA.withDataInSharedMemory();
+		final SPA spa = SPABuilder.local().sharedMemory().build();
 		// Import schema for BPMN 2.0
 		final Schema schema = spa.importSchema(getFilePath("BPMN_2.0_ontology.owl").toFile(), "RDF", "BPMN 2 Schema");
 		// Create new project with specified schema
@@ -52,7 +53,7 @@ public class BpmnExamples extends BaseExample {
 
 	private static void lookIntoDataOfDataBucket(DataBucket bucket) {
 		// Persistence service provides direct access to ontological data
-		final PersistenceService service = LocalPersistenceService.withDataInSharedMemory();
+		final PersistenceService service = new PersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
 		// Read data for bucket
 		final Optional<Model> model = service.findDataOfDataBucket(bucket);
 		// If data is present, print it
