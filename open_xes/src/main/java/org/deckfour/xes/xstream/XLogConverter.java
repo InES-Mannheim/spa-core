@@ -51,7 +51,6 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;

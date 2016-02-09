@@ -1,3 +1,18 @@
+/*******************************************************************************
+ *    Copyright 2016 University of Mannheim
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *******************************************************************************/
 package de.unima.core.domain.service;
 
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -44,7 +59,8 @@ import de.unima.core.io.file.BPMN20Importer;
 import de.unima.core.io.file.XMLImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.io.file.xes.OntModelToXLogExporter;
-import de.unima.core.persistence.local.LocalPersistenceService;
+import de.unima.core.persistence.PersistenceService;
+import de.unima.core.storage.jena.JenaTDBStore;
 
 
 public class StorageIntegrationTest extends BaseIntegrationTest {
@@ -54,11 +70,11 @@ public class StorageIntegrationTest extends BaseIntegrationTest {
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 	
-	private LocalPersistenceService persistentService;
+	private PersistenceService persistentService;
 	
 	@Before
 	public void setUp() throws IOException{
-		this.persistentService = LocalPersistenceService.withDataInFolder(temporaryFolder.newFolder().toPath());
+		this.persistentService = new PersistenceService(JenaTDBStore.withFolder(temporaryFolder.newFolder().toPath()));
 	}
 	
 	@Test
