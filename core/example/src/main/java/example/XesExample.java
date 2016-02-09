@@ -29,7 +29,7 @@ import org.deckfour.xes.model.XTrace;
 import com.google.common.base.Throwables;
 
 import de.unima.core.application.SPA;
-import de.unima.core.application.local.LocalSPA;
+import de.unima.core.application.SPABuilder;
 import de.unima.core.domain.model.DataBucket;
 import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
@@ -38,7 +38,7 @@ import de.unima.core.domain.model.Schema;
 public class XesExample extends BaseExample{
 
 	public static void main(String[] args) throws IOException {
-		final SPA spa = LocalSPA.withDataInSharedMemory();
+		final SPA spa = SPABuilder.local().sharedMemory().build(); 
 		// Create project which may may contain multiple data buckets and schemas
 		final Project project = spa.createProject("Test Project");
 		// Import schema for XES
@@ -75,3 +75,4 @@ public class XesExample extends BaseExample{
 		return Optional.empty();
 	}
 }
+
