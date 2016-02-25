@@ -65,7 +65,7 @@ public class XESImporterTest {
 
 	private void appendOneEvent(File oneLogEntry) throws IOException {
 		final String logEntry = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?> "
-				+ " <log xes.version=\"1.0\" xmlns=\"http://code.deckfour.org/xes\"> "
+				+ " <log xes.version=\"1.0\" xmlns=\"http://www.xes-standard.org/\"> "
 				+ " <trace>"
 				+ " <event>"
 				+ " <string key=\"Costs\" value=\"50\"/>"
