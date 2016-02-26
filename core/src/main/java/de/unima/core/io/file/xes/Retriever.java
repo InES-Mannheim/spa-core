@@ -23,7 +23,7 @@ import org.deckfour.xes.factory.XFactoryNaiveImpl;
 
 abstract class Retriever<T> {
 	
-	protected final static String NS_XES = "http://code.deckfour.org/xes#";
+	protected final static String NS_XES = "http://www.xes-standard.org/#";
 	protected final static String NS_RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	protected final static String NS_RDFS = "http://www.w3.org/2000/01/rdf-schema#";
 	protected final static String NS_OWL = "http://www.w3.org/2002/07/owl#";
