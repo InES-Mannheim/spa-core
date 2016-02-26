@@ -38,6 +38,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.google.common.base.Preconditions;
+
 import tr.com.srdc.ontmalizer.data.TypedResource;
 import tr.com.srdc.ontmalizer.helper.Constants;
 import tr.com.srdc.ontmalizer.helper.NamingUtil;
@@ -234,8 +236,15 @@ public class XML2OWLMapper {
 		// Set namespace and its prefix if it is not set before.
 		if (NS==null)
 			setNSPrefix(root);
-			
+		
+		Preconditions.checkNotNull(NS, "There is no namespace provided for the XML beeing imported.");
+		
 		OntClass rootType = ontology.getOntClass(NS + root.getLocalName());
+		
+		Preconditions.checkNotNull(rootType, "The rootType of XML could not be identified. This may be the case if the base-" 
+				+ "namespace of the underlying XSD and the base-namespace of the XML files do not match or the root element "
+				+ "is used in the XML but is not specified in the XSD.");
+		
 		Resource modelRoot = model.createResource( baseURI 
 												   + Constants.ONTMALIZER_INSTANCE_NAME_PREFIX 
 												   + no 
