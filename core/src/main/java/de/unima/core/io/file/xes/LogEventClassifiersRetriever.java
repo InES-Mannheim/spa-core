@@ -15,7 +15,7 @@
  *******************************************************************************/
 package de.unima.core.io.file.xes;
 
-import org.apache.jena.arq.querybuilder.SelectBuilder;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
@@ -39,19 +39,21 @@ class LogEventClassifiersRetriever extends SetRetriever<XEventClassifier> {
 	}
 
 	@Override
-	protected void setQueryParameters(SelectBuilder queryBuilder) {
-		queryBuilder.setVar("?log", logNode);
+	protected void setQueryParameters(ParameterizedSparqlString queryBuilder) {
+		queryBuilder.setParam("?log", logNode);
 	}
 
 	@Override
-	protected SelectBuilder createAndConfigureQueryBuilder() {
-		final SelectBuilder queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addVar("?name");
-		queryBuilder.addVar("?keys");
-		queryBuilder.addWhere("?log", "xes:classifier", "?classifier");
-		queryBuilder.addWhere("?classifier", "xes:name", "?name");
-		queryBuilder.addWhere("?classifier", "xes:keys", "?keys");
+	protected ParameterizedSparqlString createAndConfigureQueryBuilder() {
+		final ParameterizedSparqlString queryBuilder = new ParameterizedSparqlString();
+		queryBuilder.setNsPrefix("xes", NS_XES);
+		queryBuilder.append("SELECT DISTINCT ?name ?keys\n");
+		queryBuilder.append("WHERE {\n");
+		queryBuilder.append("	?log xes:classifier ?classifier .\n");
+		queryBuilder.append("	?classifier\n");
+		queryBuilder.append("		xes:name ?name ;\n");
+		queryBuilder.append("		xes:keys ?keys .\n");
+		queryBuilder.append("}\n");
 		return queryBuilder;
 	}
 
