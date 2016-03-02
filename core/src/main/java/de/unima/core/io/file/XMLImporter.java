@@ -16,12 +16,14 @@
 package de.unima.core.io.file;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
 import tr.com.srdc.ontmalizer.XML2OWLMapper;
+import tr.com.srdc.ontmalizer.XSD2OWLMapper;
 
 public class XMLImporter implements FileBasedImporter<Model> {
 	
@@ -36,6 +38,12 @@ public class XMLImporter implements FileBasedImporter<Model> {
 		XML2OWLMapper mapper = new XML2OWLMapper(xml, ontology);
 	    mapper.convertXML2OWL();
 	    return ModelFactory.createDefaultModel().add(mapper.getModel());
+	}
+
+	public Model importData(InputStream is) {
+		XML2OWLMapper mapper = new XML2OWLMapper(is, new XSD2OWLMapper(ontology));
+		mapper.convertXML2OWL();
+		return ModelFactory.createDefaultModel().add(mapper.getModel());
 	}
 
 }
