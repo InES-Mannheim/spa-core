@@ -15,15 +15,37 @@
  *******************************************************************************/
 package de.unima.core.io.file.xes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.deckfour.xes.model.XLog;
+
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 public class OntModelToXLogExporter {
 
-	public Set<XLog> export(Model model) {
-		LogsRetriever retriever = new LogsRetriever(model);
+	private static final String SCHEMAPATH = "ontologies/xes.owl";
+	
+	public Set<XLog> export(Model dataModel) {
+		OntModel combinedSchemaAndData = getSchemaFromFile();
+		combinedSchemaAndData.addSubModel(dataModel);
+		LogsRetriever retriever = new LogsRetriever(combinedSchemaAndData);
 		return retriever.retrieve();
+	}
+	
+	private OntModel getSchemaFromFile() {
+		OntModel schemaModel = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
+		try (InputStream schemaInputStream = Resources.asByteSource(Resources.getResource(SCHEMAPATH)).openBufferedStream()){
+			schemaModel.read(schemaInputStream, null);
+		} catch (IOException e) {
+			throw Throwables.propagate(e);
+		}
+	    return schemaModel;
 	}
 }
