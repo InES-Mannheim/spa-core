@@ -133,6 +133,7 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 		exportedModel.listStatements().toList().stream().map(Object::toString)
 				.forEach(statement -> assertThat(expectedStringStatements, hasItem(statement.toString())));
 	}
+	
 
 	@Test
 	public void xesWhichHasBeenExportedMustMatchExportedXes() throws IOException {
@@ -185,5 +186,13 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 	
 	private BpmnModelInstance readBpmnFromFile(File bpmn){
 		return Bpmn.readModelFromFile(bpmn);
+	}
+	
+	@Test
+	public void whenOneSchemaIsStoredOnlyOneSchemaShouldBeReturnedFromFindAllSchemas(){
+		final SPA spa = SPABuilder.local().uniqueMemory().build();
+		spa.importSchema(getFilePath("BPMN_2.0_ontology.owl").toFile(), "RDF", "BPMN2 ontology");
+		final List<Schema> allSchemas = spa.findAllSchemas();
+		assertThat(allSchemas.size(), is(1));
 	}
 }
