@@ -31,15 +31,9 @@ import com.google.common.io.Resources;
 public class OntModelToXLogExporter {
 
 	private static final String SCHEMAPATH = "ontologies/xes.owl";
+	private static final OntModel SCHEMA = loadSchemaFromFile();
 	
-	public Set<XLog> export(Model dataModel) {
-		OntModel combinedSchemaAndData = getSchemaFromFile();
-		combinedSchemaAndData.addSubModel(dataModel);
-		LogsRetriever retriever = new LogsRetriever(combinedSchemaAndData);
-		return retriever.retrieve();
-	}
-	
-	private OntModel getSchemaFromFile() {
+	private static OntModel loadSchemaFromFile() {
 		OntModel schemaModel = ModelFactory.createOntologyModel(new OntModelSpec(OntModelSpec.OWL_MEM));
 		try (InputStream schemaInputStream = Resources.asByteSource(Resources.getResource(SCHEMAPATH)).openBufferedStream()){
 			schemaModel.read(schemaInputStream, null);
@@ -48,4 +42,11 @@ public class OntModelToXLogExporter {
 		}
 	    return schemaModel;
 	}
+	
+	public Set<XLog> export(Model dataModel) {
+		Model unifiedModel = ModelFactory.createUnion(SCHEMA, dataModel);
+		LogsRetriever retriever = new LogsRetriever(unifiedModel);
+		return retriever.retrieve();
+	}
+
 }
