@@ -25,13 +25,19 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.jena.ext.com.google.common.collect.Lists;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.deckfour.xes.in.XParser;
@@ -39,11 +45,13 @@ import org.deckfour.xes.in.XParserRegistry;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+import org.testcontainers.containers.VirtuosoContainer;
 
 import com.google.common.base.Throwables;
 
@@ -54,6 +62,7 @@ import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
 import de.unima.core.persistence.PersistenceService;
 import de.unima.core.persistence.PersistenceServiceFactory;
+import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
 
 public class SPAIntegrationTest extends BaseIntegrationTest {
 
@@ -62,10 +71,17 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
+	
+	@ClassRule
+	public static final VirtuosoContainer virtuosoContainer = new VirtuosoContainer();
 
 	private SPA spa;
-	private PersistenceService service;
-
+	private PersistenceService service;	
+	private final String jdbcUrl = virtuosoContainer.getJdbcUrl();
+	private final String username = virtuosoContainer.getUsername();
+	private final String password = virtuosoContainer.getPassword();
+	private final String sparqlServiceUrl = virtuosoContainer.getSparqlUrl();
+	
 	@Before
 	public void setUp() {
 		this.spa = SPABuilder.local().sharedMemory().build();
@@ -193,5 +209,66 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 		spa.importSchema(getFilePath("BPMN_2.0_ontology.owl").toFile(), "RDF", "BPMN2 ontology");
 		final List<Schema> allSchemas = spa.findAllSchemas();
 		assertThat(allSchemas.size(), is(1));
+	}
+	
+	@Test
+	public void combinedBpmnAndXexImporterAndQueryOnVirtuosoBackendIntegrationTest() throws Exception {
+		SPA remoteSpa = SPABuilder.remote().virtuoso().url(jdbcUrl).username(username).password(password).build();
+		final Project project = remoteSpa.createProject("Mail Project");
+		
+		final Schema bpmnSchema = remoteSpa.importSchema(getFilePath("BPMN_2.0_ontology.owl").toFile(), "RDF", "BPMN2 ontology");
+		project.linkSchema(bpmnSchema);
+		
+		final Schema xesSchema = remoteSpa.importSchema(getFilePath("xes.owl").toFile(), "RDF", "XES ontology");
+		project.linkSchema(xesSchema);
+				
+		final DataPool dataPool = remoteSpa.createDataPool(project, "Mail Data Pool");
+		remoteSpa.importData(getFilePath("MailProcess.bpmn").toFile(), "BPMN2", "Mail Process", dataPool);
+		remoteSpa.importData(getFilePath("MailProcess.xes").toFile(), "XES", "Mail Process Instance", dataPool);
+		
+		remoteSpa.saveProject(project);
+		
+		HashSet<String> results = new HashSet<>();
+		final Query query = createQueryForRetrivingActivitiesOfEmployee("Bob");
+		try(QueryExecution queryExecution = VirtuosoQueryExecutionFactory.sparqlService(sparqlServiceUrl, query)) {
+			ResultSet resultSet = queryExecution.execSelect();
+			while(resultSet.hasNext()) {
+				final QuerySolution solution = resultSet.nextSolution();
+				results.add(solution.get("?activityDesc").toString());
+			}
+		} catch(Exception e) {
+			throw Throwables.propagate(e);
+		}
+		
+		HashSet<String> expected = new HashSet<>();
+		expected.add("Delete Email");
+		expected.add("Read Email");
+		expected.add("Answer Email");
+		assertThat(results, is(expected));
+	}
+	
+	private static Query createQueryForRetrivingActivitiesOfEmployee(String workerName) {
+		ParameterizedSparqlString queryBuilder = new ParameterizedSparqlString();
+		queryBuilder.setNsPrefix("bpmn", "http://dkm.fbk.eu/index.php/BPMN2_Ontology#");
+		queryBuilder.setNsPrefix("xes", "http://www.xes-standard.org/#");
+		queryBuilder.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
+		
+		queryBuilder.append("SELECT DISTINCT ?activityDesc\n");
+		queryBuilder.append("WHERE {\n");
+		queryBuilder.append("	?eventResourceInstance\n");
+		queryBuilder.append("		xes:key     \"org:resource\"^^xsd:Name ;\n");
+		queryBuilder.append("		xes:value   ?workerName .\n");
+		queryBuilder.append("	?eventInstance\n");
+		queryBuilder.append("		xes:string  ?eventResourceInstance ;\n");
+		queryBuilder.append("		xes:id      ?eventIdInstance .\n");
+		queryBuilder.append("	?eventIdInstance\n");
+		queryBuilder.append("		xes:value   ?bpmnId .\n");
+		queryBuilder.append("	?activity  bpmn:id    ?bpmnId ;\n");
+		queryBuilder.append("		bpmn:name   ?activityDesc\n");
+		queryBuilder.append("}\n");
+		
+		queryBuilder.setLiteral("?workerName", workerName);
+		
+		return queryBuilder.asQuery();	
 	}
 }

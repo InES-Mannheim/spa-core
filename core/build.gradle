@@ -51,4 +51,15 @@ dependencies {
       }
     }
     compile files('lib/OpenXES.jar', 'lib/Spex.jar', 'lib/virt_jena3.jar', 'lib/virtjdbc4.jar')
+
+	List testcontainerDependencies = ['org.testcontainers:testcontainers:1.0.2',
+		'org.testcontainers:jdbc:1.0.2',
+		'org.testcontainers:virtuoso:1.0.2']
+	testcontainerDependencies.each{
+		dependency-> compile(dependency){
+			// Exclude conflicting module; in httpclient v2.3 some code is changed resulting in a ClassCastException
+			// in the QueryFactory that uses httpclient v2.2.x
+			exclude module: 'httpclient'
+		}
+	}
 }
