@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.xes-standard.org/#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:dtype="http://www.srdc.com.tr/ontmalizer#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" > 
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_5">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</key>
+    <value>string</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_GlobalsType_2">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#GlobalsType"/>
+    <scope rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">event</scope>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_2"/>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_3"/>
+    <date rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeDateType_1"/>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_4"/>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_5"/>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_6"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_6">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</key>
+    <value>string</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</key>
+    <value>name</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_2">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">concept:name</key>
+    <value>name</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_3">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">org:resource</key>
+    <value>resource</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_GlobalsType_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#GlobalsType"/>
+    <scope rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">trace</scope>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeStringType_4">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Activity</key>
+    <value>string</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_log_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#log"/>
+    <xes.version rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.0</xes.version>
+    <global rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_GlobalsType_1"/>
+    <global rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_GlobalsType_2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS8525734_AttributeDateType_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeDateType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">time:timestamp</key>
+    <value rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-04-13T14:02:31.199+02:00</value>
+  </rdf:Description>
+</rdf:RDF>

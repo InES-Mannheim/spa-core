@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.xes-standard.org/#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:dtype="http://www.srdc.com.tr/ontmalizer#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" > 
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_log_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#log"/>
+    <xes.version rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.0</xes.version>
+    <trace rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_TraceType_1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_TraceType_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#TraceType"/>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_AttributeStringType_1"/>
+    <event rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_EventType_1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_EventType_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#EventType"/>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_AttributeStringType_2"/>
+    <string rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_AttributeStringType_3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_AttributeStringType_3">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Costs</key>
+    <value>50</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_AttributeStringType_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">name</key>
+    <value>3</value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS6677417_AttributeStringType_2">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#AttributeStringType"/>
+    <key rdf:datatype="http://www.w3.org/2001/XMLSchema#Name">Resource</key>
+    <value>Pete</value>
+  </rdf:Description>
+</rdf:RDF>

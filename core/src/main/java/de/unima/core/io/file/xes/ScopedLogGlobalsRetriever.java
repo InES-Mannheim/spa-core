@@ -42,7 +42,7 @@ class ScopedLogGlobalsRetriever extends SetRetriever<Collection<XAttribute>> {
 
 	@Override
 	protected void setQueryParameters(ParameterizedSparqlString queryBuilder) {
-		queryBuilder.setLiteral("?scope", "\""+scope+"\"^^xsd:NCName");
+		queryBuilder.setLiteral("?scope", scope);
 		queryBuilder.setParam("?log", logNode);
 	}
 
@@ -54,7 +54,7 @@ class ScopedLogGlobalsRetriever extends SetRetriever<Collection<XAttribute>> {
 		queryBuilder.append("SELECT DISTINCT ?global\n");
 		queryBuilder.append("WHERE {\n");
 		queryBuilder.append("	?log xes:global ?global .\n");
-		queryBuilder.append("	?global xes:scope ?scope .\n");
+		queryBuilder.append("	?global xes:scope ?scope^^xsd:NCName .\n");
 		queryBuilder.append("}\n");
 		return queryBuilder;
 	}
