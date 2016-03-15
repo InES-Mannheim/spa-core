@@ -130,27 +130,27 @@ public abstract class AbstractEntityRepository<T extends Entity<R>, R> implement
 	@Override
 	public List<T> findAll() {
 		return store.readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
-			return Lists.newArrayList(dataset.listNames())
-					.stream()
-					.filter(this::isNamedGraphOfThisEntityType)
-					.map(name -> findByIdWithoutTransaction(name, dataset))
+			final ArrayList<String> graphIds = Lists.newArrayList(dataset.listNames());
+			return graphIds.stream()
+					.filter(this::isGraphOfEntityInstance)
+					.map(graph -> createEntity(graph, dataset))
 					.collect(Collectors.toList());
 		})).get().get();
 	}
 	
-	private boolean isNamedGraphOfThisEntityType(String graphId){
-		return graphId.startsWith(getRdfClass()); 
+	private boolean isGraphOfEntityInstance(String graphId){
+		return graphId.startsWith(getRdfClass()) && graphId.endsWith("graph");
 	}
-
+	
 	@Override
 	public Optional<T> findById(R id) {
 		checkNotNull(id, "Could not find entity as id is null.");
 		return store.readWithConnection(connection -> connection.as(Dataset.class).map(dataset -> {
-			return findByIdWithoutTransaction(generateGraphId(id), dataset);
+			return createEntity(generateGraphId(id), dataset);
 		})).get();
 	}
 
-	private T findByIdWithoutTransaction(String graphId, Dataset dataset) {
+	private T createEntity(String graphId, Dataset dataset) {
 		final Model model = dataset.getNamedModel(graphId);
 		if(model.isEmpty()) return null;
 		return transformation.inverse().get().apply(model);
