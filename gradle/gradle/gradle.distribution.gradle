@@ -1,7 +1,7 @@
 apply plugin: 'application'
 
 // Set main class
-mainClassName = "de.unima.core.application.local.LocalSPA"
+mainClassName = "de.unima.core.application.local.SPA"
 
 // Create sources and javadoc
 task sourcesJar(type: Jar, dependsOn: classes) {
