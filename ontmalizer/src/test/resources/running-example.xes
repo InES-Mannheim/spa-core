@@ -2,10 +2,10 @@
 <!-- XES version 1.0 -->
 <!-- Created by Fluxicon Nitro (http://fluxicon.com/nitro/ -->
 <!-- (c) 2010 Fluxicon Process Laboratories / http://fluxicon.com/ -->
-<log xes.version="1.0" xmlns="http://code.deckfour.org/xes" xes.creator="Fluxicon Nitro">
-	<extension name="Concept" prefix="concept" uri="http://code.deckfour.org/xes/concept.xesext"/>
-	<extension name="Time" prefix="time" uri="http://code.deckfour.org/xes/time.xesext"/>
-	<extension name="Organizational" prefix="org" uri="http://code.deckfour.org/xes/org.xesext"/>
+<log xes.version="1.0" xmlns="http://www.xes-standard.org/" xes.creator="Fluxicon Nitro">
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+	<extension name="Organizational" prefix="org" uri="http://www.xes-standard.org/org.xesext"/>
 	<global scope="trace">
 		<string key="concept:name" value="name"/>
 	</global>

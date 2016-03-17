@@ -15,8 +15,7 @@
  *******************************************************************************/
 package de.unima.core.io.file.xes;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.apache.jena.arq.querybuilder.SelectBuilder;
@@ -34,8 +33,6 @@ import org.deckfour.xes.model.XAttributeMap;
 import com.google.common.base.Throwables;
 
 class AttributesRetriever extends Retriever<XAttributeMap> {
-
-	private final static SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 	
 	private final RDFNode node;
 	
@@ -114,11 +111,8 @@ class AttributesRetriever extends Retriever<XAttributeMap> {
 	}
 	
 	private static Date parseDate(String dateString) {
-		try {
-			return dateParser.parse(dateString);
-		} catch (ParseException e) {
-			throw Throwables.propagate(e);
-		}
+		ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateString);
+		return Date.from(zonedDateTime.toInstant());
 	}
 	
 	private static XID parseId(String idString) {
