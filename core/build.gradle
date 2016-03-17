@@ -1,6 +1,6 @@
-// Release plugin
 plugins {
   id 'net.researchgate.release' version '2.3.4'
+  id "de.undercouch.download" version "2.1.0"
 }
 
 apply from:'../gradle/gradle/application.java.jena.gradle'
@@ -16,9 +16,14 @@ release {
     tagCommitMessage = '[Release] Tag '
 }
 
+repositories {
+   flatDir {
+       dirs 'lib'
+   }
+}
+
 dependencies {
     compile  project(':ontmalizer')
-    compile  project(':open_xes')
 
     compile 'org.slf4j:slf4j-api:1.7.13'
     compile 'org.slf4j:slf4j-log4j12:1.7.13'
@@ -28,4 +33,19 @@ dependencies {
     compile 'org.hashids:hashids:1.0.1'
     compile 'org.apache.commons:commons-lang3:3.4'
 
+    def libFolder = file("lib") 
+    if(!libFolder.exists()){
+        libFolder.mkdirs()   
+    }
+    ['https://svn.win.tue.nl/trac/prom/export/latest/Releases/OpenXES/OpenXES.jar', 'https://svn.win.tue.nl/trac/prom/export/26781/OpenXES/tags/2.0.57/lib/Spex.jar'].each {
+      url -> 
+      def fileName = url.substring(url.lastIndexOf("/")+1, url.length())
+      if(!file("lib/$fileName").exists()){
+        download {
+            src url 
+            dest 'lib/' 
+        }
+      }
+    }
+    compile files('lib/OpenXES.jar', 'lib/Spex.jar')
 }

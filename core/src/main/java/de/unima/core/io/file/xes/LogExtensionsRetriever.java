@@ -18,7 +18,7 @@ package de.unima.core.io.file.xes;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.apache.jena.arq.querybuilder.SelectBuilder;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
@@ -48,17 +48,19 @@ class LogExtensionsRetriever extends SetRetriever<XExtension> {
 	}
 
 	@Override
-	protected void setQueryParameters(SelectBuilder queryBuilder) {
-		queryBuilder.setVar("?log", logNode);
+	protected void setQueryParameters(ParameterizedSparqlString queryBuilder) {
+		queryBuilder.setParam("?log", logNode);
 	}
 
 	@Override
-	protected SelectBuilder createAndConfigureQueryBuilder() {
-		final SelectBuilder queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addVar("?uri");
-		queryBuilder.addWhere("?log", "xes:extension", "?extension");
-		queryBuilder.addWhere("?extension", "xes:uri", "?uri");
+	protected ParameterizedSparqlString createAndConfigureQueryBuilder() {
+		final ParameterizedSparqlString queryBuilder = new ParameterizedSparqlString();
+		queryBuilder.setNsPrefix("xes", NS_XES);
+		queryBuilder.append("SELECT DISTINCT ?uri\n");
+		queryBuilder.append("WHERE {\n");
+		queryBuilder.append("	?log xes:extension ?extension .\n");
+		queryBuilder.append("	?extension xes:uri ?uri .\n");
+		queryBuilder.append("}\n");
 		return queryBuilder;
 	}
 

@@ -17,7 +17,7 @@ package de.unima.core.io.file.xes;
 
 import java.util.Set;
 
-import org.apache.jena.arq.querybuilder.SelectBuilder;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
@@ -46,8 +46,8 @@ class TracesRetriever extends SetRetriever<XTrace> {
 	}
 
 	@Override
-	protected void setQueryParameters(SelectBuilder queryBuilder) {
-		queryBuilder.setVar("?log", logNode);
+	protected void setQueryParameters(ParameterizedSparqlString queryBuilder) {
+		queryBuilder.setParam("?log", logNode);
 	}
 	
 	private Set<XEvent> getEvents(RDFNode traceNode) {
@@ -56,13 +56,14 @@ class TracesRetriever extends SetRetriever<XTrace> {
 	}
 
 	@Override
-	protected SelectBuilder createAndConfigureQueryBuilder() {
-		final SelectBuilder queryBuilder;
-		queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addPrefix("rdf:", NS_RDF);
-		queryBuilder.addVar("?trace");
-		queryBuilder.addWhere("?trace", "rdf:type", "xes:TraceType");
+	protected ParameterizedSparqlString createAndConfigureQueryBuilder() {
+		final ParameterizedSparqlString queryBuilder = new ParameterizedSparqlString();
+		queryBuilder.setNsPrefix("xes", NS_XES);
+		queryBuilder.setNsPrefix("rdf", NS_RDF);
+		queryBuilder.append("SELECT DISTINCT ?trace\n");
+		queryBuilder.append("WHERE {\n");
+		queryBuilder.append("	?trace rdf:type xes:TraceType .\n");
+		queryBuilder.append("}\n");
 		return queryBuilder;
 	}
 

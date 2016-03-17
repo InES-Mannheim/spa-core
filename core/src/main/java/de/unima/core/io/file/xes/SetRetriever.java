@@ -18,7 +18,7 @@ package de.unima.core.io.file.xes;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.jena.arq.querybuilder.SelectBuilder;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -39,9 +39,9 @@ abstract class SetRetriever<T> extends Retriever<Set<T>> {
 	protected abstract T createElement(QuerySolution querySolution);
 	
 	public Set<T> retrieve() {
-		final SelectBuilder queryBuilder = createAndConfigureQueryBuilder(); 
+		final ParameterizedSparqlString queryBuilder = createAndConfigureQueryBuilder(); 
 		setQueryParameters(queryBuilder);
-		return executeQuery(queryBuilder.build());
+		return executeQuery(queryBuilder.asQuery());
 	}
 	
 	protected Set<T> executeQuery(Query query) {

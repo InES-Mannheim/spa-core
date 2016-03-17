@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.xes-standard.org/#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:dtype="http://www.srdc.com.tr/ontmalizer#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" > 
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS9377260_ClassifierType_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#ClassifierType"/>
+    <keys rdf:datatype="http://www.w3.org/2001/XMLSchema#token">Activity</keys>
+    <name rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">Activity</name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS9377260_ClassifierType_2">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#ClassifierType"/>
+    <keys rdf:datatype="http://www.w3.org/2001/XMLSchema#token">Activity</keys>
+    <name rdf:datatype="http://www.w3.org/2001/XMLSchema#NCName">activity classifier</name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.srdc.com.tr/ontmalizer/instance#INS9377260_log_1">
+    <rdf:type rdf:resource="http://www.xes-standard.org/#log"/>
+    <xes.version rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.0</xes.version>
+    <classifier rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS9377260_ClassifierType_1"/>
+    <classifier rdf:resource="http://www.srdc.com.tr/ontmalizer/instance#INS9377260_ClassifierType_2"/>
+  </rdf:Description>
+</rdf:RDF>

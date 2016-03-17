@@ -15,7 +15,7 @@
  *******************************************************************************/
 package de.unima.core.io.file.xes;
 
-import org.apache.jena.arq.querybuilder.SelectBuilder;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
 import org.deckfour.xes.factory.XFactory;
@@ -37,9 +37,9 @@ abstract class Retriever<T> {
 		this.model = model;
 	}
 	
-	protected abstract SelectBuilder createAndConfigureQueryBuilder();
+	protected abstract ParameterizedSparqlString createAndConfigureQueryBuilder();
 	
-	protected void setQueryParameters(SelectBuilder queryBuilder){}
+	protected void setQueryParameters(ParameterizedSparqlString queryBuilder){}
 	
 	public abstract T retrieve();
 	
