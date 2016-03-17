@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://code.deckfour.org/xes" xmlns="http://code.deckfour.org/xes">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.xes-standard.org/" xmlns="http://www.xes-standard.org/">
   <!-- This file describes the XML serialization of the XES format for event log data. -->
   <!-- For more information about XES, visit http://www.xes-standard.org/ -->
   
