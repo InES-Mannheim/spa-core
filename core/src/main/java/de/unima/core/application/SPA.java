@@ -15,24 +15,19 @@
  *******************************************************************************/
 package de.unima.core.application;
 
-import java.io.File;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import org.apache.jena.rdf.model.Model;
-
-import de.unima.core.domain.model.DataBucket;
-import de.unima.core.domain.model.DataPool;
-import de.unima.core.domain.model.Entity;
-import de.unima.core.domain.model.Project;
-import de.unima.core.domain.model.Schema;
+import de.unima.core.domain.model.*;
 import de.unima.core.io.Importer;
 import de.unima.core.io.ImporterSupport;
 import de.unima.core.io.Key;
 import de.unima.core.io.file.FileBasedExporterSupport;
 import de.unima.core.persistence.PersistenceService;
+import org.apache.jena.rdf.model.Model;
+
+import java.io.File;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class SPA {
 
@@ -301,14 +296,14 @@ public class SPA {
 		return persistenceService.findDataOfSchema(schema)
 				.orElseThrow(() -> new IllegalArgumentException(String.format("Could not find data for schema '%s'", schema)));
 	}
-	
+
 	/**
 	 * Exports data stored for given {@code DataBucket}.
-	 * 
-	 * @param bucket
-	 *            which data should be returned
-	 * @param format TODO
-	 * @param target TODO
+	 *
+	 * @param bucket which data should be returned
+	 * @param format of the file content
+	 * @param target where to write the result. For some exporters this might also
+	 *               be a directory where multiple files are exported to.
 	 * @return the data if present; empty otherwise
 	 */
 	public File exportData(DataBucket bucket, String format, File target) {

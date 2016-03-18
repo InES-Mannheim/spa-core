@@ -18,7 +18,7 @@ package de.unima.core.io.file.xes;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import org.apache.jena.arq.querybuilder.SelectBuilder;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -42,33 +42,37 @@ class AttributesRetriever extends Retriever<XAttributeMap> {
 	}
 	
 	@Override
-	protected SelectBuilder createAndConfigureQueryBuilder() {
-		final SelectBuilder queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addPrefix("rdfs:", NS_RDFS);
-		queryBuilder.addPrefix("owl:", NS_OWL);
-		queryBuilder.addVar("?key");
-		queryBuilder.addVar("?value");
-		queryBuilder.addVar("?attribute");
-		queryBuilder.addWhere("?eventAttr", "xes:key", "?key");
-		queryBuilder.addWhere("?eventAttr", "xes:value", "?value");
-		queryBuilder.addWhere("?node", "?attribute", "?eventAttr");
-		queryBuilder.addWhere("?attributeType", "rdfs:subClassOf", "xes:AttributeType");
-		queryBuilder.addWhere("?attributeTypeAnon", "owl:allValuesFrom", "?attributeType");
-		queryBuilder.addWhere("?attributeTypeAnon", "owl:onProperty", "?attribute");
+	protected ParameterizedSparqlString createAndConfigureQueryBuilder() {
+		ParameterizedSparqlString queryBuilder = new ParameterizedSparqlString();
+		queryBuilder.setNsPrefix("xes", NS_XES);
+		queryBuilder.setNsPrefix("rdfs", NS_RDFS);
+		queryBuilder.setNsPrefix("owl", NS_OWL);
+		
+		queryBuilder.append("SELECT DISTINCT ?key ?value ?attribute\n");
+		queryBuilder.append("WHERE {\n");
+		queryBuilder.append("	?eventAttr\n");
+		queryBuilder.append("		xes:key     ?key ;\n");
+		queryBuilder.append("		xes:value   ?value .\n");
+		queryBuilder.append("	?node ?attribute ?eventAttr .\n");
+		queryBuilder.append("	?attributeType rdfs:subClassOf xes:AttributeType .\n");
+		queryBuilder.append("	?attributeTypeAnon\n");
+		queryBuilder.append("		owl:allValuesFrom   ?attributeType ;\n");
+		queryBuilder.append("		owl:onProperty   ?attribute .\n");
+		queryBuilder.append("}\n");
+		
 		return queryBuilder;
 	}
 	
 	@Override
 	public XAttributeMap retrieve() {
-		final SelectBuilder builder = createAndConfigureQueryBuilder();
+		final ParameterizedSparqlString builder = createAndConfigureQueryBuilder();
 		setQueryParameters(builder);
-		return executeQuery(builder.build());
+		return executeQuery(builder.asQuery());
 	}
 	
 	@Override
-	protected void setQueryParameters(SelectBuilder queryBuilder) {
-		queryBuilder.setVar("?node", node);
+	protected void setQueryParameters(ParameterizedSparqlString queryBuilder) {
+		queryBuilder.setParam("?node", node);
 	}
 	
 	@Override

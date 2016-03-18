@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.jena.arq.querybuilder.SelectBuilder;
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
@@ -80,15 +80,15 @@ class LogsRetriever extends SetRetriever<XLog> {
 	}
 
 	@Override
-	protected SelectBuilder createAndConfigureQueryBuilder() {
-		final SelectBuilder queryBuilder = new SelectBuilder();
-		queryBuilder.addPrefix("xes:", NS_XES);
-		queryBuilder.addPrefix("rdf:", NS_RDF);
-		queryBuilder.addVar("?log");
-		queryBuilder.addVar("?attributeKey");
-		queryBuilder.addVar("?attributeValue");
-		queryBuilder.addWhere("?log", "rdf:type", "xes:log");
-		return queryBuilder;
+	protected ParameterizedSparqlString createAndConfigureQueryBuilder() {
+		final ParameterizedSparqlString queryBuilder = new ParameterizedSparqlString();
+		queryBuilder.setNsPrefix("xes", NS_XES);
+		queryBuilder.setNsPrefix("rdf", NS_RDF);
+		queryBuilder.append("SELECT DISTINCT ?log ?attributeKey ?attributeValue\n");
+		queryBuilder.append("WHERE {\n");
+		queryBuilder.append("	?log rdf:type xes:log .\n");
+		queryBuilder.append("}\n");
+		return queryBuilder;		
 	}
 }
 
