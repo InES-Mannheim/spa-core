@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeNotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.jena.atlas.logging.Log;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -71,16 +73,16 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
-	
+		
 	@ClassRule
 	public static final VirtuosoContainer virtuosoContainer = new VirtuosoContainer();
-
-	private SPA spa;
-	private PersistenceService service;	
 	private final String jdbcUrl = virtuosoContainer.getJdbcUrl();
 	private final String username = virtuosoContainer.getUsername();
 	private final String password = virtuosoContainer.getPassword();
 	private final String sparqlServiceUrl = virtuosoContainer.getSparqlUrl();
+
+	private SPA spa;
+	private PersistenceService service;	
 	
 	@Before
 	public void setUp() {
@@ -213,6 +215,7 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 	
 	@Test
 	public void combinedBpmnAndXexImporterAndQueryOnVirtuosoBackendIntegrationTest() throws Exception {
+		assumeNotNull(virtuosoContainer);
 		SPA remoteSpa = SPABuilder.remote().virtuoso().url(jdbcUrl).username(username).password(password).build();
 		final Project project = remoteSpa.createProject("Mail Project");
 		
