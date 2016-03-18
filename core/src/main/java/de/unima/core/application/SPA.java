@@ -272,6 +272,8 @@ public class SPA {
 	/**
 	 * Removes given {@code DataBucket}.
 	 * 
+	 * @param dataPool
+	 *            where the bucket should be removed from	
 	 * @param dataBucket
 	 *            which should be removed
 	 */
@@ -284,6 +286,8 @@ public class SPA {
 	 * 
 	 * @param schema
 	 *            which data should be returned
+	 * @param format
+	 *            of the exported file
 	 * @param target
 	 *            where to write the result. For some exporters this might also
 	 *            be a directory where multiple files are exported to.

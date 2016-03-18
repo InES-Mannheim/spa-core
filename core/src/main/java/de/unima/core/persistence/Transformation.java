@@ -53,6 +53,8 @@ public class Transformation<T> {
 	 * 
 	 * @param clazz
 	 *            whose instances should be transformed
+	 * @param <T>
+	 *            type of the class
 	 * @return {@code Transformation} for given type
 	 */
 	public static <T> Transformation<T> map(Class<T> clazz) {

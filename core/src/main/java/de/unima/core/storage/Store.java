@@ -22,15 +22,19 @@ import com.google.common.base.Throwables;
 
 /**
  * Common abstraction over several triple stores.
- * 
- * @param <T> id type
  */
 public interface Store {
 
 	/**
 	 * Locks {@link StoreConnection} in read mode.
 	 * 
-	 * @param operation performing a read operation
+	 * <p> A {@code Read} lock indicates that the thread just performs read
+	 * operations, i.e. no data is altered. Thus, multiple threads holding a
+	 * {@code Read} lock may access the database at the same time. However, the
+	 * locking semantics is dependent on the actual implementation.
+	 * 
+	 * @param operation performing a read operation 
+	 * @param <T> result type of the read operation 
 	 * @return operation result
 	 */
 	default <T> Optional<T> readWithConnection(Function<? super StoreConnection, T> operation){
@@ -40,7 +44,12 @@ public interface Store {
 	/**
 	 * Locks {@link StoreConnection} in write mode.
 	 * 
-	 * @param operation performing a read operation
+	 * <p> In order to prevent race conditions, a {@code Write} lock is much
+	 * more greedy than a {@code Read} lock. Depending on the underlying
+	 * implementation this may result into a lock of the complete database.
+	 * 
+	 * @param operation performing a write operation 
+	 * @param <T> result type of the write operation 
 	 * @return operation result
 	 */
 	default <T> Optional<T> writeWithConnection(Function<? super StoreConnection, T> operation){
@@ -54,6 +63,7 @@ public interface Store {
 	 * 
 	 * @param operation which should be executed
 	 * @param lock data access mode; defaults to {@link Lock#WRITE}
+	 * @param <T> result type of the function
 	 * @return function result
 	 * @throws IllegalStateException if any error occurs
 	 */

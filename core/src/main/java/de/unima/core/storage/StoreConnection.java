@@ -86,6 +86,7 @@ public interface StoreConnection {
 	 * 
 	 * @param targetType
 	 *            target type
+	 * @param <T> target type
 	 * @return instance as target type or empty if not possible
 	 */
 	default <T> Optional<T> as(Class<T> targetType) {

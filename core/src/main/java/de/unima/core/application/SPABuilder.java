@@ -143,6 +143,7 @@ public class SPABuilder {
 		/**
 		 * Set the namespace for importers/exporters with dynamic namespace support.
 		 * @param customNamespace The namespace which should be used
+		 * @param <T> type of the concrete builder
 		 * @return A instance of the extending class in order to chain further methods
 		 */
 		@SuppressWarnings("unchecked")

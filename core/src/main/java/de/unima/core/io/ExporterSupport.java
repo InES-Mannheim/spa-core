@@ -22,8 +22,6 @@ import org.apache.jena.rdf.model.Model;
 
 /**
  * Support interface for exporters.
- * @param <T>
- *
  */
 public interface ExporterSupport<R, T extends Model, S extends Exporter<T,R>> {
 
