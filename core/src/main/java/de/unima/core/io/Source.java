@@ -87,7 +87,8 @@ public interface Source<IN, OUT> {
                     return file -> {
                         try(InputStream in = Files.newInputStream(file.toPath())){
                             return ifNotEmpty(in)
-                                    .map(deserializeAndRead()::apply)
+                            		.map(format.deserialize())
+                                    .map(format.read())
                                     .orElse(emptyModel());
                         } catch (IOException e) {
                             throw Throwables.propagate(e);
@@ -97,12 +98,6 @@ public interface Source<IN, OUT> {
 
                 private Optional<InputStream> ifNotEmpty(InputStream fos) throws IOException {
                     return fos.available() == 0?Optional.empty():Optional.of(fos);
-                }
-
-                private Function<InputStream, Model> deserializeAndRead() {
-                    return format
-                            .deserialize()
-                            .andThen(format.read());
                 }
 
                 private Model emptyModel() {
