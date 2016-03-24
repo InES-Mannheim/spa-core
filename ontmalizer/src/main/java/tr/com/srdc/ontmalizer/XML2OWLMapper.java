@@ -139,7 +139,7 @@ public class XML2OWLMapper {
 	/**
 	 * Creates a new XML2OWLMapper instance. 
 	 *  
-	 * @param xmlInputStream
+	 * @param xmlURL
 	 * - XML URL to be converted
 	 * @param mapping
 	 * - mapping must be an XSD2OWLMapper instance which wraps 
