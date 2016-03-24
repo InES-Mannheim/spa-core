@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- XES version 1.0 -->
+<!-- Created by Fluxicon Nitro (http://fluxicon.com/nitro/ -->
+<!-- (c) 2010 Fluxicon Process Laboratories / http://fluxicon.com/ -->
+<log xes.version="1.0" xmlns="http://www.xes-standard.org/" xes.creator="Fluxicon Nitro">
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+	<extension name="ID" prefix="identity" uri="http://www.xes-standard.org/identity.xesext"/>
+	<extension name="Organizational" prefix="org" uri="http://www.xes-standard.org/org.xesext"/>
+	<global scope="trace">
+		<id key="id" value="uuid"/>
+	</global>
+	<global scope="event">
+		<id key="concept:bpmnId" value="uuid"/>
+		<string key="org:resource" value="resource"/>
+	</global>
+	<trace>
+		<string key="concept:id" value="eb90c3e7-2c33-412b-a5fd-1fab61d85261"/>
+		<event>
+			<id key="concept:bpmnId" value="sid-CD802AAD-9464-4237-B8ED-CEC67FE4311F"/>
+			<date key="time:timestamp" value="2018-12-17T09:30:00.000+01:00"/>
+			<string key="org:resource" value="Alice"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-72106D94-A5C0-4F6E-9D3B-EFACED0B8BFA"/>
+			<date key="time:timestamp" value="2018-12-17T09:30:01.000+01:00"/>
+			<string key="org:resource" value="Alice"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-717AF738-B697-4C26-8DE2-7D02A9049F2E"/>
+			<date key="time:timestamp" value="2018-12-17T09:30:08.000+01:00"/>
+			<string key="org:resource" value="Bob"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-3870D2C0-3205-4AEE-9F09-8608ED8EB5DC"/>
+			<date key="time:timestamp" value="2018-12-17T09:33:02.000+01:00"/>
+			<string key="org:resource" value="Bob"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-FDD2238B-D622-43E2-AC0D-1C777ECA192D"/>
+			<date key="time:timestamp" value="2018-12-17T09:41:45.000+01:00"/>
+			<string key="org:resource" value="Bob"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:id" value="3576ed86-7c81-42ea-a3df-b623adb01b08"/>
+		<event>
+			<id key="concept:bpmnId" value="sid-CD802AAD-9464-4237-B8ED-CEC67FE4311F"/>
+			<date key="time:timestamp" value="2018-12-17T11:30:00.000+01:00"/>
+			<string key="org:resource" value="Pete"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-72106D94-A5C0-4F6E-9D3B-EFACED0B8BFA"/>
+			<date key="time:timestamp" value="2018-12-17T11:30:01.000+01:00"/>
+			<string key="org:resource" value="Pete"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-717AF738-B697-4C26-8DE2-7D02A9049F2E"/>
+			<date key="time:timestamp" value="2018-12-17T11:30:08.000+01:00"/>
+			<string key="org:resource" value="Lara"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-3870D2C0-3205-4AEE-9F09-8608ED8EB5DC"/>
+			<date key="time:timestamp" value="2018-12-17T11:33:02.000+01:00"/>
+			<string key="org:resource" value="Lara"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-FDD2238B-D622-43E2-AC0D-1C777ECA192D"/>
+			<date key="time:timestamp" value="2018-12-17T11:41:45.000+01:00"/>
+			<string key="org:resource" value="Lara"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:id" value="3576ed86-7c81-42ea-a3df-b623adb01b08"/>
+		<event>
+			<id key="concept:bpmnId" value="sid-CD802AAD-9464-4237-B8ED-CEC67FE4311F"/>
+			<date key="time:timestamp" value="2018-12-17T12:30:00.000+01:00"/>
+			<string key="org:resource" value="Lara"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-72106D94-A5C0-4F6E-9D3B-EFACED0B8BFA"/>
+			<date key="time:timestamp" value="2018-12-17T12:30:01.000+01:00"/>
+			<string key="org:resource" value="Lara"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-FC0A52DE-8A5A-4456-B6F9-48F9BC5D7E91"/>
+			<date key="time:timestamp" value="2018-12-17T12:30:08.000+01:00"/>
+			<string key="org:resource" value="Bob"/>
+		</event>
+		<event>
+			<id key="concept:bpmnId" value="sid-FDD2238B-D622-43E2-AC0D-1C777ECA192D"/>
+			<date key="time:timestamp" value="2018-12-17T12:30:10.000+01:00"/>
+			<string key="org:resource" value="Bob"/>
+		</event>
+	</trace>
+</log>

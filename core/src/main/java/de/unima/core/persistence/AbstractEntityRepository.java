@@ -123,8 +123,13 @@ public abstract class AbstractEntityRepository<T extends Entity<R>, R> implement
 	
 	private R saveEntityInDataSetAsNamedModel(T entity, Dataset dataset){
 		final String graphId = generateGraphId(entity);
-		dataset.addNamedModel(graphId, transformation.get().apply(entity));
-		return entity.getId();
+        Model model = transformation.get().apply(entity);
+        if(dataset.containsNamedModel(graphId)) {
+            dataset.replaceNamedModel(graphId, model);
+        } else {
+            dataset.addNamedModel(graphId, model);
+        }
+        return entity.getId();
 	}
 
 	@Override

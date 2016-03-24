@@ -17,7 +17,6 @@ package de.unima.core.application;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
 
 import com.google.common.base.Preconditions;
 
@@ -32,8 +31,7 @@ import de.unima.core.io.file.XESExporter;
 import de.unima.core.io.file.XESImporter;
 import de.unima.core.io.file.XSDImporter;
 import de.unima.core.persistence.PersistenceService;
-import de.unima.core.storage.StoreSupport;
-import de.unima.core.storage.jena.JenaTDBStore;
+import de.unima.core.persistence.PersistenceServiceFactory;
 
 /**
  * The SPABuilder is used to create a new instance of SPA.
@@ -86,7 +84,7 @@ public class SPABuilder {
 	    	}
 	    	
 	    	protected PersistenceService getPersistenceService() {
-	    		return new PersistenceService(JenaTDBStore.withUniqueMemoryLocation());
+	    		return PersistenceServiceFactory.withDataInUniqueMemory();
 	    	}
 	    	
 	    }
@@ -102,7 +100,7 @@ public class SPABuilder {
 	    	}
 	    	
 	    	protected PersistenceService getPersistenceService() {
-	    		return new PersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
+	    		return PersistenceServiceFactory.withDataInSharedMemory();
 	    	}
 	    	
 	    }
@@ -125,7 +123,7 @@ public class SPABuilder {
 	    	}
 	    	
 	    	protected PersistenceService getPersistenceService() {
-	    		return new PersistenceService(JenaTDBStore.withFolder(Paths.get(pathToFolder)));
+	    		return PersistenceServiceFactory.withDataInFolder(pathToFolder);
 	    	}
 	    	
 	    }
@@ -133,6 +131,49 @@ public class SPABuilder {
 	}
 	
 	public class RemoteBuilder {
+		
+		public VirtuosoBuilder virtuoso() {
+			return new VirtuosoBuilder();
+		}
+		
+		public class VirtuosoBuilder extends Builder {
+			
+			private String url;
+			private String username;
+			private String password;
+			
+			public VirtuosoBuilder url(String url) {
+				this.url = url;
+				return this;
+			}
+			
+			public VirtuosoBuilder username(String username) {
+				this.username = username;
+				return this;
+			}
+			
+			public VirtuosoBuilder password(String password) {
+				this.password = password;
+				return this;
+			}
+
+			@Override
+			protected void validateConfigurationParameters() {
+				Preconditions.checkNotNull(url);
+				Preconditions.checkNotNull(username);
+				Preconditions.checkArgument(!username.isEmpty());
+				Preconditions.checkNotNull(password);
+				
+			}
+
+			@Override
+			protected PersistenceService getPersistenceService() {
+				return PersistenceServiceFactory.withDataAtVirtuoso(url, username, password);
+			}
+			
+			
+			
+		}
 	}
  
 	public abstract class Builder {

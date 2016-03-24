@@ -44,7 +44,7 @@ public class PersistenceService {
 	private final DataPoolRepository dataPoolRepository;
 	private final DataBucketRepository dataBucketRepository;
 	
-	public PersistenceService(Store store) {
+	PersistenceService(Store store) {
 		this.repositoryRepository = new RepositoryRepository(store);
 		this.schemaRepository = new SchemaRepository(store);
 		this.projectRepository = new ProjectRepository(store);
