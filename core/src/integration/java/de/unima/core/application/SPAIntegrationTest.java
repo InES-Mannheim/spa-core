@@ -75,11 +75,22 @@ public class SPAIntegrationTest extends BaseIntegrationTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 		
 	@ClassRule
-	public static final VirtuosoContainer virtuosoContainer = new VirtuosoContainer();
-	private final String jdbcUrl = virtuosoContainer.getJdbcUrl();
-	private final String username = virtuosoContainer.getUsername();
-	private final String password = virtuosoContainer.getPassword();
-	private final String sparqlServiceUrl = virtuosoContainer.getSparqlUrl();
+	public static VirtuosoContainer virtuosoContainer;
+	private static String jdbcUrl;
+	private static String username;
+	private static String password;
+	private static String sparqlServiceUrl;
+	static {
+		try {
+			virtuosoContainer = new VirtuosoContainer();
+			jdbcUrl = virtuosoContainer.getJdbcUrl();
+			username = virtuosoContainer.getUsername();
+			password = virtuosoContainer.getPassword();
+			sparqlServiceUrl = virtuosoContainer.getSparqlUrl();
+		} catch(Exception ex) {
+			Log.warn("Virtuoso Docker Container Initialisation", "Virtuoso Docker Container could not be initialized.");
+		}
+	}
 
 	private SPA spa;
 	private PersistenceService service;	
