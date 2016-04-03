@@ -1,6 +1,6 @@
 subprojects {
-	apply plugin: 'java'
-	apply plugin: 'eclipse'
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
 
     javadoc {
         failOnError = false
@@ -10,9 +10,9 @@ subprojects {
         options.encoding = 'UTF-8'
     }
 
-	repositories {
-	    jcenter()
-	}
+    repositories {
+        jcenter()
+    }
 
     sourceSets {
         integration {
@@ -22,13 +22,20 @@ subprojects {
         } 
     }
 
-	dependencies {
-	    compile 'com.google.guava:guava:18.0' 
-	    compile 'org.slf4j:slf4j-api:1.7.13'
-	    compile 'org.slf4j:slf4j-log4j12:1.7.13'
-	    testCompile 'junit:junit:4.12'
+    // Add integrationCompile configration to eclipse classpath
+    eclipse {
+        classpath {
+            plusConfigurations += [ configurations.integrationCompile ]
+        }
+    }
+
+    dependencies {
+        compile 'com.google.guava:guava:18.0' 
+	compile 'org.slf4j:slf4j-api:1.7.13'
+	compile 'org.slf4j:slf4j-log4j12:1.7.13'
+	testCompile 'junit:junit:4.12'
         testCompile 'org.hamcrest:hamcrest-all:1.3'
-	}
+    }
 
     task intTest(type: Test) {
         group 'Verification'
