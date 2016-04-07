@@ -26,8 +26,7 @@ import de.unima.core.domain.model.DataPool;
 import de.unima.core.domain.model.Project;
 import de.unima.core.domain.model.Schema;
 import de.unima.core.persistence.PersistenceService;
-import de.unima.core.storage.StoreSupport;
-import de.unima.core.storage.jena.JenaTDBStore;
+import de.unima.core.persistence.PersistenceServiceFactory;
 
 public class BpmnExamples extends BaseExample {
 	public static void main(String[] args) {
@@ -53,7 +52,7 @@ public class BpmnExamples extends BaseExample {
 
 	private static void lookIntoDataOfDataBucket(DataBucket bucket) {
 		// Persistence service provides direct access to ontological data
-		final PersistenceService service = new PersistenceService(JenaTDBStore.withCommonMemoryLocation(StoreSupport.commonMemoryLocation));
+		final PersistenceService service = PersistenceServiceFactory.withDataInSharedMemory(); 
 		// Read data for bucket
 		final Optional<Model> model = service.findDataOfDataBucket(bucket);
 		// If data is present, print it
