@@ -1,8 +1,3 @@
----
-layout: post
-title: 'SPA'
-state: startpage
----
 # Smart Process API (SPA)
 
 > The semantic process API (SPA) is a vocabulary and engine that enables 
@@ -87,5 +82,26 @@ Package `io` contains the `Importer` and `Exporter` interfaces for importing dat
 Package `persistence` contains all implementations responsible for mapping Java instances to RDF and vice-versa. All `Repository` implementations rely on the `Transformation` class which implements a DSL for RDF <-> Java transformations.
 
 A leaky abstraction over `Jena` is the content of the storage package. When a `Store` supports transactions, each connection is automatically run in a transaction conext.
+
+# Usage 
+Currently SPA supports 3 different triple stores; namely [Jena TDB](https://jena.apache.org/documentation/tdb/), jena in-memory and [Virtuoso](http://virtuoso.openlinksw.com/). Each [SPA](../master/core/src/main/java/de/unima/core/application/SPA.java) instance is configured using the [SPABuilder](../master/core/src/main/java/de/unima/core/application/SPABuilder.java). The code below depicts how one can obtain instances.
+
+```Java
+// All instances have access to the same data
+final SPA sharedMemorySpa = SPABuilder.local().sharedMemory().build();
+
+// Connect to a remote virtuoso server
+final SPA virtuosoRemoteSpa = SPABuilder.remote().virtuoso()
+                               .url("http://virtuososerver:8890/sparql")
+                               .username("yourUserName")
+                               .password("yourPassword")
+                               .build();
+
+// In-Memory instance which does not share data with other instances
+final SPA inMemorySpa = SPABuilder.local().uniqueMemory().build();
+
+// Instance using Jena TDB
+final SPA folderSpa = SPABuilder.local().folder(Files.createTempDirectory("TDB")).build();
+```
 
 *To be continued*
