@@ -1,6 +1,7 @@
 subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
+    apply plugin: 'maven'
 
     javadoc {
         failOnError = false
@@ -47,4 +48,5 @@ subprojects {
     check {
         dependsOn intTest
     }
+
 }
