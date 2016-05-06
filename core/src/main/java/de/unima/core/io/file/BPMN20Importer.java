@@ -48,6 +48,14 @@ import org.camunda.bpm.model.bpmn.instance.Participant;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnEdge;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnLabel;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnPlane;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnShape;
+import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
+import org.camunda.bpm.model.bpmn.instance.di.Waypoint;
+import org.camunda.bpm.model.xml.instance.ModelElementInstance;
 
 public class BPMN20Importer implements FileBasedImporter<Model> {
     
@@ -290,7 +298,164 @@ public class BPMN20Importer implements FileBasedImporter<Model> {
         
       }
       
+
+      createBpmnDiagramIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, modelInstance);
       return ontModelInstance;
   }
 
+    private void createBpmnDiagramIndividual(OntModel schemaModel, OntModel ontModelInstance,
+            String blankSubnodeProperty, BpmnModelInstance modelInstance) {
+        Collection<BpmnDiagram> bpmnDiagrams = modelInstance.getModelElementsByType(BpmnDiagram.class);
+        for (BpmnDiagram bpmnDiagram : bpmnDiagrams) {			
+            Individual bpmnDiagramInd = createBpmnIndividual(schemaModel, ontModelInstance, bpmnDiagram, bpmnDiagram.getId());
+            addBpmnPlaneIndividualToBpmnDiagramIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, bpmnDiagram, bpmnDiagramInd);
+        }
+    }
+
+    private void addBpmnPlaneIndividualToBpmnDiagramIndividual(OntModel schemaModel, OntModel ontModelInstance, String blankSubnodeProperty,
+            BpmnDiagram bpmnDiagram, Individual bpmnDiagramInd) {
+        BpmnPlane bpmnPlane = bpmnDiagram.getBpmnPlane();
+        String bpmnPlaneId = bpmnPlane.getId();
+        Individual bpmnPlaneInd = createBpmnPlaneIndividual(schemaModel, ontModelInstance, bpmnPlane, bpmnPlaneId);
+        bpmnDiagramInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "bpmnPlane"),
+                ResourceFactory.createResource(individualNameSpace + bpmnPlaneId));
+
+
+        addBpmnShapeIndividualToBpmnPlaneIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, bpmnPlane, bpmnPlaneInd);
+
+        addBpmnEdgeIndividualsToBpmnPlaneIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, bpmnPlane, bpmnPlaneInd);
+    }
+
+    private Individual createBpmnPlaneIndividual(OntModel schemaModel, OntModel ontModelInstance, BpmnPlane bpmnPlane,
+            String bpmnPlaneId) {		
+        Individual bpmnPlaneInd = createBpmnIndividual(schemaModel, ontModelInstance, bpmnPlane,bpmnPlaneId);
+        bpmnPlaneInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "bpmnElement"),
+                bpmnPlane.getBpmnElement().getId());
+        return bpmnPlaneInd;
+    }
+
+    private void addBpmnEdgeIndividualsToBpmnPlaneIndividual(OntModel schemaModel, OntModel ontModelInstance, String blankSubnodeProperty,
+            BpmnPlane bpmnPlane, Individual bpmnPlaneInd) {
+        Collection<BpmnEdge> bpmnEdges = bpmnPlane.getChildElementsByType(BpmnEdge.class);
+        for (BpmnEdge bpmnEdge : bpmnEdges) {
+
+            String bpmnEdgeId = bpmnEdge.getId();
+            Individual bpmnEdgeInd = createBpmnEdgeIndivdual(schemaModel, ontModelInstance, bpmnEdge, bpmnEdgeId);
+            bpmnPlaneInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "bpmnEdge"),
+                    ResourceFactory.createResource(individualNameSpace + bpmnEdgeId));
+
+            addWaypointIndividualsToBpmnEdgeIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, bpmnEdge, bpmnEdgeId, bpmnEdgeInd);
+
+            BpmnLabel bpmnLabel = bpmnEdge.getBpmnLabel();
+            if (bpmnLabel != null){
+                addBpmnLabelIndividualToBpmnPlaneIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, bpmnLabel, bpmnEdgeId, bpmnEdgeInd);
+            }
+        }
+    }
+
+    private Individual createBpmnEdgeIndivdual(OntModel schemaModel, OntModel ontModelInstance, BpmnEdge bpmnEdge,
+            String bpmnEdgeId) {
+        Individual bpmnEdgeInd = createBpmnIndividual(schemaModel, ontModelInstance, bpmnEdge,bpmnEdgeId);
+        bpmnEdgeInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "bpmnElement"),
+                bpmnEdge.getBpmnElement().getId());
+        return bpmnEdgeInd;
+    }	
+
+    private void addWaypointIndividualsToBpmnEdgeIndividual(OntModel schemaModel, OntModel ontModelInstance, String blankSubnodeProperty,
+            BpmnEdge bpmnEdge, String bpmnEdgeId, Individual bpmnEdgeInd) {
+        Collection<Waypoint> waypoints = bpmnEdge.getWaypoints();
+        int counter = 0;
+        for (Waypoint waypoint : waypoints) {
+            counter++;
+            createWaypointIndividual(schemaModel, ontModelInstance, bpmnEdgeId, counter, waypoint);
+            bpmnEdgeInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "waypoint"),
+                    ResourceFactory.createResource(individualNameSpace + bpmnEdgeId + counter));
+        }
+    }
+
+    private void createWaypointIndividual(OntModel schemaModel, OntModel ontModelInstance, String bpmnEdgeId,
+            int counter, Waypoint waypoint) {
+        String waypointNodeType = waypoint.getElementType().getTypeName();
+        OntClass waypointClass = schemaModel.getOntClass(SCHEMA_NAMESPACE + waypointNodeType);		
+        Individual waypointInd = ontModelInstance
+                .createIndividual(individualNameSpace + bpmnEdgeId + counter, waypointClass);			
+        Double x = waypoint.getX();
+        Double y = waypoint.getY();
+        waypointInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "x"), x);
+        waypointInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "y"), y);		
+    }
+
+    private void addBpmnShapeIndividualToBpmnPlaneIndividual(OntModel schemaModel, OntModel ontModelInstance, String blankSubnodeProperty,
+            BpmnPlane bpmnPlane, Individual bpmnPlaneInd) {
+        Collection<BpmnShape> bpmnShapes = bpmnPlane.getChildElementsByType(BpmnShape.class);
+        for (BpmnShape bpmnShape : bpmnShapes) {
+
+            String bpmnShapeId = bpmnShape.getId();
+            Individual bpmnShapeInd = createBpmnShapeIndividual(schemaModel, ontModelInstance, bpmnShape, bpmnShapeId);
+            bpmnPlaneInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "bpmnShape"),
+                    ResourceFactory.createResource(individualNameSpace + bpmnShapeId));	
+
+            Bounds bound = bpmnShape.getBounds();
+            createBoundsIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, bpmnShapeId, bpmnShapeInd, bound);
+            bpmnShapeInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "bound"),
+                    ResourceFactory.createResource(individualNameSpace + bpmnShapeId));
+
+            BpmnLabel bpmnLabel = bpmnShape.getBpmnLabel();
+            if (bpmnLabel != null){
+                addBpmnLabelIndividualToBpmnPlaneIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, bpmnLabel, bpmnShapeId, bpmnShapeInd);
+            }
+        }
+    }
+
+    private Individual createBpmnShapeIndividual(OntModel schemaModel, OntModel ontModelInstance, BpmnShape bpmnShape,
+            String bpmnShapeId) {		
+        Individual bpmnShapeInd = createBpmnIndividual(schemaModel, ontModelInstance, bpmnShape, bpmnShapeId);
+        bpmnShapeInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "bpmnElement"),
+                bpmnShape.getBpmnElement().getId());
+        return bpmnShapeInd;
+    }
+
+    private Individual createBpmnIndividual(OntModel schemaModel, OntModel ontModelInstance, ModelElementInstance modelElement, String newElementId) {
+        String bpmnNodeType = modelElement.getElementType().getTypeName();
+        OntClass bpmnClass = schemaModel.getOntClass(SCHEMA_NAMESPACE + bpmnNodeType);		
+        Individual bpmnInd = ontModelInstance.createIndividual(individualNameSpace + newElementId,
+                bpmnClass);
+        bpmnInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"), newElementId);		
+        return bpmnInd;
+    }
+
+    private void addBpmnLabelIndividualToBpmnPlaneIndividual(OntModel schemaModel, OntModel ontModelInstance,
+            String blankSubnodeProperty, BpmnLabel bpmnLabel, String bpmnShapeId, Individual bpmnShapeInd) {
+
+        String bpmnLabelNodeType = bpmnLabel.getElementType().getTypeName();
+        OntClass bpmnLabelClass = schemaModel.getOntClass(SCHEMA_NAMESPACE + bpmnLabelNodeType);
+        Individual bpmnLabelInd = ontModelInstance.createIndividual(individualNameSpace + "edited-" + bpmnShapeId,
+                bpmnLabelClass);
+        bpmnShapeInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "bpmnLabel"),
+                ResourceFactory.createResource(individualNameSpace + "edited-" + bpmnShapeId));
+
+        Bounds bound = bpmnLabel.getBounds();
+        createBoundsIndividual(schemaModel, ontModelInstance, blankSubnodeProperty, "edited-" + bpmnShapeId,
+                bpmnLabelInd, bound);
+        bpmnLabelInd.addProperty(schemaModel.getProperty(blankSubnodeProperty + "bound"),
+                ResourceFactory.createResource(individualNameSpace + "edited-" + bpmnShapeId));
+
+    }
+
+    private Individual createBoundsIndividual(OntModel schemaModel, OntModel ontModelInstance, String blankSubnodeProperty,
+            String bpmnShapeId, Individual bpmnShapeInd, Bounds bound) {
+
+        String boundNodeType = bound.getElementType().getTypeName();
+        OntClass boundClass = schemaModel.getOntClass(SCHEMA_NAMESPACE + boundNodeType);
+        double x = bound.getX();
+        double y = bound.getY();
+        double width = bound.getWidth();
+        double height = bound.getHeight();
+        Individual boundInd = ontModelInstance.createIndividual(individualNameSpace + bpmnShapeId, boundClass);
+        boundInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "x"), x);
+        boundInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "y"), y);
+        boundInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "width"), width);
+        boundInd.addLiteral(schemaModel.getProperty(SCHEMA_NAMESPACE + "height"), height);
+        return boundInd;
+    }
 }

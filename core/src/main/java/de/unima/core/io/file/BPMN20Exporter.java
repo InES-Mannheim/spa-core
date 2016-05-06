@@ -53,6 +53,13 @@ import org.camunda.bpm.model.bpmn.instance.Participant;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnEdge;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnLabel;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnPlane;
+import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnShape;
+import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
+import org.camunda.bpm.model.bpmn.instance.di.Waypoint;
 
 import com.google.common.base.Throwables;
 import com.google.common.io.Resources;
@@ -347,9 +354,220 @@ public class BPMN20Exporter implements FileBasedExporter<Model> {
 	      definitions.addChildElement(bpmnCollaboration);
 	    }
 	    
+		addBpmnDiagramIndividualsToDefinitions(dataOntModel, schemaModel, bpmnMI, definitions);
+
 	    Bpmn.writeModelToFile(location, bpmnMI);
 	    return location;
 	
 	}
 
+	private void addBpmnDiagramIndividualsToDefinitions(OntModel dataOntModel, OntModel schemaModel,
+	        BpmnModelInstanceImpl bpmnMI, Definitions definitions) {
+	    @SuppressWarnings("unchecked")
+	    ExtendedIterator<Individual> bpmnDiagramIndividuals = (ExtendedIterator<Individual>) schemaModel
+	    .getOntClass(SCHEMA_NAMESPACE + "BPMNDiagram").listInstances();
+	    for (Individual bpmnDiagramInd : bpmnDiagramIndividuals.toList()) {
+
+	        BpmnDiagram bpmnDiagram = createBpmnDiagram(schemaModel, bpmnMI, bpmnDiagramInd);
+	        definitions.addChildElement(bpmnDiagram);
+
+	        addBpmnPlaneToBpmnDiagram(dataOntModel, schemaModel, bpmnMI, bpmnDiagramInd, bpmnDiagram);
+	    }
+	}
+
+	private BpmnDiagram createBpmnDiagram(OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        Individual bpmnDiagramInd) {
+	    String bpmnDiagramId = bpmnDiagramInd.getPropertyValue(schemaModel.getProperty(SCHEMA_NAMESPACE + "id"))
+	            .toString();
+	    BpmnDiagram bpmnDiagram = bpmnMI.newInstance(BpmnDiagram.class);
+	    bpmnDiagram.setId(bpmnDiagramId);
+	    return bpmnDiagram;
+	}
+
+	private void addBpmnPlaneToBpmnDiagram(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        Individual bpmnDiagramInd, BpmnDiagram bpmnDiagram) {
+
+	    RDFNode bpmnPlaneNode = bpmnDiagramInd.getPropertyValue(schemaModel.getProperty(SCHEMA_NAMESPACE + "has_bpmnPlane"));
+
+	    if (bpmnPlaneNode != null) {
+
+	        Individual bpmnPlaneInd = dataOntModel.getIndividual(bpmnPlaneNode.asResource().getURI());
+	        BpmnPlane bpmnPlane = createBpmnPlane(dataOntModel, schemaModel, bpmnMI, bpmnPlaneNode);
+	        bpmnDiagram.addChildElement(bpmnPlane);
+
+	        addBpmnShapesToBpmnPlane(dataOntModel, schemaModel, bpmnMI, bpmnPlaneInd, bpmnPlane);
+
+	        addBpmnEdgesToBpmnPlane(dataOntModel, schemaModel, bpmnMI, bpmnPlaneInd, bpmnPlane);
+
+	    }
+	}
+
+	private BpmnPlane createBpmnPlane(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        RDFNode bpmnPlaneNode) {
+	    BpmnPlane bpmnPlane = bpmnMI.newInstance(BpmnPlane.class);		
+	    String bpmnPlaneId = dataOntModel
+	            .getProperty(bpmnPlaneNode.asResource(), schemaModel.getProperty(SCHEMA_NAMESPACE + "id"))
+	            .getObject().toString();
+	    String bpmnElement = dataOntModel.getProperty(bpmnPlaneNode.asResource(),
+	            schemaModel.getProperty(SCHEMA_NAMESPACE + "bpmnElement")).getObject().toString();
+	    bpmnPlane.setAttributeValue("bpmnElement", bpmnElement);
+	    bpmnPlane.setId(bpmnPlaneId);
+	    return bpmnPlane;
+	}
+
+	private void addBpmnEdgesToBpmnPlane(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        Individual bpmnPlaneInd, BpmnPlane bpmnPlane) {
+	    List<RDFNode> bpmnEdges = bpmnPlaneInd
+	            .listPropertyValues(schemaModel.getProperty(SCHEMA_NAMESPACE + "has_bpmnEdge")).toList();
+	    for (RDFNode bpmnEdgeNode : bpmnEdges) {
+
+	        Individual bpmnEdgeInd = dataOntModel.getIndividual(bpmnEdgeNode.asResource().getURI());			
+	        BpmnEdge bpmnEdge = createBpmnEdge(dataOntModel, schemaModel, bpmnMI, bpmnEdgeNode);
+	        bpmnPlane.addChildElement(bpmnEdge);
+
+	        addSortedWaypointsToBpmnEdge(dataOntModel, schemaModel, bpmnMI, bpmnEdgeInd, bpmnEdge);
+
+	        BpmnLabel bpmnLabel = createBpmnLabel(dataOntModel, schemaModel, bpmnMI, bpmnEdgeInd);
+	        if (bpmnLabel != null){
+	            bpmnEdge.addChildElement(bpmnLabel);
+	        }
+	    }
+	}	
+
+	private BpmnEdge createBpmnEdge(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        RDFNode bpmnEdgeNode) {
+	    BpmnEdge bpmnEdge = bpmnMI.newInstance(BpmnEdge.class);			
+	    String bpmnEdgeId = dataOntModel
+	            .getProperty(bpmnEdgeNode.asResource(), schemaModel.getProperty(SCHEMA_NAMESPACE + "id"))
+	            .getObject().toString();
+	    String bpmnElement = dataOntModel.getProperty(bpmnEdgeNode.asResource(),
+	            schemaModel.getProperty(SCHEMA_NAMESPACE + "bpmnElement")).getObject().toString();
+	    bpmnEdge.setAttributeValue("bpmnElement", bpmnElement);
+	    bpmnEdge.setId(bpmnEdgeId);
+	    return bpmnEdge;
+	}
+
+	private void addSortedWaypointsToBpmnEdge(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        Individual bpmnEdgeInd, BpmnEdge bpmnEdge) {
+	    List<RDFNode> waypoints = bpmnEdgeInd
+	            .listPropertyValues(schemaModel.getProperty(SCHEMA_NAMESPACE + "has_waypoint")).toList();
+	    RDFNode[] sortedWaypoints = sortWaypoints(waypoints);
+
+	    for (RDFNode waypointNode : sortedWaypoints) {
+
+	        Waypoint waypoint = createWaypoint(dataOntModel, schemaModel, bpmnMI, waypointNode);
+	        bpmnEdge.addChildElement(waypoint);
+	    }
+	}
+
+	private Waypoint createWaypoint(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        RDFNode waypointNode) {
+	    Waypoint waypoint = bpmnMI.newInstance(Waypoint.class);
+	    Double x = dataOntModel
+	            .getProperty(waypointNode.asResource(), schemaModel.getProperty(SCHEMA_NAMESPACE + "x"))
+	            .getDouble();
+	    Double y = dataOntModel
+	            .getProperty(waypointNode.asResource(), schemaModel.getProperty(SCHEMA_NAMESPACE + "y"))
+	            .getDouble();
+	    waypoint.setX(x);
+	    waypoint.setY(y);
+	    return waypoint;
+	}
+
+	/**
+	 * sorts the waypoints in the order they were importet into the spa
+	 * 
+	 * @return an Array with sorted nodes
+	 */
+	private RDFNode[] sortWaypoints(List<RDFNode> waypoints) {
+	    RDFNode[] waypointshelper = new RDFNode[waypoints.size()];
+	    for (RDFNode waypointNode : waypoints) {
+	        waypointshelper[extractWaypointOrderNumber(waypointNode)] = waypointNode;
+	    }
+	    return waypointshelper;
+	}
+
+	/**
+	 * @return the number which specifies in which order the waypoints were importet into the SPA
+	 */
+	private int extractWaypointOrderNumber(RDFNode waypointNode){
+	    return Integer.parseInt(waypointNode.toString()
+	            .substring(waypointNode.toString().length() - 1, waypointNode.toString().length()))
+	            - 1;
+	}
+
+	private void addBpmnShapesToBpmnPlane(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        Individual bpmnPlaneInd, BpmnPlane bpmnPlane) {
+	    List<RDFNode> bpmnShapes = bpmnPlaneInd
+	            .listPropertyValues(schemaModel.getProperty(SCHEMA_NAMESPACE + "has_bpmnShape")).toList();
+
+	    for (RDFNode bpmnShapeNode : bpmnShapes) {
+	        Individual bpmnShapeInd = dataOntModel.getIndividual(bpmnShapeNode.asResource().getURI());
+	        BpmnShape bpmnShape = createBpmnShape(dataOntModel, schemaModel, bpmnMI, bpmnShapeNode);
+	        bpmnPlane.addChildElement(bpmnShape);
+
+	        RDFNode boundNode = bpmnShapeInd.getPropertyValue(schemaModel.getProperty(SCHEMA_NAMESPACE + "has_bound"));
+	        Bounds bound = createBounds(dataOntModel, schemaModel, bpmnMI, boundNode);
+	        bpmnShape.addChildElement(bound);
+
+	        BpmnLabel bpmnLabel = createBpmnLabel(dataOntModel, schemaModel, bpmnMI, bpmnShapeInd);
+	        if (bpmnLabel != null) {
+	            bpmnShape.addChildElement(bpmnLabel);
+	        }
+	    }
+	}
+
+	private BpmnShape createBpmnShape(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        RDFNode bpmnShapeNode) {
+	    BpmnShape bpmnShape = bpmnMI.newInstance(BpmnShape.class);		
+	    String bpmnShapeId = dataOntModel
+	            .getProperty(bpmnShapeNode.asResource(), schemaModel.getProperty(SCHEMA_NAMESPACE + "id"))
+	            .getObject().toString();
+	    String bpmnElement = dataOntModel.getProperty(bpmnShapeNode.asResource(),
+	            schemaModel.getProperty(SCHEMA_NAMESPACE + "bpmnElement")).getObject().toString();
+	    bpmnShape.setAttributeValue("bpmnElement", bpmnElement);
+	    bpmnShape.setId(bpmnShapeId);
+	    return bpmnShape;
+	}	
+
+	/**
+	 * @return the created BpmnLabel or null if the bpmnShape has no bpmnLabel
+	 */
+	private BpmnLabel createBpmnLabel(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        Individual individual) {
+	    RDFNode bpmnLabelNode = individual
+	            .getPropertyValue(schemaModel.getProperty(SCHEMA_NAMESPACE + "has_bpmnLabel"));
+
+	    if (bpmnLabelNode != null) {
+	        Individual bpmnLabelInd = dataOntModel.getIndividual(bpmnLabelNode.asResource().getURI());
+	        BpmnLabel bpmnLabel = bpmnMI.newInstance(BpmnLabel.class);
+
+	        RDFNode boundNode = bpmnLabelInd.getPropertyValue(schemaModel.getProperty(SCHEMA_NAMESPACE + "has_bound"));
+	        Bounds bound = createBounds(dataOntModel, schemaModel, bpmnMI, boundNode);
+	        bpmnLabel.addChildElement(bound);
+
+	        return bpmnLabel;
+	    }
+	    return null;
+	}
+
+	private Bounds createBounds(OntModel dataOntModel, OntModel schemaModel, BpmnModelInstanceImpl bpmnMI,
+	        RDFNode boundNode) {
+	    Bounds bound = bpmnMI.newInstance(Bounds.class);
+	    Double x = dataOntModel
+	            .getProperty(boundNode.asResource(), schemaModel.getProperty(SCHEMA_NAMESPACE + "x"))
+	            .getDouble();
+	    Double y = dataOntModel
+	            .getProperty(boundNode.asResource(), schemaModel.getProperty(SCHEMA_NAMESPACE + "y"))
+	            .getDouble();
+	    Double width = dataOntModel.getProperty(boundNode.asResource(),
+	            schemaModel.getProperty(SCHEMA_NAMESPACE + "width")).getDouble();
+	    Double height = dataOntModel.getProperty(boundNode.asResource(),
+	            schemaModel.getProperty(SCHEMA_NAMESPACE + "height")).getDouble();
+	    bound.setX(x);
+	    bound.setY(y);
+	    bound.setWidth(width);
+	    bound.setHeight(height);
+	    return bound;
+	}
 }
