@@ -1,9 +1,6 @@
 List jena = ["org.apache.jena:jena-arq:3.0.0","org.apache.jena:jena-core:3.0.0","org.apache.jena:jena-shaded-guava:3.0.0","org.apache.jena:jena-iri:3.0.0","org.apache.jena:jena-tdb:3.0.0","org.apache.jena:jena-querybuilder:3.0.0"]
 
 dependencies {
-    compile 'com.google.guava:guava:18.0' 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:hamcrest-all:1.3'
     jena.each {dependency -> compile(dependency){
 		exclude group: 'org.slf4j'
 		exclude module: 'apache-jena-libs'
