@@ -3,6 +3,8 @@ subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'maven'
 
+    group = 'de.unima'
+
     javadoc {
         failOnError = false
     }

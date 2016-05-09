@@ -1,4 +1,3 @@
 include 'core'
 include 'ontmalizer'
-rootProject.name = 'de.unima'
 project(":core").name = "spa-core"
