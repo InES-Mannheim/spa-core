@@ -81,9 +81,26 @@ Package `io` contains the `Importer` and `Exporter` interfaces for importing dat
 
 Package `persistence` contains all implementations responsible for mapping Java instances to RDF and vice-versa. All `Repository` implementations rely on the `Transformation` class which implements a DSL for RDF <-> Java transformations.
 
-A leaky abstraction over `Jena` is the content of the storage package. When a `Store` supports transactions, each connection is automatically run in a transaction conext.
+A leaky abstraction over `Jena` is the content of the `storage` package. When a `Store` supports transactions, each connection is automatically run in a transaction conext.
 
 # Usage 
+You can either download the releases or use our artifactory instance located at the University of Mannheim. A minimal gradle build file is given below:
+```
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+    maven {
+      url "http://eris-vm109.uni-mannheim.de:8081/artifactory/spa/"
+    }
+}
+
+dependencies {
+    compile(group: 'de.unima', name: 'spa-core', version: '0.0.10')
+}
+```
+
+
 Currently SPA supports 3 different triple stores; namely [Jena TDB](https://jena.apache.org/documentation/tdb/), jena in-memory and [Virtuoso](http://virtuoso.openlinksw.com/). Each [SPA](../master/core/src/main/java/de/unima/core/application/SPA.java) instance is configured using the [SPABuilder](../master/core/src/main/java/de/unima/core/application/SPABuilder.java). The code below depicts how one can obtain instances.
 
 ```Java
