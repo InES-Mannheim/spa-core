@@ -96,7 +96,7 @@ repositories {
 }
 
 dependencies {
-    compile(group: 'de.unima', name: 'spa-core', version: '0.0.10')
+    compile(group: 'de.unima', name: 'spa-core', version: '0.0.11')
 }
 ```
 
