@@ -17,6 +17,9 @@ subprojects {
     }
 
     repositories {
+        maven {
+          url "http://eris-vm109.uni-mannheim.de:8081/artifactory/spa"
+        }
         jcenter()
     }
 

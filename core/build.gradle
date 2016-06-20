@@ -1,6 +1,5 @@
 plugins {
   id 'net.researchgate.release' version '2.3.4'
-  id "de.undercouch.download" version "2.1.0"
 }
 
 apply from: "$rootDir/gradle/gradle/application.java.jena.gradle"
@@ -15,11 +14,6 @@ release {
     newVersionCommitMessage = '[POST-Release] Updated Version to '
     tagCommitMessage = '[Release] Tag '
 }
-
-def xesAndOpenSpexDeps = ['https://svn.win.tue.nl/trac/prom/export/latest/Releases/OpenXES/OpenXES.jar', 
-     'https://svn.win.tue.nl/trac/prom/export/26781/OpenXES/tags/2.0.57/lib/Spex.jar',
-     'http://opldownload.s3.amazonaws.com/uda/virtuoso/7.2/rdfproviders/jena/30/virt_jena3.jar',
-     'http://opldownload.s3.amazonaws.com/uda/virtuoso/7.2/jdbc/virtjdbc4.jar']
      
 def testcontainerDependencies = ['org.testcontainers:testcontainers:1.0.2', 
      'org.testcontainers:jdbc:1.0.2', 
@@ -30,24 +24,14 @@ dependencies {
 
     compile 'org.slf4j:slf4j-api:1.7.13'
     compile 'org.slf4j:slf4j-log4j12:1.7.13'
-
     compile 'org.camunda.bpm.model:camunda-bpmn-model:7.3.0'
-
     compile 'org.hashids:hashids:1.0.1'
     compile 'org.apache.commons:commons-lang3:3.4'
-    
-    // Download spex and openspex if necessary
-    def libFolder = file("lib") 
-    if(!libFolder.exists()){
-        libFolder.mkdirs()   
-    }
-    download {
-       src xesAndOpenSpexDeps 
-       dest 'lib/' 
-       overwrite false
-    }
-    compile files('lib/OpenXES.jar', 'lib/Spex.jar', 'lib/virt_jena3.jar', 'lib/virtjdbc4.jar')
-    
+    compile 'com.openlink.virtuoso:jdbc4:7.2'   
+    compile 'com.openlink.virtuoso:rdfproviders-jena3:7.2'
+    compile 'org.deckfour:openxes:1.0.0'
+    compile 'org.deckfour:spex:2.0.57'
+ 
     // Exclude httpclient v2.3 because it results into a ClassCastException when used with the QueryFactory 
     // which depends on httpclient v2.2.x
     testcontainerDependencies.each { dependency ->
